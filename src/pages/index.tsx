@@ -1,39 +1,70 @@
-import dynamic from 'next/dynamic'
-// Step 5 - delete Instructions components
-import Instructions from '@/components/dom/Instructions'
-// import Shader from '@/components/canvas/Shader/Shader'
+import * as THREE from 'three'
+import React, { useEffect, useRef, useState } from 'react'
+import { Canvas, useFrame, useThree } from '@react-three/fiber'
+import useStore from '@/helpers/store'
+import shallow from 'zustand/shallow'
+import Vector from '@/components/Vector'
+import { OrbitControls } from 'three-stdlib'
 
-// Dynamic import is used to prevent a payload when the website start that will include threejs r3f etc..
-// WARNING ! errors might get obfuscated by using dynamic import.
-// If something goes wrong go back to a static import to show the error.
-// https://github.com/pmndrs/react-three-next/issues/49
-const Shader = dynamic(() => import('@/components/canvas/Shader/Shader'), {
-  ssr: false,
-})
+const CameraController = () => {
+  const { camera, gl } = useThree()
+  useEffect(() => {
+    const controls = new OrbitControls(camera, gl.domElement)
 
-// dom components goes here
-const Page = (props) => {
+    controls.minDistance = 3
+    controls.maxDistance = 20
+    return () => {
+      controls.dispose()
+    }
+  }, [camera, gl])
+  return null
+}
+
+// const Camera = () => {
+//   const camera = useRef()
+//   const { aspect, size, setDefaultCamera } = useThree()
+//   const pixelToThreeUnitRatio = 1
+//   const planeDistance = 0
+//   const cameraDistance = 500
+//   const distance = cameraDistance - planeDistance
+//   const height = size.height / pixelToThreeUnitRatio
+//   const halfFovRadians = Math.atan(height / 2 / distance)
+//   const fov = 2 * halfFovRadians * (180 / Math.PI)
+//   useEffect(() => void setDefaultCamera(camera.current), [])
+//   return (
+//     <perspectiveCamera
+//       ref={camera}
+//       aspect={aspect}
+//       fov={fov}
+//       position={[0, 0, cameraDistance]}
+//       onUpdate={(self) => self.updateProjectionMatrix()}
+//     />
+//   )
+// }
+
+const Page = () => {
+  const { eField, bField, boost, setEField, setBField, setBoost } = useStore(
+    (state) => ({
+      eField: state.eField,
+      bField: state.bField,
+      boost: state.boost,
+      setEField: state.setEField,
+      setBField: state.setBField,
+      setBoost: state.setBoost,
+    }),
+    shallow
+  )
+
   return (
-    <>
-      <Instructions />
-    </>
+    <Canvas>
+      <CameraController />
+      <ambientLight />
+      <pointLight position={[10, 10, 10]} />
+      <Vector components={eField} color='blue' />
+      <Vector components={bField} color='red' />
+      <Vector components={boost} color='green' />
+    </Canvas>
   )
 }
 
-// canvas components goes here
-// It will receive same props as Page component (from getStaticProps, etc.)
-Page.r3f = (props) => (
-  <>
-    <Shader />
-  </>
-)
-
 export default Page
-
-export async function getStaticProps() {
-  return {
-    props: {
-      title: 'Index',
-    },
-  }
-}

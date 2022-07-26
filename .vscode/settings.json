@@ -4,6 +4,7 @@
   "editor.codeActionsOnSave": {
     "source.fixAll": true
   },
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
   "eslint.validate": ["javascript"],
   "eslint.workingDirectories": [{ "mode": "auto" }]
 }
