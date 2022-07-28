@@ -7,24 +7,22 @@ export interface State {
   eField: CartesianComponents
   /** Cartesian components of the magnetic field vector in the original (unprimed) frame. */
   bField: CartesianComponents
-  /**
-   * Cartesian components of the primed frame's normalized velocity vector with respect to the unprimed frame.
-   * The vector's magnitude must be >= 0 and < 1.
-   */
-  boost: CartesianComponents
+  /* The (signed) rapidity of the boost-vector, which is always along the x-axis. */
+  boostRapidity: number
   setEField: (newEField: State['eField']) => void
   setBField: (newBField: State['bField']) => void
-  setBoost: (newBoost: State['boost']) => void
+  setBoostRapidity: (newBoostRapidity: State['boostRapidity']) => void
 }
 
 const useStore = create<State>()((set) => {
   return {
     eField: [1, 1, 1],
     bField: [-1, -1, -1],
-    boost: [0.25, -0.25, 0.25],
+    boostRapidity: 0.8,
     setEField: (newEField) => set(() => ({ eField: newEField })),
     setBField: (newBField) => set(() => ({ bField: newBField })),
-    setBoost: (newBoost) => set(() => ({ boost: newBoost })),
+    setBoostRapidity: (newBoostRapidity) =>
+      set(() => ({ boostRapidity: newBoostRapidity })),
   }
 })
 

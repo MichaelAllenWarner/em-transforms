@@ -32,14 +32,14 @@ const Vector = ({ components, color }: Props) => {
       ref.current.geometry.setFromPoints(
         [[0, 0, 0], components].map((point) => new THREE.Vector3(...point))
       )
-      ref.current.rotation.x += 0.01
+      // ref.current.rotation.x += 0.01
     }
   })
 
   return (
     <line_ ref={ref}>
       <bufferGeometry attach='geometry' />
-      <lineBasicMaterial attach='material' color={color} linewidth={10} />
+      <lineBasicMaterial attach='material' color={color} />
     </line_>
   )
 }
