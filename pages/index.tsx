@@ -7,8 +7,6 @@ import Vector from '../components/Vector';
 import { OrbitControls } from 'three-stdlib';
 import Axes from '../components/Axes';
 
-const boostUnit: CartesianComponents = [1, 0, 0];
-
 const CameraController = () => {
   const { camera, gl } = useThree();
   // camera.translateZ(0.5);
@@ -61,6 +59,8 @@ const Page = () => {
     shallow
   );
 
+  const boostUnit: CartesianComponents = [Math.sign(boostVelocity), 0, 0];
+
   const boostRapidity = Math.atanh(boostVelocity);
   const ch = Math.cosh(boostRapidity);
   const sh = Math.sinh(boostRapidity);
@@ -76,6 +76,14 @@ const Page = () => {
   const bPrime = bField.map(
     (comp, i) => ch * comp - sh * crossE[i] - 2 * sh2 * dotB * boostUnit[i]
   ) as CartesianComponents;
+
+  // for testing that the invariants are equal
+  // console.log({
+  //   eDotB: dot(eField, bField),
+  //   eDotBPrime: dot(ePrime, bPrime),
+  //   diffOfSquares: dot(eField, eField) - dot(bField, bField),
+  //   diffOfSquaresPrime: dot(ePrime, ePrime) - dot(bPrime, bPrime),
+  // });
 
   return (
     <div className="container mt-10 flex h-screen w-screen flex-col space-y-10">
