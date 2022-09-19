@@ -1,10 +1,14 @@
 {
-  "editor.formatOnPaste": true,
-  "editor.formatOnSave": true,
-  "editor.codeActionsOnSave": {
-    "source.fixAll": true
-  },
   "editor.defaultFormatter": "esbenp.prettier-vscode",
-  "eslint.validate": ["javascript"],
-  "eslint.workingDirectories": [{ "mode": "auto" }]
+  "editor.formatOnSave": true,
+  "tailwindCSS.experimental.classRegex": [
+    // so we can put `/* tw */ ` in front of a JS/TS string and get Tailwind Intellisense in custom spots
+    "/\\* tw \\*/ '([^']*)",
+    "/\\* tw \\*/ `([^`]*)",
+    "/\\* tw \\*/ \"([^\"]*)",
+    // these must go directly before a `{` (w/ space in between) and apply to strings until it hits a semi-colon (good for JS/TS if using semi-colons)
+    ["/\\* tw \\*/ {([^;]*);", "'([^']*)'"],
+    ["/\\* tw \\*/ {([^;]*);", "`([^']*)`"],
+    ["/\\* tw \\*/ {([^;]*);", "\"([^\"]*)\""]
+  ]
 }
