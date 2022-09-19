@@ -98,10 +98,7 @@ const Page = () => {
               This visualization demonstrates how the electric and magnetic
               fields transform under a Lorentz boost.
             </p>
-            <p>
-              First, some instructions on manipulating the visualization's
-              "camera":
-            </p>
+            <p>First, here is how the "camera" works:</p>
             <ul className="ml-4 list-disc">
               <li>
                 To orbit, use the left mouse-button (or one-finger-move for
