@@ -125,12 +125,19 @@ const Page = () => {
               "primed" frame are calculated and rendered automatically.
             </p>
             <p>
+              The inputs can only accept number-values, even while you're typing
+              the number. Since a minus-sign by itself isn't interpreted as a
+              number, entering a negative number is a bit cumbersome: you have
+              to type at least one digit <em>before</em> inserting the minus
+              sign at the start. Sorry about that.
+            </p>
+            <p>
               Electric and magnetic fields are measured in the same unit. The
               boost-speed is normalized (i.e., it's given as a fraction of the
               speed of light and can be no greater than 1). Finally, the
               Cartesian axes and their labels are fixed; perhaps in the future
-              I'll make them adjustable or have them adapt to the lengths and
-              orientations of the vectors in the plot.
+              I'll make them adjustable or have them adapt to the vectors in the
+              space.
             </p>
           </div>
         </details>
