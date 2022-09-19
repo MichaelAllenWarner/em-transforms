@@ -167,7 +167,7 @@ const Page = () => {
             <input value="0" type="number" disabled min="-.9999" max=".9999" />
           </label>
           <label>
-            x-component
+            z-component
             <input value="0" type="number" disabled min="-.9999" max=".9999" />
           </label>
         </fieldset>
