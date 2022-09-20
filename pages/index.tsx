@@ -1,5 +1,5 @@
 /* eslint-disable react/no-unescaped-entities */
-import { useEffect, useState } from 'react';
+import { forwardRef, useEffect, useRef, useState } from 'react';
 import { Canvas, useThree } from '@react-three/fiber';
 import useStore, { CartesianComponents } from '../helpers/store';
 import shallow from 'zustand/shallow';
@@ -8,17 +8,6 @@ import { OrbitControls } from 'three-stdlib';
 import Axes from '../components/Axes';
 import Head from 'next/head';
 import * as THREE from 'three';
-
-const CameraController = () => {
-  const { camera, gl } = useThree();
-  useEffect(() => {
-    const controls = new OrbitControls(camera, gl.domElement);
-    return () => {
-      controls.dispose();
-    };
-  }, [camera, gl]);
-  return null;
-};
 
 const cross = (
   [a_x, a_y, a_z]: CartesianComponents,
@@ -33,9 +22,46 @@ const dot = (
   [b_x, b_y, b_z]: CartesianComponents
 ) => a_x * b_x + a_y * b_y + a_z * b_z;
 
-const roundN = 12;
+const round = (n: number) => parseFloat(n.toFixed(12));
+
+enum Color {
+  E = 'blue',
+  B = 'crimson',
+  V = 'saddlebrown',
+  EPrime = 'purple',
+  BPrime = 'mediumvioletred',
+  S = 'green',
+  SPrime = 'darkslategray',
+}
+
+const textColor: { [C in Color]: `text-[${C}]` } = /* tw */ {
+  blue: 'text-[blue]',
+  crimson: 'text-[crimson]',
+  saddlebrown: 'text-[saddlebrown]',
+  purple: 'text-[purple]',
+  mediumvioletred: 'text-[mediumvioletred]',
+  green: 'text-[green]',
+  darkslategray: 'text-[darkslategray]',
+};
+
+const CameraController = forwardRef<OrbitControls | undefined>((_, ref) => {
+  const { camera, gl } = useThree();
+  useEffect(() => {
+    const controls = new OrbitControls(camera, gl.domElement);
+    if (ref && typeof ref !== 'function') {
+      ref.current = controls;
+    }
+    return () => {
+      controls.dispose();
+    };
+  }, [camera, gl, ref]);
+  return null;
+});
+CameraController.displayName = 'CameraController';
 
 const Page = () => {
+  const cameraRef = useRef<OrbitControls>();
+
   const {
     eField,
     bField,
@@ -85,14 +111,6 @@ const Page = () => {
   const poynting = cross(eField, bField);
   const poyntingPrime = cross(ePrime, bPrime);
 
-  // for testing that the invariants are equal
-  // console.log({
-  //   eDotB: dot(eField, bField),
-  //   eDotBPrime: dot(ePrime, bPrime),
-  //   diffOfSquares: dot(eField, eField) - dot(bField, bField),
-  //   diffOfSquaresPrime: dot(ePrime, ePrime) - dot(bPrime, bPrime),
-  // });
-
   return (
     <>
       <Head>
@@ -113,22 +131,6 @@ const Page = () => {
                 This visualization demonstrates how the electric and magnetic
                 fields transform under a Lorentz boost.
               </p>
-              <p>First, here is how the "camera" works:</p>
-              <ul className="ml-4 list-disc">
-                <li>
-                  To orbit, use the left mouse-button (or one-finger-move for
-                  touch).
-                </li>
-                <li>
-                  To zoom, use the mousewheel or the middle mouse-button (or
-                  two-finger spread/squish for touch).
-                </li>
-                <li>
-                  To pan, use the right mouse-button (or two-finger move on
-                  touch). Panning will change the focal point for orbiting and
-                  zooming.
-                </li>
-              </ul>
               <p>
                 Use the inputs below the visualization to set the Cartesian
                 components of the electric- and magnetic-field vectors in the
@@ -146,44 +148,60 @@ const Page = () => {
               <p>
                 Electric and magnetic fields are measured in the same unit. The
                 boost-speed is normalized (i.e., it's given as a fraction of the
-                speed of light and can be no greater than 1). Finally, the
-                Cartesian axes and their labels are fixed; perhaps in the future
-                I'll make them adjustable or have them adapt to the vectors in
-                the space.
+                speed of light and must be less than 1). Finally, the Cartesian
+                axes and their labels are fixed; perhaps in the future I'll make
+                them adjustable or have them adapt to the vectors in the space.
               </p>
+              <p>Here is how the "camera" works:</p>
+              <ul className="ml-4 list-disc">
+                <li>
+                  To orbit, use the left mouse-button (or one-finger-move for
+                  touch).
+                </li>
+                <li>
+                  To zoom, use the mousewheel or the middle mouse-button (or
+                  two-finger spread/squish for touch).
+                </li>
+                <li>
+                  To pan, use the right mouse-button (or two-finger move on
+                  touch). Panning will change the focal point for orbiting and
+                  zooming, but you can restore it with the "Reset Camera" button
+                  below the visualization.
+                </li>
+              </ul>
             </div>
           </details>
         </div>
         <Canvas className="max-h-screen min-h-[600px] flex-1 px-6 [&>*]:border">
-          <CameraController />
+          <CameraController ref={cameraRef} />
           <ambientLight />
           <Axes />
           <Vector
             components={eField}
-            color="blue"
+            color={Color.E}
             label="E"
             showComponentVectors={showComponentVectors}
           />
           <Vector
             components={bField}
-            color="crimson"
+            color={Color.B}
             label="B"
             showComponentVectors={showComponentVectors}
           />
           <Vector
             components={[boostVelocityX, 0, 0]}
-            color="saddlebrown"
+            color={Color.V}
             label="v"
           />
           <Vector
             components={ePrime}
-            color="purple"
+            color={Color.EPrime}
             label="E′"
             showComponentVectors={showComponentVectors}
           />
           <Vector
             components={bPrime}
-            color="mediumvioletred"
+            color={Color.BPrime}
             label="B′"
             showComponentVectors={showComponentVectors}
           />
@@ -191,13 +209,13 @@ const Page = () => {
             <>
               <Vector
                 components={poynting}
-                color="green"
+                color={Color.S}
                 label="S"
                 showComponentVectors={showComponentVectors}
               />
               <Vector
                 components={poyntingPrime}
-                color="darkslategray"
+                color={Color.SPrime}
                 label="S′"
                 showComponentVectors={showComponentVectors}
               />
@@ -229,13 +247,27 @@ const Page = () => {
               />
               Show the Poynting vector in both frames (S = E x B).
             </label>
+            <div>
+              <button
+                type="button"
+                className="rounded bg-stone-600 py-2 px-3 text-white transition-colors hover:bg-stone-600/[.85] focus-visible:bg-stone-600/[.85]"
+                onClick={() => {
+                  if (cameraRef.current) {
+                    cameraRef.current.reset();
+                  }
+                }}
+              >
+                Reset Camera
+              </button>
+            </div>
           </fieldset>
-          <fieldset className="text-[saddlebrown]">
+
+          <fieldset className={`${textColor[Color.V]}`}>
             <legend>Boost velocity (v)</legend>
             <label>
               x-component
               <input
-                value={parseFloat(boostVelocityX.toFixed(roundN))}
+                value={round(boostVelocityX)}
                 type="number"
                 min="-.9999"
                 max=".9999"
@@ -270,198 +302,79 @@ const Page = () => {
               />
             </label>
           </fieldset>
-          <fieldset className="text-[blue]">
-            <legend>Original electric field (E)</legend>
-            <label>
-              x-component
-              <input
-                value={parseFloat(eField[0].toFixed(roundN))}
-                type="number"
-                step="0.1"
-                onChange={(e) => {
-                  let n = e.target.valueAsNumber;
-                  if (isNaN(n)) n = 0;
-                  setEField([n, eField[1], eField[2]]);
-                }}
-              />
-            </label>
-            <label>
-              y-component
-              <input
-                value={parseFloat(eField[1].toFixed(roundN))}
-                type="number"
-                step="0.1"
-                onChange={(e) => {
-                  let n = e.target.valueAsNumber;
-                  if (isNaN(n)) n = 0;
-                  setEField([eField[0], n, eField[2]]);
-                }}
-              />
-            </label>
-            <label>
-              z-component
-              <input
-                value={parseFloat(eField[2].toFixed(roundN))}
-                type="number"
-                step="0.1"
-                onChange={(e) => {
-                  let n = e.target.valueAsNumber;
-                  if (isNaN(n)) n = 0;
-                  setEField([eField[0], eField[1], n]);
-                }}
-              />
-            </label>
-          </fieldset>
-          <fieldset className="text-[crimson]">
-            <legend>Original magnetic field (B)</legend>
-            <label>
-              x-component
-              <input
-                value={parseFloat(bField[0].toFixed(roundN))}
-                type="number"
-                step="0.1"
-                onChange={(e) => {
-                  let n = e.target.valueAsNumber;
-                  if (isNaN(n)) n = 0;
-                  setBField([n, bField[1], bField[2]]);
-                }}
-              />
-            </label>
-            <label>
-              y-component
-              <input
-                value={parseFloat(bField[1].toFixed(roundN))}
-                type="number"
-                step="0.1"
-                onChange={(e) => {
-                  let n = e.target.valueAsNumber;
-                  if (isNaN(n)) n = 0;
-                  setBField([bField[0], n, bField[2]]);
-                }}
-              />
-            </label>
-            <label>
-              z-component
-              <input
-                value={parseFloat(bField[2].toFixed(roundN))}
-                type="number"
-                step="0.1"
-                onChange={(e) => {
-                  let n = e.target.valueAsNumber;
-                  if (isNaN(n)) n = 0;
-                  setBField([bField[0], bField[1], n]);
-                }}
-              />
-            </label>
-          </fieldset>
-          <fieldset className="text-[green]">
-            <legend>Original Poynting vector (S)</legend>
-            <label>
-              x-component
-              <input
-                value={parseFloat(poynting[0].toFixed(roundN))}
-                type="number"
-                disabled
-              />
-            </label>
-            <label>
-              y-component
-              <input
-                value={parseFloat(poynting[1].toFixed(roundN))}
-                type="number"
-                disabled
-              />
-            </label>
-            <label>
-              z-component
-              <input
-                value={parseFloat(poynting[2].toFixed(roundN))}
-                type="number"
-                disabled
-              />
-            </label>
-          </fieldset>
-          <fieldset className="text-[purple]">
-            <legend>Boosted electric field (E′)</legend>
-            <label>
-              x-component
-              <input
-                value={parseFloat(ePrime[0].toFixed(roundN))}
-                type="number"
-                disabled
-              />
-            </label>
-            <label>
-              y-component
-              <input
-                value={parseFloat(ePrime[1].toFixed(roundN))}
-                type="number"
-                disabled
-              />
-            </label>
-            <label>
-              z-component
-              <input
-                value={parseFloat(ePrime[2].toFixed(roundN))}
-                type="number"
-                disabled
-              />
-            </label>
-          </fieldset>
-          <fieldset className="text-[mediumvioletred]">
-            <legend>Boosted magnetic field (B′)</legend>
-            <label>
-              x-component
-              <input
-                value={parseFloat(bPrime[0].toFixed(roundN))}
-                type="number"
-                disabled
-              />
-            </label>
-            <label>
-              y-component
-              <input
-                value={parseFloat(bPrime[1].toFixed(roundN))}
-                type="number"
-                disabled
-              />
-            </label>
-            <label>
-              z-component
-              <input
-                value={parseFloat(bPrime[2].toFixed(roundN))}
-                type="number"
-                disabled
-              />
-            </label>
-          </fieldset>
-          <fieldset className="text-[darkslategray]">
-            <legend>Boosted Poynting vector (S′)</legend>
-            <label>
-              x-component
-              <input
-                value={parseFloat(poyntingPrime[0].toFixed(roundN))}
-                type="number"
-                disabled
-              />
-            </label>
-            <label>
-              y-component
-              <input
-                value={parseFloat(poyntingPrime[1].toFixed(roundN))}
-                type="number"
-                disabled
-              />
-            </label>
-            <label>
-              z-component
-              <input
-                value={parseFloat(poyntingPrime[2].toFixed(roundN))}
-                type="number"
-                disabled
-              />
-            </label>
-          </fieldset>
+
+          {/* original electric and magnetic fields */}
+          {[
+            {
+              color: Color.E,
+              legend: 'Original electric field (E)',
+              cartesians: eField,
+              setter: setEField,
+            },
+            {
+              color: Color.B,
+              legend: 'Original magnetic field (B)',
+              cartesians: bField,
+              setter: setBField,
+            },
+          ].map(({ color, legend, cartesians, setter }, i) => (
+            <fieldset key={i} className={textColor[color]}>
+              <legend>{legend}</legend>
+              {['x', 'y', 'z'].map((e, j) => (
+                <label key={j}>
+                  {e}-component
+                  <input
+                    value={round(cartesians[j])}
+                    type="number"
+                    step="0.1"
+                    onChange={(e) => {
+                      let n = e.target.valueAsNumber;
+                      if (isNaN(n)) n = 0;
+                      setter([
+                        j === 0 ? n : cartesians[0],
+                        j === 1 ? n : cartesians[1],
+                        j === 2 ? n : cartesians[2],
+                      ]);
+                    }}
+                  />
+                </label>
+              ))}
+            </fieldset>
+          ))}
+
+          {/* disabled fieldsets (inputs are display-only) */}
+          {[
+            {
+              color: Color.S,
+              legend: 'Original Poynting vector (S)',
+              cartesians: poynting,
+            },
+            {
+              color: Color.EPrime,
+              legend: 'Boosted electric field (E′)',
+              cartesians: ePrime,
+            },
+            {
+              color: Color.BPrime,
+              legend: 'Boosted magnetic field (B′)',
+              cartesians: bPrime,
+            },
+            {
+              color: Color.SPrime,
+              legend: 'Boosted Poynting vector (S′)',
+              cartesians: poyntingPrime,
+            },
+          ].map(({ color, legend, cartesians }, i) => (
+            <fieldset key={i} className={textColor[color]}>
+              <legend>{legend}</legend>
+              {['x', 'y', 'z'].map((e, j) => (
+                <label key={j}>
+                  {e}-component
+                  <input value={round(cartesians[j])} type="number" disabled />
+                </label>
+              ))}
+            </fieldset>
+          ))}
         </form>
       </main>
     </>

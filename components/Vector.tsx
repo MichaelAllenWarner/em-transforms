@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { type CartesianComponents } from '../helpers/store';
 import { font } from '../helpers/font';
-import { Material, Vector3 } from 'three';
+import { Material } from 'three';
 
 interface Props {
   components: CartesianComponents;
