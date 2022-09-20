@@ -155,7 +155,7 @@ const Page = () => {
               <p>Here is how the "camera" works:</p>
               <ul className="ml-4 list-disc">
                 <li>
-                  To orbit, use the left mouse-button (or one-finger-move for
+                  To orbit, use the left mouse-button (or one-finger move for
                   touch).
                 </li>
                 <li>
@@ -163,7 +163,7 @@ const Page = () => {
                   two-finger spread/squish for touch).
                 </li>
                 <li>
-                  To pan, use the right mouse-button (or two-finger move on
+                  To pan, use the right mouse-button (or two-finger move for
                   touch). Panning will change the focal point for orbiting and
                   zooming, but you can restore it with the "Reset Camera" button
                   below the visualization.
