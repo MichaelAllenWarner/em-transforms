@@ -3,6 +3,7 @@ import { extend, ReactThreeFiber } from '@react-three/fiber';
 import React from 'react';
 import * as THREE from 'three';
 import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry';
+import { Material } from 'three';
 
 // see https://github.com/pmndrs/react-three-fiber/discussions/1742#discussioncomment-2567726
 extend({ TextGeometry });
@@ -17,6 +18,8 @@ declare global {
   }
 }
 
+const opacity = 0.3;
+
 const origin = new THREE.Vector3(0, 0, 0);
 const x = new THREE.Vector3(1, 0, 0);
 const y = new THREE.Vector3(0, 1, 0);
@@ -26,9 +29,14 @@ const Y = new THREE.Vector3(0, -1, 0);
 const Z = new THREE.Vector3(0, 0, -1);
 const length = 4;
 const color = 0x00;
-const axes = [x, y, z, X, Y, Z].map(
-  (vector) => new THREE.ArrowHelper(vector, origin, length, color, 0.2, 0.1)
-);
+const axes = [x, y, z, X, Y, Z].map((vector) => {
+  const axis = new THREE.ArrowHelper(vector, origin, length, color, 0.2, 0.1);
+  (axis.line.material as Material).transparent = true;
+  (axis.line.material as Material).opacity = opacity;
+  (axis.cone.material as Material).transparent = true;
+  (axis.cone.material as Material).opacity = opacity;
+  return axis;
+});
 
 const Axes = () => {
   return (
@@ -56,7 +64,11 @@ const Axes = () => {
                   },
                 ]}
               />
-              <meshLambertMaterial color={'black'} />
+              <meshLambertMaterial
+                color={'black'}
+                transparent
+                opacity={opacity}
+              />
             </mesh>
           ))}
           {i < 3 && (
@@ -78,7 +90,11 @@ const Axes = () => {
                   },
                 ]}
               />
-              <meshLambertMaterial color={'black'} />
+              <meshLambertMaterial
+                color={'black'}
+                transparent
+                opacity={opacity}
+              />
             </mesh>
           )}
         </React.Fragment>

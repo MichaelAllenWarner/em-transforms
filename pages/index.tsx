@@ -1,5 +1,5 @@
 /* eslint-disable react/no-unescaped-entities */
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Canvas, useThree } from '@react-three/fiber';
 import useStore, { CartesianComponents } from '../helpers/store';
 import shallow from 'zustand/shallow';
@@ -7,6 +7,7 @@ import Vector from '../components/Vector';
 import { OrbitControls } from 'three-stdlib';
 import Axes from '../components/Axes';
 import Head from 'next/head';
+import * as THREE from 'three';
 
 const CameraController = () => {
   const { camera, gl } = useThree();
@@ -38,25 +39,34 @@ const Page = () => {
   const {
     eField,
     bField,
-    boostVelocity,
+    boostVelocityX,
     setEField,
     setBField,
-    setBoostVelocity,
+    setBoostVelocityX,
   } = useStore(
     (state) => ({
       eField: state.eField,
       bField: state.bField,
-      boostVelocity: state.boostVelocity,
+      boostVelocityX: state.boostVelocityX,
       setEField: state.setEField,
       setBField: state.setBField,
-      setBoostVelocity: state.setBoostVelocity,
+      setBoostVelocityX: state.setBoostVelocityX,
     }),
     shallow
   );
 
-  const boostUnit: CartesianComponents = [Math.sign(boostVelocity), 0, 0];
+  const [showComponentVectors, setShowComponentVectors] = useState(false);
+  const [showPoynting, setShowPoynting] = useState(false);
 
-  const boostRapidity = Math.atanh(boostVelocity);
+  const boostVelocity = new THREE.Vector3(boostVelocityX, 0, 0);
+  const boostUnitVelocity = boostVelocity.clone().normalize();
+  const boostUnit = [
+    boostUnitVelocity.x,
+    boostUnitVelocity.y,
+    boostUnitVelocity.z,
+  ] as CartesianComponents;
+
+  const boostRapidity = Math.atanh(boostVelocity.length());
   const ch = Math.cosh(boostRapidity);
   const sh = Math.sinh(boostRapidity);
   const sh2 = Math.sinh(boostRapidity / 2) ** 2;
@@ -71,6 +81,9 @@ const Page = () => {
   const bPrime = bField.map(
     (comp, i) => ch * comp - sh * crossE[i] - 2 * sh2 * dotB * boostUnit[i]
   ) as CartesianComponents;
+
+  const poynting = cross(eField, bField);
+  const poyntingPrime = cross(ePrime, bPrime);
 
   // for testing that the invariants are equal
   // console.log({
@@ -119,7 +132,7 @@ const Page = () => {
               <p>
                 Use the inputs below the visualization to set the Cartesian
                 components of the electric- and magnetic-field vectors in the
-                original "unprimed" frame, as well as the (x-component of the)
+                original "unprimed" frame, as well as (the x-component of) the
                 boost-velocity. The electric- and magnetic-field vectors in the
                 "primed" frame are calculated and rendered automatically.
               </p>
@@ -141,28 +154,88 @@ const Page = () => {
             </div>
           </details>
         </div>
-        <Canvas className="max-h-screen min-h-[600px] flex-1 px-12 [&>*]:border">
+        <Canvas className="max-h-screen min-h-[600px] flex-1 px-6 [&>*]:border">
           <CameraController />
           <ambientLight />
           <Axes />
-          <Vector components={eField} color="blue" label="E" />
-          <Vector components={bField} color="crimson" label="B" />
-          <Vector components={[boostVelocity, 0, 0]} color="green" label="v" />
-          <Vector components={ePrime} color="saddlebrown" label="E'" />
-          <Vector components={bPrime} color="purple" label="B'" />
+          <Vector
+            components={eField}
+            color="blue"
+            label="E"
+            showComponentVectors={showComponentVectors}
+          />
+          <Vector
+            components={bField}
+            color="crimson"
+            label="B"
+            showComponentVectors={showComponentVectors}
+          />
+          <Vector
+            components={[boostVelocityX, 0, 0]}
+            color="saddlebrown"
+            label="v"
+          />
+          <Vector
+            components={ePrime}
+            color="purple"
+            label="E′"
+            showComponentVectors={showComponentVectors}
+          />
+          <Vector
+            components={bPrime}
+            color="mediumvioletred"
+            label="B′"
+            showComponentVectors={showComponentVectors}
+          />
+          {showPoynting && (
+            <>
+              <Vector
+                components={poynting}
+                color="green"
+                label="S"
+                showComponentVectors={showComponentVectors}
+              />
+              <Vector
+                components={poyntingPrime}
+                color="darkslategray"
+                label="S′"
+                showComponentVectors={showComponentVectors}
+              />
+            </>
+          )}
         </Canvas>
         <form
-          className="flex flex-wrap gap-8 pb-10 [&_input]:ml-3 [&_input]:border [&_legend]:text-xl [&_fieldset]:flex [&_fieldset]:flex-col [&_fieldset]:space-y-2"
+          className="flex flex-wrap gap-8 pb-10 [&_input]:ml-3 [&_input]:border [&_legend]:text-xl [&_fieldset]:flex [&_fieldset]:flex-col [&_fieldset]:space-y-2 [&_[type=checkbox]]:ml-0 [&_[type=checkbox]]:mr-3"
           onSubmit={(e) => {
             e.preventDefault();
           }}
         >
-          <fieldset className="text-[green]">
+          <fieldset className="w-full">
+            <legend>Options</legend>
+            <label>
+              <input
+                type="checkbox"
+                checked={showComponentVectors}
+                onChange={(e) => setShowComponentVectors(e.target.checked)}
+              />
+              Show component-vectors parallel and perpendicular to
+              boost-velocity.
+            </label>
+            <label>
+              <input
+                type="checkbox"
+                checked={showPoynting}
+                onChange={(e) => setShowPoynting(e.target.checked)}
+              />
+              Show the Poynting vector in both frames (S = E x B).
+            </label>
+          </fieldset>
+          <fieldset className="text-[saddlebrown]">
             <legend>Boost velocity (v)</legend>
             <label>
               x-component
               <input
-                value={parseFloat(boostVelocity.toFixed(roundN))}
+                value={parseFloat(boostVelocityX.toFixed(roundN))}
                 type="number"
                 min="-.9999"
                 max=".9999"
@@ -172,7 +245,7 @@ const Page = () => {
                   if (n >= 1) n = 0.9999;
                   if (n <= -1) n = -0.9999;
                   if (isNaN(n)) n = 0;
-                  setBoostVelocity(n);
+                  setBoostVelocityX(n);
                 }}
               />
             </label>
@@ -204,6 +277,7 @@ const Page = () => {
               <input
                 value={parseFloat(eField[0].toFixed(roundN))}
                 type="number"
+                step="0.1"
                 onChange={(e) => {
                   let n = e.target.valueAsNumber;
                   if (isNaN(n)) n = 0;
@@ -216,6 +290,7 @@ const Page = () => {
               <input
                 value={parseFloat(eField[1].toFixed(roundN))}
                 type="number"
+                step="0.1"
                 onChange={(e) => {
                   let n = e.target.valueAsNumber;
                   if (isNaN(n)) n = 0;
@@ -228,6 +303,7 @@ const Page = () => {
               <input
                 value={parseFloat(eField[2].toFixed(roundN))}
                 type="number"
+                step="0.1"
                 onChange={(e) => {
                   let n = e.target.valueAsNumber;
                   if (isNaN(n)) n = 0;
@@ -243,6 +319,7 @@ const Page = () => {
               <input
                 value={parseFloat(bField[0].toFixed(roundN))}
                 type="number"
+                step="0.1"
                 onChange={(e) => {
                   let n = e.target.valueAsNumber;
                   if (isNaN(n)) n = 0;
@@ -255,6 +332,7 @@ const Page = () => {
               <input
                 value={parseFloat(bField[1].toFixed(roundN))}
                 type="number"
+                step="0.1"
                 onChange={(e) => {
                   let n = e.target.valueAsNumber;
                   if (isNaN(n)) n = 0;
@@ -267,6 +345,7 @@ const Page = () => {
               <input
                 value={parseFloat(bField[2].toFixed(roundN))}
                 type="number"
+                step="0.1"
                 onChange={(e) => {
                   let n = e.target.valueAsNumber;
                   if (isNaN(n)) n = 0;
@@ -275,8 +354,35 @@ const Page = () => {
               />
             </label>
           </fieldset>
-          <fieldset className="text-[saddlebrown]">
-            <legend>Boosted electric field (E`)</legend>
+          <fieldset className="text-[green]">
+            <legend>Original Poynting vector (S)</legend>
+            <label>
+              x-component
+              <input
+                value={parseFloat(poynting[0].toFixed(roundN))}
+                type="number"
+                disabled
+              />
+            </label>
+            <label>
+              y-component
+              <input
+                value={parseFloat(poynting[1].toFixed(roundN))}
+                type="number"
+                disabled
+              />
+            </label>
+            <label>
+              z-component
+              <input
+                value={parseFloat(poynting[2].toFixed(roundN))}
+                type="number"
+                disabled
+              />
+            </label>
+          </fieldset>
+          <fieldset className="text-[purple]">
+            <legend>Boosted electric field (E′)</legend>
             <label>
               x-component
               <input
@@ -302,8 +408,8 @@ const Page = () => {
               />
             </label>
           </fieldset>
-          <fieldset className="text-[purple]">
-            <legend>Boosted magnetic field (B`)</legend>
+          <fieldset className="text-[mediumvioletred]">
+            <legend>Boosted magnetic field (B′)</legend>
             <label>
               x-component
               <input
@@ -324,6 +430,33 @@ const Page = () => {
               z-component
               <input
                 value={parseFloat(bPrime[2].toFixed(roundN))}
+                type="number"
+                disabled
+              />
+            </label>
+          </fieldset>
+          <fieldset className="text-[darkslategray]">
+            <legend>Boosted Poynting vector (S′)</legend>
+            <label>
+              x-component
+              <input
+                value={parseFloat(poyntingPrime[0].toFixed(roundN))}
+                type="number"
+                disabled
+              />
+            </label>
+            <label>
+              y-component
+              <input
+                value={parseFloat(poyntingPrime[1].toFixed(roundN))}
+                type="number"
+                disabled
+              />
+            </label>
+            <label>
+              z-component
+              <input
+                value={parseFloat(poyntingPrime[2].toFixed(roundN))}
                 type="number"
                 disabled
               />

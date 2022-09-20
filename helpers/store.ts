@@ -8,21 +8,21 @@ export interface State {
   /** Cartesian components of the magnetic field vector in the original (unprimed) frame. */
   bField: CartesianComponents;
   /* The x-component of the boost velocity-vector (y- and z-components are always 0). */
-  boostVelocity: number;
+  boostVelocityX: number;
   setEField: (newEField: State['eField']) => void;
   setBField: (newBField: State['bField']) => void;
-  setBoostVelocity: (newBoostVelocity: State['boostVelocity']) => void;
+  setBoostVelocityX: (newBoostVelocityX: State['boostVelocityX']) => void;
 }
 
 const useStore = create<State>()((set) => {
   return {
     eField: [1, 1, 1],
     bField: [-1, -1, -1],
-    boostVelocity: 0.5,
+    boostVelocityX: 0.5,
     setEField: (newEField) => set(() => ({ eField: newEField })),
     setBField: (newBField) => set(() => ({ bField: newBField })),
-    setBoostVelocity: (newBoostVelocity) =>
-      set(() => ({ boostVelocity: newBoostVelocity })),
+    setBoostVelocityX: (newBoostVelocityX) =>
+      set(() => ({ boostVelocityX: newBoostVelocityX })),
   };
 });
 
