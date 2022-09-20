@@ -223,7 +223,7 @@ const Page = () => {
           )}
         </Canvas>
         <form
-          className="flex flex-wrap gap-8 pb-10 [&_input]:ml-3 [&_input]:border [&_legend]:text-xl [&_fieldset]:flex [&_fieldset]:flex-col [&_fieldset]:space-y-2 [&_[type=checkbox]]:ml-0 [&_[type=checkbox]]:mr-3"
+          className="flex flex-wrap gap-8 pb-10 [&_input]:ml-3 [&_input]:border [&_legend]:text-xl [&_fieldset]:flex [&_fieldset]:flex-col [&_fieldset]:space-y-2 [&_[type=checkbox]]:ml-0 [&_[type=checkbox]]:mr-3 [&_button]:rounded [&_button]:bg-stone-600 [&_button]:py-2 [&_button]:px-3 [&_button]:text-white [&_button]:transition-colors hover:[&_button]:bg-stone-600/[.85] focus-visible:[&_button]:bg-stone-600/[.85]"
           onSubmit={(e) => {
             e.preventDefault();
           }}
@@ -250,7 +250,6 @@ const Page = () => {
             <div>
               <button
                 type="button"
-                className="rounded bg-stone-600 py-2 px-3 text-white transition-colors hover:bg-stone-600/[.85] focus-visible:bg-stone-600/[.85]"
                 onClick={() => {
                   if (cameraRef.current) {
                     cameraRef.current.reset();
@@ -260,6 +259,80 @@ const Page = () => {
                 Reset Camera
               </button>
             </div>
+
+            <details className="space-y-2">
+              <summary className="mt-2">
+                Some interesting preset configurations
+              </summary>
+              <div className="flex flex-wrap gap-2">
+                <div>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setEField([0, 1, 0]);
+                      setBField([0, 0, 1]);
+                    }}
+                  >
+                    Light-wave toward x
+                  </button>
+                </div>
+                <div>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setEField([-1, 0, 0]);
+                      setBField([0, -1, 0]);
+                    }}
+                  >
+                    Light-wave toward z
+                  </button>
+                </div>
+                <div>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setEField([0, 0, 1]);
+                      setBField([0, 0, -1]);
+                    }}
+                  >
+                    Anti-parallel fields on z
+                  </button>
+                </div>
+                <div>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setEField([1, 1, 1]);
+                      setBField([-1, -1, -1]);
+                    }}
+                  >
+                    Anti-parallel fields, tilted
+                  </button>
+                </div>
+                <div>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setEField([0, 0, 0]);
+                      setBField([-1, 1, -1]);
+                    }}
+                  >
+                    No electric
+                  </button>
+                </div>
+                <div>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setBField([0, 0, 0]);
+                      setEField([-1, 1, -1]);
+                    }}
+                  >
+                    No magnetic
+                  </button>
+                </div>
+              </div>
+            </details>
           </fieldset>
 
           <fieldset className={`${textColor[Color.V]}`}>
