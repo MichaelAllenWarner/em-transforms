@@ -306,6 +306,28 @@ const Page = () => {
                     type="button"
                     onClick={() => {
                       setEField([0, 0, 1]);
+                      setBField([0, 0, 1]);
+                    }}
+                  >
+                    Parallel fields on z
+                  </button>
+                </div>
+                <div>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setEField([1, 1, 1]);
+                      setBField([1, 1, 1]);
+                    }}
+                  >
+                    Parallel fields, tilted
+                  </button>
+                </div>
+                <div>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setEField([0, 0, 1]);
                       setBField([0, 0, -1]);
                     }}
                   >
