@@ -18,7 +18,16 @@ interface Props {
 const origin = new THREE.Vector3(0, 0, 0);
 
 const Vector = memo(
-  ({ x, y, z, color, label, opacity, showComponentVectors, hide }: Props) => {
+  ({
+    x,
+    y,
+    z,
+    color,
+    label,
+    opacity,
+    showComponentVectors = false,
+    hide = false,
+  }: Props) => {
     const [vectorsAreReady, setVectorsAreReady] = useState(false);
 
     // define refs for main vector
@@ -218,7 +227,7 @@ const Vector = memo(
         <mesh visible={!hide}>
           <primitive object={arrow.current} />
         </mesh>
-        {/* label stuff is getting recreated every render at the moment; would be better not to */}
+        {/* label stuff is getting recreated every render, I think; would be better for performance to mutate */}
         {label && (
           <mesh
             position={
