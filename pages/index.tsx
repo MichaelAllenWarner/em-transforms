@@ -259,7 +259,7 @@ const Page = () => {
           />
 
           <VectorFieldSet
-            color={Color.E}
+            color={Color.B}
             legend="Original magnetic field (B)"
             x={bField[0]}
             y={bField[1]}
