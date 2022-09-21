@@ -1,5 +1,5 @@
 /* eslint-disable react/no-unescaped-entities */
-import { forwardRef, useEffect, useRef, useState } from 'react';
+import { forwardRef, useEffect, useRef } from 'react';
 import { Canvas, useThree } from '@react-three/fiber';
 import useStore, { CartesianComponents } from '../helpers/store';
 import shallow from 'zustand/shallow';
@@ -8,6 +8,9 @@ import { OrbitControls } from 'three-stdlib';
 import Axes from '../components/Axes';
 import Head from 'next/head';
 import * as THREE from 'three';
+import Options from '../components/Options';
+import VectorFieldSet from '../components/VectorFieldset';
+import { Color } from '../helpers/Color';
 
 const cross = (
   [a_x, a_y, a_z]: CartesianComponents,
@@ -22,30 +25,8 @@ const dot = (
   [b_x, b_y, b_z]: CartesianComponents
 ) => a_x * b_x + a_y * b_y + a_z * b_z;
 
-const round = (n: number) => parseFloat(n.toFixed(12));
-
-const boostVelocity = new THREE.Vector3();
-const boostUnitVelocity = boostVelocity.clone();
-
-enum Color {
-  E = 'blue',
-  B = 'crimson',
-  V = 'saddlebrown',
-  EPrime = 'purple',
-  BPrime = 'mediumvioletred',
-  S = 'green',
-  SPrime = 'darkslategray',
-}
-
-const textColor: { [C in Color]: `text-[${C}]` } = /* tw */ {
-  blue: 'text-[blue]',
-  crimson: 'text-[crimson]',
-  saddlebrown: 'text-[saddlebrown]',
-  purple: 'text-[purple]',
-  mediumvioletred: 'text-[mediumvioletred]',
-  green: 'text-[green]',
-  darkslategray: 'text-[darkslategray]',
-};
+const boostVelocityVec = new THREE.Vector3();
+const boostUnitVelocity = boostVelocityVec.clone();
 
 const axes = <Axes />;
 
@@ -124,27 +105,28 @@ const Page = () => {
   const {
     eField,
     bField,
-    boostVelocityX,
+    boostVelocity,
     setEField,
     setBField,
-    setBoostVelocityX,
+    setBoostVelocity,
+    showComponentVectors,
+    showPoynting,
   } = useStore(
     (state) => ({
       eField: state.eField,
       bField: state.bField,
-      boostVelocityX: state.boostVelocityX,
+      boostVelocity: state.boostVelocity,
       setEField: state.setEField,
       setBField: state.setBField,
-      setBoostVelocityX: state.setBoostVelocityX,
+      setBoostVelocity: state.setBoostVelocity,
+      showComponentVectors: state.showComponentVectors,
+      showPoynting: state.showPoynting,
     }),
     shallow
   );
 
-  const [showComponentVectors, setShowComponentVectors] = useState(false);
-  const [showPoynting, setShowPoynting] = useState(false);
-
-  boostVelocity.set(boostVelocityX, 0, 0);
-  boostUnitVelocity.set(boostVelocityX, 0, 0).normalize();
+  boostVelocityVec.set(boostVelocity[0], 0, 0);
+  boostUnitVelocity.set(boostVelocity[0], 0, 0).normalize();
 
   const boostUnit = [
     boostUnitVelocity.x,
@@ -152,7 +134,7 @@ const Page = () => {
     boostUnitVelocity.z,
   ] as CartesianComponents;
 
-  const boostRapidity = Math.atanh(boostVelocity.length());
+  const boostRapidity = Math.atanh(boostVelocityVec.length());
   const ch = Math.cosh(boostRapidity);
   const sh = Math.sinh(boostRapidity);
   const sh2 = Math.sinh(boostRapidity / 2) ** 2;
@@ -180,10 +162,13 @@ const Page = () => {
       </Head>
       <main className="container mt-10 flex h-screen w-screen flex-col space-y-10">
         {instructions}
+
         <Canvas className="max-h-screen min-h-[600px] flex-1 px-6 [&>*]:border">
           <CameraController ref={cameraRef} />
           <ambientLight />
+
           {axes}
+
           <Vector
             x={eField[0]}
             y={eField[1]}
@@ -192,6 +177,7 @@ const Page = () => {
             label="E"
             showComponentVectors={showComponentVectors}
           />
+
           <Vector
             x={bField[0]}
             y={bField[1]}
@@ -200,7 +186,9 @@ const Page = () => {
             label="B"
             showComponentVectors={showComponentVectors}
           />
-          <Vector x={boostVelocityX} y={0} z={0} color={Color.V} label="v" />
+
+          <Vector x={boostVelocity[0]} y={0} z={0} color={Color.V} label="v" />
+
           <Vector
             x={ePrime[0]}
             y={ePrime[1]}
@@ -209,6 +197,7 @@ const Page = () => {
             label="E′"
             showComponentVectors={showComponentVectors}
           />
+
           <Vector
             x={bPrime[0]}
             y={bPrime[1]}
@@ -217,6 +206,7 @@ const Page = () => {
             label="B′"
             showComponentVectors={showComponentVectors}
           />
+
           <Vector
             x={poynting[0]}
             y={poynting[1]}
@@ -226,6 +216,7 @@ const Page = () => {
             showComponentVectors={showComponentVectors}
             hide={!showPoynting}
           />
+
           <Vector
             x={poyntingPrime[0]}
             y={poyntingPrime[1]}
@@ -236,254 +227,90 @@ const Page = () => {
             hide={!showPoynting}
           />
         </Canvas>
+
         <form
           className="flex flex-wrap gap-8 pb-10 [&_input]:ml-3 [&_input]:border [&_legend]:text-xl [&_fieldset]:flex [&_fieldset]:flex-col [&_fieldset]:space-y-2 [&_[type=checkbox]]:ml-0 [&_[type=checkbox]]:mr-3 [&_button]:rounded [&_button]:bg-stone-600 [&_button]:py-2 [&_button]:px-3 [&_button]:text-white [&_button]:transition-colors hover:[&_button]:bg-stone-600/[.85] focus-visible:[&_button]:bg-stone-600/[.85]"
           onSubmit={(e) => {
             e.preventDefault();
           }}
         >
-          <fieldset className="w-full">
-            <legend>Options</legend>
-            <label>
-              <input
-                type="checkbox"
-                checked={showComponentVectors}
-                onChange={(e) => setShowComponentVectors(e.target.checked)}
-              />
-              Show component-vectors parallel and perpendicular to
-              boost-velocity.
-            </label>
-            <label>
-              <input
-                type="checkbox"
-                checked={showPoynting}
-                onChange={(e) => setShowPoynting(e.target.checked)}
-              />
-              Show the Poynting vector in both frames (S = E x B).
-            </label>
-            <div>
-              <button
-                type="button"
-                onClick={() => {
-                  if (cameraRef.current) {
-                    cameraRef.current.reset();
-                  }
-                }}
-              >
-                Reset Camera
-              </button>
-            </div>
+          <Options cameraRef={cameraRef} />
 
-            <details className="space-y-2">
-              <summary className="mt-2">
-                Some interesting preset configurations
-              </summary>
-              <div className="flex flex-wrap gap-2">
-                <div>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setEField([0, 1, 0]);
-                      setBField([0, 0, 1]);
-                    }}
-                  >
-                    Light-wave toward x
-                  </button>
-                </div>
-                <div>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setEField([-1, 0, 0]);
-                      setBField([0, -1, 0]);
-                    }}
-                  >
-                    Light-wave toward z
-                  </button>
-                </div>
-                <div>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setEField([0, 0, 1]);
-                      setBField([0, 0, 1]);
-                    }}
-                  >
-                    Parallel fields on z
-                  </button>
-                </div>
-                <div>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setEField([1, 1, 1]);
-                      setBField([1, 1, 1]);
-                    }}
-                  >
-                    Parallel fields, tilted
-                  </button>
-                </div>
-                <div>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setEField([0, 0, 1]);
-                      setBField([0, 0, -1]);
-                    }}
-                  >
-                    Anti-parallel fields on z
-                  </button>
-                </div>
-                <div>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setEField([1, 1, 1]);
-                      setBField([-1, -1, -1]);
-                    }}
-                  >
-                    Anti-parallel fields, tilted
-                  </button>
-                </div>
-                <div>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setEField([0, 0, 0]);
-                      setBField([-1, 1, -1]);
-                    }}
-                  >
-                    No electric
-                  </button>
-                </div>
-                <div>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setBField([0, 0, 0]);
-                      setEField([-1, 1, -1]);
-                    }}
-                  >
-                    No magnetic
-                  </button>
-                </div>
-              </div>
-            </details>
-          </fieldset>
+          <VectorFieldSet
+            color={Color.V}
+            legend="Boost velocity (v)"
+            x={boostVelocity[0]}
+            y={0}
+            z={0}
+            yDisabled
+            zDisabled
+            setter={setBoostVelocity}
+            isBoostVelocity
+          />
 
-          <fieldset className={`${textColor[Color.V]}`}>
-            <legend>Boost velocity (v)</legend>
-            <label>
-              x-component
-              <input
-                value={round(boostVelocityX)}
-                type="number"
-                min="-.9999"
-                max=".9999"
-                step="0.05"
-                onChange={(e) => {
-                  let n = e.target.valueAsNumber;
-                  if (n >= 1) n = 0.9999;
-                  if (n <= -1) n = -0.9999;
-                  if (isNaN(n)) n = 0;
-                  setBoostVelocityX(n);
-                }}
-              />
-            </label>
-            <label>
-              y-component
-              <input
-                value="0"
-                type="number"
-                disabled
-                min="-.9999"
-                max=".9999"
-              />
-            </label>
-            <label>
-              z-component
-              <input
-                value="0"
-                type="number"
-                disabled
-                min="-.9999"
-                max=".9999"
-              />
-            </label>
-          </fieldset>
+          <VectorFieldSet
+            color={Color.E}
+            legend="Original electric field (E)"
+            x={eField[0]}
+            y={eField[1]}
+            z={eField[2]}
+            step="0.1"
+            setter={setEField}
+          />
 
-          {/* original electric and magnetic fields */}
-          {[
-            {
-              color: Color.E,
-              legend: 'Original electric field (E)',
-              cartesians: eField,
-              setter: setEField,
-            },
-            {
-              color: Color.B,
-              legend: 'Original magnetic field (B)',
-              cartesians: bField,
-              setter: setBField,
-            },
-          ].map(({ color, legend, cartesians, setter }, i) => (
-            <fieldset key={i} className={textColor[color]}>
-              <legend>{legend}</legend>
-              {['x', 'y', 'z'].map((e, j) => (
-                <label key={j}>
-                  {e}-component
-                  <input
-                    value={round(cartesians[j])}
-                    type="number"
-                    step="0.1"
-                    onChange={(e) => {
-                      let n = e.target.valueAsNumber;
-                      if (isNaN(n)) n = 0;
-                      setter([
-                        j === 0 ? n : cartesians[0],
-                        j === 1 ? n : cartesians[1],
-                        j === 2 ? n : cartesians[2],
-                      ]);
-                    }}
-                  />
-                </label>
-              ))}
-            </fieldset>
-          ))}
+          <VectorFieldSet
+            color={Color.E}
+            legend="Original magnetic field (B)"
+            x={bField[0]}
+            y={bField[1]}
+            z={bField[2]}
+            step="0.1"
+            setter={setBField}
+          />
 
-          {/* disabled fieldsets (inputs are display-only) */}
-          {[
-            {
-              color: Color.S,
-              legend: 'Original Poynting vector (S)',
-              cartesians: poynting,
-            },
-            {
-              color: Color.EPrime,
-              legend: 'Boosted electric field (E′)',
-              cartesians: ePrime,
-            },
-            {
-              color: Color.BPrime,
-              legend: 'Boosted magnetic field (B′)',
-              cartesians: bPrime,
-            },
-            {
-              color: Color.SPrime,
-              legend: 'Boosted Poynting vector (S′)',
-              cartesians: poyntingPrime,
-            },
-          ].map(({ color, legend, cartesians }, i) => (
-            <fieldset key={i} className={textColor[color]}>
-              <legend>{legend}</legend>
-              {['x', 'y', 'z'].map((e, j) => (
-                <label key={j}>
-                  {e}-component
-                  <input value={round(cartesians[j])} type="number" disabled />
-                </label>
-              ))}
-            </fieldset>
-          ))}
+          <VectorFieldSet
+            color={Color.S}
+            legend="Original Poynting vector (S)"
+            x={poynting[0]}
+            y={poynting[1]}
+            z={poynting[2]}
+            xDisabled
+            yDisabled
+            zDisabled
+          />
+
+          <VectorFieldSet
+            color={Color.EPrime}
+            legend="Boosted electric field (E′)"
+            x={ePrime[0]}
+            y={ePrime[1]}
+            z={ePrime[2]}
+            xDisabled
+            yDisabled
+            zDisabled
+          />
+
+          <VectorFieldSet
+            color={Color.BPrime}
+            legend="Boosted magnetic field (B′)"
+            x={bPrime[0]}
+            y={bPrime[1]}
+            z={bPrime[2]}
+            xDisabled
+            yDisabled
+            zDisabled
+          />
+
+          <VectorFieldSet
+            color={Color.SPrime}
+            legend="Boosted Poynting vector (S′)"
+            x={poyntingPrime[0]}
+            y={poyntingPrime[1]}
+            z={poyntingPrime[2]}
+            xDisabled
+            yDisabled
+            zDisabled
+          />
         </form>
       </main>
     </>
