@@ -3,6 +3,7 @@ import { type CartesianComponents } from '../helpers/store';
 import { font } from '../helpers/font';
 import { Material } from 'three';
 import { memo, useEffect, useRef, useState } from 'react';
+import { TextGeometry } from 'three-stdlib';
 
 interface Props {
   x: number;
@@ -28,12 +29,13 @@ const Vector = memo(
     showComponentVectors = false,
     hide = false,
   }: Props) => {
-    const [vectorsAreReady, setVectorsAreReady] = useState(false);
+    const [ready, setReady] = useState(false);
 
     // define refs for main vector
     const vector = useRef<THREE.Vector3>();
     const dir = useRef<THREE.Vector3>();
     const arrow = useRef<THREE.ArrowHelper>();
+    const labelMesh = useRef<THREE.Mesh>();
 
     // define refs for component-vector perpendicular to boost (x-axis)
     const vectorClonePerp = useRef<THREE.Vector3>();
@@ -42,13 +44,14 @@ const Vector = memo(
     const perpCompDir = useRef<THREE.Vector3>();
     const perpCompArrow = useRef<THREE.ArrowHelper>();
 
-    // define component-vector parallel to boost (x-axis) with refs
+    // define refs for component-vector parallel to boost (x-axis)
     const vectorClonePar = useRef<THREE.Vector3>();
     const parCompProjectee = useRef<THREE.Vector3>();
     const parCompVec = useRef<THREE.Vector3>();
     const parCompDir = useRef<THREE.Vector3>();
     const parCompArrow = useRef<THREE.ArrowHelper>();
 
+    // define/set all the needed canvas objects here
     // (is this the right hook to use? I'm wondering about fast changes)
     useEffect(() => {
       // main vector
@@ -88,7 +91,30 @@ const Vector = memo(
         })();
       }
 
-      // component-vector perpendicular to boost (x-axis)
+      if (!labelMesh.current) {
+        labelMesh.current = (() => {
+          const mesh = new THREE.Mesh();
+          mesh.geometry = new TextGeometry(label || '', {
+            font,
+            size: 0.4,
+            height: 0,
+          });
+          mesh.material = new THREE.MeshLambertMaterial({
+            color,
+            ...(typeof opacity === 'number'
+              ? { opacity, transparent: true }
+              : {}),
+          });
+          return mesh;
+        })();
+      }
+
+      labelMesh.current.position.set(
+        ...([x, y, z].map((component) =>
+          component < 0 ? component - 0.05 : component + 0.05
+        ) as CartesianComponents)
+      );
+      labelMesh.current.visible = !hide;
 
       if (vectorClonePerp.current) {
         vectorClonePerp.current.set(x, y, z);
@@ -215,10 +241,10 @@ const Vector = memo(
         })();
       }
 
-      setVectorsAreReady(true);
-    }, [color, opacity, x, y, z]);
+      setReady(true);
+    }, [color, opacity, x, y, z, hide, label]);
 
-    return vectorsAreReady ? (
+    return ready ? (
       <>
         <mesh visible={!hide && showComponentVectors}>
           <primitive object={perpCompArrow.current} />
@@ -227,33 +253,7 @@ const Vector = memo(
         <mesh visible={!hide}>
           <primitive object={arrow.current} />
         </mesh>
-        {/* label stuff is getting recreated every render, I think; would be better for performance to mutate */}
-        {label && (
-          <mesh
-            position={
-              [x, y, z].map((component) =>
-                component < 0 ? component - 0.05 : component + 0.05
-              ) as CartesianComponents
-            }
-            visible={!hide}
-          >
-            <textGeometry
-              args={[
-                label,
-                {
-                  // @ts-ignore
-                  font,
-                  size: 0.4,
-                  height: 0,
-                },
-              ]}
-            />
-            <meshLambertMaterial
-              color={color}
-              {...(opacity ? { transparent: true, opacity } : {})}
-            />
-          </mesh>
-        )}
+        <primitive object={labelMesh.current} />
       </>
     ) : (
       <></>
