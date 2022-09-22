@@ -106,9 +106,13 @@ const Page = () => {
     eField,
     bField,
     boostVelocity,
-    setEField,
-    setBField,
-    setBoostVelocity,
+    setEFieldX,
+    setEFieldY,
+    setEFieldZ,
+    setBFieldX,
+    setBFieldY,
+    setBFieldZ,
+    setBoostVelocityX,
     showComponentVectors,
     showPoynting,
   } = useStore(
@@ -117,8 +121,15 @@ const Page = () => {
       bField: state.bField,
       boostVelocity: state.boostVelocity,
       setEField: state.setEField,
+      setEFieldX: state.setEFieldX,
+      setEFieldY: state.setEFieldY,
+      setEFieldZ: state.setEFieldZ,
       setBField: state.setBField,
+      setBFieldX: state.setBFieldX,
+      setBFieldY: state.setBFieldY,
+      setBFieldZ: state.setBFieldZ,
       setBoostVelocity: state.setBoostVelocity,
+      setBoostVelocityX: state.setBoostVelocityX,
       showComponentVectors: state.showComponentVectors,
       showPoynting: state.showPoynting,
     }),
@@ -244,7 +255,7 @@ const Page = () => {
             z={0}
             yDisabled
             zDisabled
-            setter={setBoostVelocity}
+            xSetter={setBoostVelocityX}
             isBoostVelocity
           />
 
@@ -255,7 +266,9 @@ const Page = () => {
             y={eField[1]}
             z={eField[2]}
             step="0.1"
-            setter={setEField}
+            xSetter={setEFieldX}
+            ySetter={setEFieldY}
+            zSetter={setEFieldZ}
           />
 
           <VectorFieldSet
@@ -265,7 +278,9 @@ const Page = () => {
             y={bField[1]}
             z={bField[2]}
             step="0.1"
-            setter={setBField}
+            xSetter={setBFieldX}
+            ySetter={setBFieldY}
+            zSetter={setBFieldZ}
           />
 
           <VectorFieldSet

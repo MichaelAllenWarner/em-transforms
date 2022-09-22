@@ -1,8 +1,12 @@
-import { memo } from 'react';
+import { ChangeEvent, memo, useCallback } from 'react';
 import { Color, textColor } from '../helpers/Color';
 import { CartesianComponents } from '../helpers/store';
 
 const round = (n: number) => parseFloat(n.toFixed(12));
+
+const boostVelocityMin = -0.9999;
+const boostVelocityMax = 0.9999;
+const boostVelocityStep = 0.05;
 
 interface Props {
   color: Color;
@@ -16,9 +20,10 @@ interface Props {
   step?: string;
   min?: string;
   max?: string;
-  /** For `onChange` event (if no custom `onChange` is passed in). Will only be used on non-`disabled` inputs. */
-  setter?: (newCartesians: CartesianComponents) => void;
-  /** Boost-velocity vector gets a special `onChange` event, `step`, `min`, and `max`. */
+  xSetter?: (newComponent: CartesianComponents[number]) => void;
+  ySetter?: (newComponent: CartesianComponents[number]) => void;
+  zSetter?: (newComponent: CartesianComponents[number]) => void;
+  /** Boost-velocity vector gets special `onChange`-handling as well as its own `step`, `min`, and `max`. */
   isBoostVelocity?: boolean;
 }
 
@@ -29,7 +34,9 @@ const VectorFieldSet = memo(
     x,
     y,
     z,
-    setter,
+    xSetter,
+    ySetter,
+    zSetter,
     xDisabled,
     yDisabled,
     zDisabled,
@@ -38,12 +45,50 @@ const VectorFieldSet = memo(
     max,
     isBoostVelocity,
   }: Props) => {
+    const onChangeX = useCallback(
+      (e: ChangeEvent<HTMLInputElement>) => {
+        if (!xSetter) return;
+        let n = e.target.valueAsNumber;
+        if (isBoostVelocity) {
+          if (n >= 1) n = boostVelocityMax;
+          if (n <= -1) n = boostVelocityMin;
+        }
+        if (isNaN(n)) n = 0;
+        xSetter(n);
+      },
+      [isBoostVelocity, xSetter]
+    );
+
+    const onChangeY = useCallback(
+      (e: ChangeEvent<HTMLInputElement>) => {
+        if (!ySetter) return;
+        let n = e.target.valueAsNumber;
+        if (isNaN(n)) n = 0;
+        ySetter(n);
+      },
+      [ySetter]
+    );
+
+    const onChangeZ = useCallback(
+      (e: ChangeEvent<HTMLInputElement>) => {
+        if (!zSetter) return;
+        let n = e.target.valueAsNumber;
+        if (isNaN(n)) n = 0;
+        zSetter(n);
+      },
+      [zSetter]
+    );
+
     return (
       <fieldset className={`${textColor[color]}`}>
         <legend>{legend}</legend>
         {['x', 'y', 'z'].map((e, i) => {
           const value = round([x, y, z][i]);
           const disabled = [xDisabled, yDisabled, zDisabled][i];
+          const setter = [xSetter, ySetter, zSetter][i];
+          const useOnChange =
+            setter && !disabled && (i === 0 || !isBoostVelocity);
+          const onChange = useOnChange && [onChangeX, onChangeY, onChangeZ][i];
 
           return (
             <label key={i}>
@@ -51,27 +96,17 @@ const VectorFieldSet = memo(
               <input
                 value={value}
                 type="number"
-                {...(step || isBoostVelocity ? { step: step || '.05' } : {})}
-                {...(min || isBoostVelocity ? { min: min || '-.9999' } : {})}
-                {...(max || isBoostVelocity ? { max: max || '.9999' } : {})}
-                {...(disabled ? { disabled } : {})}
-                {...(setter
-                  ? {
-                      onChange: (e) => {
-                        let n = e.target.valueAsNumber;
-                        if (isBoostVelocity) {
-                          if (n >= 1) n = 0.9999;
-                          if (n <= -1) n = -0.9999;
-                        }
-                        if (isNaN(n)) n = 0;
-                        setter([
-                          i === 0 ? n : x,
-                          i === 1 ? n : y,
-                          i === 2 ? n : z,
-                        ]);
-                      },
-                    }
+                {...(step || isBoostVelocity
+                  ? { step: step || String(boostVelocityStep) }
                   : {})}
+                {...(min || isBoostVelocity
+                  ? { min: min || String(boostVelocityMin) }
+                  : {})}
+                {...(max || isBoostVelocity
+                  ? { max: max || String(boostVelocityMax) }
+                  : {})}
+                {...(disabled ? { disabled } : {})}
+                {...(onChange ? { onChange } : {})}
               />
             </label>
           );
