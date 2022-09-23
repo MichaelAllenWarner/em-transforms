@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unescaped-entities */
 import { MutableRefObject, memo } from 'react';
 import { OrbitControls } from 'three-stdlib';
 import shallow from 'zustand/shallow';
@@ -11,8 +12,16 @@ const Options = memo(({ cameraRef }: Props) => {
   const {
     showComponentVectors,
     showPoynting,
+    showParticleVelocity,
+    showLorentzForce,
+    showParticleAcceleration,
     setShowComponentVectors,
     setShowPoynting,
+    setShowParticleVelocity,
+    setShowLorentzForce,
+    setShowParticleAcceleration,
+    hideBoostedQuantities,
+    setHideBoostedQuantities,
     setEField,
     setBField,
   } = useStore(
@@ -21,6 +30,14 @@ const Options = memo(({ cameraRef }: Props) => {
       setShowComponentVectors: state.setShowComponentVectors,
       showPoynting: state.showPoynting,
       setShowPoynting: state.setShowPoynting,
+      showParticleVelocity: state.showParticleVelocity,
+      setShowParticleVelocity: state.setShowParticleVelocity,
+      showLorentzForce: state.showLorentzForce,
+      setShowLorentzForce: state.setShowLorentzForce,
+      showParticleAcceleration: state.showParticleAcceleration,
+      setShowParticleAcceleration: state.setShowParticleAcceleration,
+      hideBoostedQuantities: state.hideBoostedQuantities,
+      setHideBoostedQuantities: state.setHideBoostedQuantities,
       setEField: state.setEField,
       setBField: state.setBField,
     }),
@@ -30,22 +47,76 @@ const Options = memo(({ cameraRef }: Props) => {
   return (
     <fieldset className="w-full">
       <legend>Options</legend>
-      <label>
-        <input
-          type="checkbox"
-          checked={showComponentVectors}
-          onChange={(e) => setShowComponentVectors(e.target.checked)}
-        />
-        Show component-vectors parallel and perpendicular to boost-velocity.
-      </label>
-      <label>
-        <input
-          type="checkbox"
-          checked={showPoynting}
-          onChange={(e) => setShowPoynting(e.target.checked)}
-        />
-        Show the Poynting vector in both frames (S = E x B).
-      </label>
+      <div>
+        <label>
+          <input
+            type="checkbox"
+            checked={showComponentVectors}
+            disabled={hideBoostedQuantities}
+            onChange={(e) => setShowComponentVectors(e.target.checked)}
+          />
+          Show component-vectors parallel and perpendicular to boost-velocity.
+        </label>
+      </div>
+      <div>
+        <label>
+          <input
+            type="checkbox"
+            checked={showPoynting}
+            onChange={(e) => setShowPoynting(e.target.checked)}
+          />
+          Show the Poynting vector (S = E x B).
+        </label>
+      </div>
+      <div>
+        <label>
+          <input
+            type="checkbox"
+            checked={
+              showParticleVelocity ||
+              showLorentzForce ||
+              showParticleAcceleration
+            }
+            disabled={showLorentzForce || showParticleAcceleration}
+            onChange={(e) => setShowParticleVelocity(e.target.checked)}
+          />
+          Show particle velocity (u).
+        </label>
+      </div>
+      <div>
+        <label>
+          <input
+            type="checkbox"
+            checked={showLorentzForce || showParticleAcceleration}
+            disabled={showParticleAcceleration}
+            onChange={(e) => setShowLorentzForce(e.target.checked)}
+          />
+          Show the Lorentz force (F = q(E + u x B)) acting on the particle.
+          (Will show the particle velocity, too.)
+        </label>
+      </div>
+      <div>
+        <label>
+          <input
+            type="checkbox"
+            checked={showParticleAcceleration}
+            onChange={(e) => setShowParticleAcceleration(e.target.checked)}
+          />
+          Show the particle's acceleration (a = (F - (F • v)v) / (γm), γ = 1/√(1
+          - v²)) resulting from the Lorentz force. (Will show the particle
+          velocity and the Lorentz force, too.)
+        </label>
+      </div>
+      <div>
+        <label>
+          <input
+            type="checkbox"
+            checked={hideBoostedQuantities}
+            onChange={(e) => setHideBoostedQuantities(e.target.checked)}
+          />
+          Hide the boost-velocity and the boosted quantities.
+        </label>
+      </div>
       <div>
         <button
           type="button"
@@ -60,8 +131,8 @@ const Options = memo(({ cameraRef }: Props) => {
       </div>
 
       <details className="space-y-2">
-        <summary className="mt-2">
-          Some interesting preset configurations
+        <summary className="mt-2 w-max cursor-pointer">
+          Some interesting preset field configurations
         </summary>
         <div className="flex flex-wrap gap-2">
           <div>

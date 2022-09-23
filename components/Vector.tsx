@@ -4,12 +4,16 @@ import { font } from '../helpers/font';
 import { Material } from 'three';
 import { memo, useEffect, useRef, useState } from 'react';
 import { TextGeometry } from 'three-stdlib';
+import { Color } from '../helpers/Color';
 
 interface Props {
   x: number;
   y: number;
   z: number;
-  color?: string;
+  boostUnitX?: number;
+  boostUnitY?: number;
+  boostUnitZ?: number;
+  color?: Color;
   label?: string;
   opacity?: number;
   showComponentVectors?: boolean;
@@ -23,6 +27,9 @@ const Vector = memo(
     x,
     y,
     z,
+    boostUnitX,
+    boostUnitY,
+    boostUnitZ,
     color,
     label,
     opacity,
@@ -37,19 +44,17 @@ const Vector = memo(
     const arrow = useRef<THREE.ArrowHelper>();
     const labelMesh = useRef<THREE.Mesh>();
 
-    // define refs for component-vector perpendicular to boost (x-axis)
-    const vectorClonePerp = useRef<THREE.Vector3>();
-    const perpCompProjectee = useRef<THREE.Vector3>();
-    const perpCompVec = useRef<THREE.Vector3>();
-    const perpCompDir = useRef<THREE.Vector3>();
-    const perpCompArrow = useRef<THREE.ArrowHelper>();
-
-    // define refs for component-vector parallel to boost (x-axis)
+    // define refs for component-vector parallel to boost
     const vectorClonePar = useRef<THREE.Vector3>();
     const parCompProjectee = useRef<THREE.Vector3>();
     const parCompVec = useRef<THREE.Vector3>();
     const parCompDir = useRef<THREE.Vector3>();
     const parCompArrow = useRef<THREE.ArrowHelper>();
+
+    // define refs for component-vector perpendicular to boost
+    const perpCompVec = useRef<THREE.Vector3>();
+    const perpCompDir = useRef<THREE.Vector3>();
+    const perpCompArrow = useRef<THREE.ArrowHelper>();
 
     // define/set all the needed canvas objects here
     // (is this the right hook to use? I'm wondering about fast changes)
@@ -116,139 +121,162 @@ const Vector = memo(
       );
       labelMesh.current.visible = !hide;
 
-      if (vectorClonePerp.current) {
-        vectorClonePerp.current.set(x, y, z);
-      } else {
-        vectorClonePerp.current = vector.current.clone();
-      }
+      // component-vectors parallel/perpendicular to boost
 
-      if (perpCompProjectee.current) {
-        perpCompProjectee.current.set(0, y, z);
-      } else {
-        perpCompProjectee.current = new THREE.Vector3(0, y, z);
-      }
+      if (
+        boostUnitX !== undefined &&
+        boostUnitY !== undefined &&
+        boostUnitZ !== undefined
+      ) {
+        // first set up parallel component-vector (vector projection), but not arrow yet
+        if (vectorClonePar.current) {
+          vectorClonePar.current.set(x, y, z);
+        } else {
+          vectorClonePar.current = vector.current.clone();
+        }
 
-      vectorClonePerp.current.projectOnVector(perpCompProjectee.current);
+        if (parCompProjectee.current) {
+          parCompProjectee.current.set(boostUnitX, boostUnitY, boostUnitZ);
+        } else {
+          parCompProjectee.current = new THREE.Vector3(
+            boostUnitX,
+            boostUnitY,
+            boostUnitZ
+          );
+        }
 
-      if (perpCompVec.current) {
-        perpCompVec.current.set(
-          vectorClonePerp.current.x,
-          vectorClonePerp.current.y,
-          vectorClonePerp.current.z
-        );
-      } else {
-        perpCompVec.current = vectorClonePerp.current.projectOnVector(
-          perpCompProjectee.current
-        );
-      }
+        vectorClonePar.current.projectOnVector(parCompProjectee.current);
 
-      if (perpCompDir.current) {
-        perpCompDir.current
-          .set(
-            vectorClonePerp.current.x,
-            vectorClonePerp.current.y,
-            vectorClonePerp.current.z
-          )
-          .normalize();
-      } else {
-        perpCompDir.current = perpCompVec.current.clone().normalize();
-      }
+        // now set up perpendicular component-vector (vector rejection) and its arrow
 
-      if (perpCompArrow.current) {
-        perpCompArrow.current.setDirection(perpCompDir.current);
-        perpCompArrow.current.setLength(perpCompVec.current.length(), 0.2, 0.1);
-      } else {
-        perpCompArrow.current = (() => {
-          const arrowHelper = new THREE.ArrowHelper(
-            perpCompDir.current,
-            origin,
+        if (perpCompVec.current) {
+          perpCompVec.current.subVectors(
+            vector.current,
+            vectorClonePar.current
+          );
+        } else {
+          perpCompVec.current = new THREE.Vector3().subVectors(
+            vector.current,
+            vectorClonePar.current
+          );
+        }
+
+        if (perpCompDir.current) {
+          perpCompDir.current
+            .set(
+              perpCompVec.current.x,
+              perpCompVec.current.y,
+              perpCompVec.current.z
+            )
+            .normalize();
+        } else {
+          perpCompDir.current = perpCompVec.current.clone().normalize();
+        }
+
+        if (perpCompArrow.current) {
+          perpCompArrow.current.setDirection(perpCompDir.current);
+          perpCompArrow.current.setLength(
             perpCompVec.current.length(),
-            color,
             0.2,
             0.1
           );
-          (arrowHelper.line.material as Material).transparent = true;
-          (arrowHelper.line.material as Material).opacity = 0.2;
-          (arrowHelper.cone.material as Material).transparent = true;
-          (arrowHelper.cone.material as Material).opacity = 0.2;
-          return arrowHelper;
-        })();
-      }
+        } else {
+          perpCompArrow.current = (() => {
+            const arrowHelper = new THREE.ArrowHelper(
+              perpCompDir.current,
+              origin,
+              perpCompVec.current.length(),
+              color,
+              0.2,
+              0.1
+            );
+            (arrowHelper.line.material as Material).transparent = true;
+            (arrowHelper.line.material as Material).opacity = 0.2;
+            (arrowHelper.cone.material as Material).transparent = true;
+            (arrowHelper.cone.material as Material).opacity = 0.2;
+            return arrowHelper;
+          })();
+        }
 
-      // component-vector parallel to boost (x-axis)
+        // now finish up with parallel-component and set up its arrow
 
-      if (vectorClonePar.current) {
-        vectorClonePar.current.set(x, y, z);
-      } else {
-        vectorClonePar.current = vector.current.clone();
-      }
-
-      if (parCompProjectee.current) {
-        parCompProjectee.current.set(x, 0, 0);
-      } else {
-        parCompProjectee.current = new THREE.Vector3(x, 0, 0);
-      }
-
-      vectorClonePar.current.projectOnVector(parCompProjectee.current);
-
-      if (parCompVec.current) {
-        parCompVec.current.set(
-          vectorClonePar.current.x,
-          vectorClonePar.current.y,
-          vectorClonePar.current.z
-        );
-      } else {
-        parCompVec.current = vectorClonePar.current.projectOnVector(
-          parCompProjectee.current
-        );
-      }
-
-      if (parCompDir.current) {
-        parCompDir.current
-          .set(
+        if (parCompVec.current) {
+          parCompVec.current.set(
             vectorClonePar.current.x,
             vectorClonePar.current.y,
             vectorClonePar.current.z
-          )
-          .normalize();
-      } else {
-        parCompDir.current = parCompVec.current.clone().normalize();
-      }
-
-      if (parCompArrow.current) {
-        parCompArrow.current.setDirection(parCompDir.current);
-        parCompArrow.current.setLength(parCompVec.current.length(), 0.2, 0.1);
-        parCompArrow.current.position.set(
-          perpCompVec.current.x,
-          perpCompVec.current.y,
-          perpCompVec.current.z
-        );
-      } else {
-        parCompArrow.current = (() => {
-          const arrowHelper = new THREE.ArrowHelper(
-            parCompDir.current,
-            perpCompVec.current,
-            parCompVec.current.length(),
-            color,
-            0.2,
-            0.1
           );
-          (arrowHelper.line.material as Material).transparent = true;
-          (arrowHelper.line.material as Material).opacity = 0.2;
-          (arrowHelper.cone.material as Material).transparent = true;
-          (arrowHelper.cone.material as Material).opacity = 0.2;
-          return arrowHelper;
-        })();
+        } else {
+          parCompVec.current = vectorClonePar.current.projectOnVector(
+            parCompProjectee.current
+          );
+        }
+
+        if (parCompDir.current) {
+          parCompDir.current
+            .set(
+              vectorClonePar.current.x,
+              vectorClonePar.current.y,
+              vectorClonePar.current.z
+            )
+            .normalize();
+        } else {
+          parCompDir.current = parCompVec.current.clone().normalize();
+        }
+
+        if (parCompArrow.current) {
+          parCompArrow.current.setDirection(parCompDir.current);
+          parCompArrow.current.setLength(parCompVec.current.length(), 0.2, 0.1);
+          parCompArrow.current.position.set(
+            perpCompVec.current.x,
+            perpCompVec.current.y,
+            perpCompVec.current.z
+          );
+        } else {
+          parCompArrow.current = (() => {
+            const arrowHelper = new THREE.ArrowHelper(
+              parCompDir.current,
+              perpCompVec.current,
+              parCompVec.current.length(),
+              color,
+              0.2,
+              0.1
+            );
+            (arrowHelper.line.material as Material).transparent = true;
+            (arrowHelper.line.material as Material).opacity = 0.2;
+            (arrowHelper.cone.material as Material).transparent = true;
+            (arrowHelper.cone.material as Material).opacity = 0.2;
+            return arrowHelper;
+          })();
+        }
       }
 
       setReady(true);
-    }, [color, opacity, x, y, z, hide, label]);
+    }, [
+      color,
+      opacity,
+      x,
+      y,
+      z,
+      hide,
+      label,
+      boostUnitX,
+      boostUnitY,
+      boostUnitZ,
+    ]);
 
     return ready ? (
       <>
-        <mesh visible={!hide && showComponentVectors}>
-          <primitive object={perpCompArrow.current} />
-          <primitive object={parCompArrow.current} />
+        <mesh
+          visible={
+            !hide &&
+            showComponentVectors &&
+            !!perpCompArrow.current &&
+            !!parCompArrow.current
+          }
+        >
+          <primitive object={perpCompArrow.current || {}} />
+          <primitive object={parCompArrow.current || {}} />
         </mesh>
         <mesh visible={!hide}>
           <primitive object={arrow.current} />

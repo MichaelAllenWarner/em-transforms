@@ -9,8 +9,9 @@ import Axes from '../components/Axes';
 import Head from 'next/head';
 import * as THREE from 'three';
 import Options from '../components/Options';
-import VectorFieldSet from '../components/VectorFieldset';
-import { Color } from '../helpers/Color';
+import VectorFieldset from '../components/VectorFieldset';
+import { Color, textColor } from '../helpers/Color';
+import VectorFieldsetSpherical from '../components/VectorFieldsetSpherical';
 
 const cross = (
   [a_x, a_y, a_z]: CartesianComponents,
@@ -27,6 +28,10 @@ const dot = (
 
 const boostVelocityVec = new THREE.Vector3();
 const boostUnitVelocity = boostVelocityVec.clone();
+
+const particleVelocityVec = new THREE.Vector3();
+const particleVelocityPrimeVec = new THREE.Vector3();
+const particleVelocityPrimeSpherical = new THREE.Spherical();
 
 const axes = <Axes />;
 
@@ -45,13 +50,13 @@ const CameraController = forwardRef<OrbitControls | undefined>((_, ref) => {
 });
 CameraController.displayName = 'CameraController';
 
-const instructions = (
+const titleAndInstructions = (
   <div className="space-y-10">
     <h1 className="text-2xl sm:text-3xl">
       Lorentz Transformation of the Electric and Magnetic Fields, Visualized
     </h1>
     <details>
-      <summary>Instructions</summary>
+      <summary className="w-max cursor-pointer">Instructions</summary>
       <div className="max-w-prose space-y-3 p-4">
         <p>
           This visualization demonstrates how the electric and magnetic fields
@@ -60,9 +65,16 @@ const instructions = (
         <p>
           Use the inputs below the visualization to set the Cartesian components
           of the electric- and magnetic-field vectors in the original "unprimed"
-          frame, as well as (the x-component of) the boost-velocity. The
+          frame, as well as the spherical components of the boost-velocity. The
           electric- and magnetic-field vectors in the "primed" frame are
           calculated and rendered automatically.
+        </p>
+        <p>
+          The Poynting vector in each frame is calculated automatically, too,
+          though by default it isn't displayed. You can toggle its visibility in
+          the Options, where you'll also find some other settings that might
+          interest you. Some of them have corresponding inputs you can control
+          (e.g., the velocity-vector of a particle co-located with the fields).
         </p>
         <p>
           The inputs can only accept number-values, even while you're typing the
@@ -71,13 +83,24 @@ const instructions = (
           least one digit <em>before</em> inserting the minus sign at the start.
           Sorry about that.
         </p>
-        <p>
-          Electric and magnetic fields are measured in the same unit. The
-          boost-speed is normalized (i.e., it's given as a fraction of the speed
-          of light and must be less than 1). Finally, the Cartesian axes and
-          their labels are fixed; perhaps in the future I'll make them
-          adjustable or have them adapt to the vectors in the space.
-        </p>
+        <p>A few notes:</p>
+        <ul className="ml-4 list-disc">
+          <li>Electric and magnetic fields are measured in the same unit.</li>
+          <li>
+            The speed of light is set to 1, and speed-inputs (the r-components
+            for velocity-vectors) must be strictly less than that.
+          </li>
+          <li>
+            Spherical components are of the "math" flavor, where φ is the polar
+            angle (with reference to the y-axis) and θ is the azimuthal angle
+            (with reference to the z-axis).
+          </li>
+          <li>
+            The Cartesian axes and their labels are fixed. Perhaps in the future
+            I'll make them adjustable or have them adapt to the vectors in the
+            space, but for now they're static.
+          </li>
+        </ul>
         <p>Here is how the "camera" works:</p>
         <ul className="ml-4 list-disc">
           <li>
@@ -106,38 +129,70 @@ const Page = () => {
     eField,
     bField,
     boostVelocity,
+    particleVelocity,
+    particleCharge,
+    particleMass,
     setEFieldX,
     setEFieldY,
     setEFieldZ,
     setBFieldX,
     setBFieldY,
     setBFieldZ,
-    setBoostVelocityX,
+    setBoostVelocityR,
+    setBoostVelocityPhi,
+    setBoostVelocityTheta,
+    flipBoostVelocity,
+    setParticleVelocityR,
+    setParticleVelocityPhi,
+    setParticleVelocityTheta,
+    flipParticleVelocity,
+    setParticleCharge,
+    setParticleMass,
     showComponentVectors,
     showPoynting,
+    showParticleVelocity,
+    showLorentzForce,
+    showParticleAcceleration,
+    hideBoostedQuantities,
   } = useStore(
     (state) => ({
       eField: state.eField,
       bField: state.bField,
       boostVelocity: state.boostVelocity,
-      setEField: state.setEField,
+      particleVelocity: state.particleVelocity,
+      particleCharge: state.particleCharge,
+      particleMass: state.particleMass,
       setEFieldX: state.setEFieldX,
       setEFieldY: state.setEFieldY,
       setEFieldZ: state.setEFieldZ,
-      setBField: state.setBField,
       setBFieldX: state.setBFieldX,
       setBFieldY: state.setBFieldY,
       setBFieldZ: state.setBFieldZ,
-      setBoostVelocity: state.setBoostVelocity,
-      setBoostVelocityX: state.setBoostVelocityX,
+      setBoostVelocityR: state.setBoostVelocityR,
+      setBoostVelocityPhi: state.setBoostVelocityPhi,
+      setBoostVelocityTheta: state.setBoostVelocityTheta,
+      flipBoostVelocity: state.flipBoostVelocity,
+      setParticleVelocityR: state.setParticleVelocityR,
+      setParticleVelocityPhi: state.setParticleVelocityPhi,
+      setParticleVelocityTheta: state.setParticleVelocityTheta,
+      flipParticleVelocity: state.flipParticleVelocity,
+      setParticleCharge: state.setParticleCharge,
+      setParticleMass: state.setParticleMass,
       showComponentVectors: state.showComponentVectors,
       showPoynting: state.showPoynting,
+      showParticleVelocity: state.showParticleVelocity,
+      showLorentzForce: state.showLorentzForce,
+      showParticleAcceleration: state.showParticleAcceleration,
+      hideBoostedQuantities: state.hideBoostedQuantities,
     }),
     shallow
   );
 
-  boostVelocityVec.set(boostVelocity[0], 0, 0);
-  boostUnitVelocity.set(boostVelocity[0], 0, 0).normalize();
+  const boostVelocityCartesian = boostVelocityVec
+    .setFromSphericalCoords(...boostVelocity)
+    .toArray();
+
+  boostUnitVelocity.setFromSphericalCoords(...boostVelocity).normalize();
 
   const boostUnit = [
     boostUnitVelocity.x,
@@ -148,18 +203,67 @@ const Page = () => {
   const boostRapidity = Math.atanh(boostVelocityVec.length());
   const ch = Math.cosh(boostRapidity);
   const sh = Math.sinh(boostRapidity);
-  const sh2 = Math.sinh(boostRapidity / 2) ** 2;
+  const sh2 = 2 * Math.sinh(boostRapidity / 2) ** 2;
   const crossE = cross(boostUnit, eField);
   const crossB = cross(boostUnit, bField);
   const dotE = dot(boostUnit, eField);
   const dotB = dot(boostUnit, bField);
 
   const ePrime = eField.map(
-    (comp, i) => ch * comp + sh * crossB[i] - 2 * sh2 * dotE * boostUnit[i]
+    (comp, i) => ch * comp + sh * crossB[i] - sh2 * dotE * boostUnit[i]
   ) as CartesianComponents;
   const bPrime = bField.map(
-    (comp, i) => ch * comp - sh * crossE[i] - 2 * sh2 * dotB * boostUnit[i]
+    (comp, i) => ch * comp - sh * crossE[i] - sh2 * dotB * boostUnit[i]
   ) as CartesianComponents;
+
+  const particleVelocityCartesian = particleVelocityVec
+    .setFromSphericalCoords(...particleVelocity)
+    .toArray();
+
+  const dotU = dot(boostUnit, particleVelocityCartesian);
+
+  const particleVelocityPrime = particleVelocityCartesian.map(
+    (comp, i) => (comp + boostUnit[i] * (sh2 * dotU - sh)) / (ch - sh * dotU)
+  ) as CartesianComponents;
+
+  particleVelocityPrimeVec.set(...particleVelocityPrime);
+  particleVelocityPrimeSpherical.setFromVector3(particleVelocityPrimeVec);
+
+  const particleVelocityCrossB = cross(particleVelocityCartesian, bField);
+  const particleVelocityCrossBPrime = cross(particleVelocityPrime, bPrime);
+
+  const lorentzForce = eField.map(
+    (comp, i) => particleCharge * (comp + particleVelocityCrossB[i])
+  ) as CartesianComponents;
+  const lorentzForcePrime = ePrime.map(
+    (comp, i) => particleCharge * (comp + particleVelocityCrossBPrime[i])
+  ) as CartesianComponents;
+
+  const lorentzDotParticleVelocity = dot(
+    lorentzForce,
+    particleVelocityCartesian
+  );
+  const lorentzDotParticleVelocityPrime = dot(
+    lorentzForcePrime,
+    particleVelocityPrimeVec.toArray()
+  );
+
+  const particleRapidity = Math.atanh(particleVelocityVec.length());
+  const particleRapidityPrime = Math.atanh(particleVelocityPrimeVec.length());
+
+  const particleEnergy = Math.cosh(particleRapidity) * particleMass;
+  const particleEnergyPrime = Math.cosh(particleRapidityPrime) * particleMass;
+
+  const particleAcceleration = lorentzForce.map(
+    (comp, i) =>
+      (comp - lorentzDotParticleVelocity * particleVelocityCartesian[i]) /
+      particleEnergy
+  );
+  const particleAccelerationPrime = lorentzForcePrime.map(
+    (comp, i) =>
+      (comp - lorentzDotParticleVelocityPrime * particleVelocityPrime[i]) /
+      particleEnergyPrime
+  );
 
   const poynting = cross(eField, bField);
   const poyntingPrime = cross(ePrime, bPrime);
@@ -172,7 +276,7 @@ const Page = () => {
         </title>
       </Head>
       <main className="container mt-10 flex h-screen w-screen flex-col space-y-10">
-        {instructions}
+        {titleAndInstructions}
 
         <Canvas className="max-h-screen min-h-[600px] flex-1 px-6 [&>*]:border">
           <CameraController ref={cameraRef} />
@@ -184,47 +288,183 @@ const Page = () => {
             x={eField[0]}
             y={eField[1]}
             z={eField[2]}
+            boostUnitX={boostUnit[0]}
+            boostUnitY={boostUnit[1]}
+            boostUnitZ={boostUnit[2]}
             color={Color.E}
             label="E"
-            showComponentVectors={showComponentVectors}
+            showComponentVectors={
+              showComponentVectors && !hideBoostedQuantities
+            }
           />
 
           <Vector
             x={bField[0]}
             y={bField[1]}
             z={bField[2]}
+            boostUnitX={boostUnit[0]}
+            boostUnitY={boostUnit[1]}
+            boostUnitZ={boostUnit[2]}
             color={Color.B}
             label="B"
-            showComponentVectors={showComponentVectors}
+            showComponentVectors={
+              showComponentVectors && !hideBoostedQuantities
+            }
           />
 
-          <Vector x={boostVelocity[0]} y={0} z={0} color={Color.V} label="v" />
+          <Vector
+            x={particleVelocityCartesian[0]}
+            y={particleVelocityCartesian[1]}
+            z={particleVelocityCartesian[2]}
+            boostUnitX={boostUnit[0]}
+            boostUnitY={boostUnit[1]}
+            boostUnitZ={boostUnit[2]}
+            color={Color.U}
+            label="u"
+            showComponentVectors={
+              showComponentVectors && !hideBoostedQuantities
+            }
+            hide={
+              !showParticleVelocity &&
+              !showLorentzForce &&
+              !showParticleAcceleration
+            }
+          />
+
+          <Vector
+            x={particleVelocityPrime[0]}
+            y={particleVelocityPrime[1]}
+            z={particleVelocityPrime[2]}
+            boostUnitX={boostUnit[0]}
+            boostUnitY={boostUnit[1]}
+            boostUnitZ={boostUnit[2]}
+            color={Color.UPrime}
+            label="u′"
+            showComponentVectors={
+              showComponentVectors && !hideBoostedQuantities
+            }
+            hide={
+              (!showParticleVelocity &&
+                !showLorentzForce &&
+                !showParticleAcceleration) ||
+              hideBoostedQuantities
+            }
+          />
+
+          <Vector
+            x={lorentzForce[0]}
+            y={lorentzForce[1]}
+            z={lorentzForce[2]}
+            boostUnitX={boostUnit[0]}
+            boostUnitY={boostUnit[1]}
+            boostUnitZ={boostUnit[2]}
+            color={Color.F}
+            label="F"
+            showComponentVectors={
+              showComponentVectors && !hideBoostedQuantities
+            }
+            hide={!showLorentzForce && !showParticleAcceleration}
+          />
+
+          <Vector
+            x={lorentzForcePrime[0]}
+            y={lorentzForcePrime[1]}
+            z={lorentzForcePrime[2]}
+            boostUnitX={boostUnit[0]}
+            boostUnitY={boostUnit[1]}
+            boostUnitZ={boostUnit[2]}
+            color={Color.FPrime}
+            label="F′"
+            showComponentVectors={
+              showComponentVectors && !hideBoostedQuantities
+            }
+            hide={
+              (!showLorentzForce && !showParticleAcceleration) ||
+              hideBoostedQuantities
+            }
+          />
+
+          <Vector
+            x={particleAcceleration[0]}
+            y={particleAcceleration[1]}
+            z={particleAcceleration[2]}
+            boostUnitX={boostUnit[0]}
+            boostUnitY={boostUnit[1]}
+            boostUnitZ={boostUnit[2]}
+            color={Color.A}
+            label="A"
+            showComponentVectors={
+              showComponentVectors && !hideBoostedQuantities
+            }
+            hide={!showParticleAcceleration}
+          />
+
+          <Vector
+            x={particleAccelerationPrime[0]}
+            y={particleAccelerationPrime[1]}
+            z={particleAccelerationPrime[2]}
+            boostUnitX={boostUnit[0]}
+            boostUnitY={boostUnit[1]}
+            boostUnitZ={boostUnit[2]}
+            color={Color.APrime}
+            label="A′"
+            showComponentVectors={
+              showComponentVectors && !hideBoostedQuantities
+            }
+            hide={!showParticleAcceleration || hideBoostedQuantities}
+          />
+
+          <Vector
+            x={boostVelocityCartesian[0]}
+            y={boostVelocityCartesian[1]}
+            z={boostVelocityCartesian[2]}
+            color={Color.V}
+            label="v"
+            hide={hideBoostedQuantities}
+          />
 
           <Vector
             x={ePrime[0]}
             y={ePrime[1]}
             z={ePrime[2]}
+            boostUnitX={boostUnit[0]}
+            boostUnitY={boostUnit[1]}
+            boostUnitZ={boostUnit[2]}
             color={Color.EPrime}
             label="E′"
-            showComponentVectors={showComponentVectors}
+            showComponentVectors={
+              showComponentVectors && !hideBoostedQuantities
+            }
+            hide={hideBoostedQuantities}
           />
 
           <Vector
             x={bPrime[0]}
             y={bPrime[1]}
             z={bPrime[2]}
+            boostUnitX={boostUnit[0]}
+            boostUnitY={boostUnit[1]}
+            boostUnitZ={boostUnit[2]}
             color={Color.BPrime}
             label="B′"
-            showComponentVectors={showComponentVectors}
+            showComponentVectors={
+              showComponentVectors && !hideBoostedQuantities
+            }
+            hide={hideBoostedQuantities}
           />
 
           <Vector
             x={poynting[0]}
             y={poynting[1]}
             z={poynting[2]}
+            boostUnitX={boostUnit[0]}
+            boostUnitY={boostUnit[1]}
+            boostUnitZ={boostUnit[2]}
             color={Color.S}
             label="S"
-            showComponentVectors={showComponentVectors}
+            showComponentVectors={
+              showComponentVectors && !hideBoostedQuantities
+            }
             hide={!showPoynting}
           />
 
@@ -232,10 +472,15 @@ const Page = () => {
             x={poyntingPrime[0]}
             y={poyntingPrime[1]}
             z={poyntingPrime[2]}
+            boostUnitX={boostUnit[0]}
+            boostUnitY={boostUnit[1]}
+            boostUnitZ={boostUnit[2]}
             color={Color.SPrime}
             label="S′"
-            showComponentVectors={showComponentVectors}
-            hide={!showPoynting}
+            showComponentVectors={
+              showComponentVectors && !hideBoostedQuantities
+            }
+            hide={!showPoynting || hideBoostedQuantities}
           />
         </Canvas>
 
@@ -247,19 +492,20 @@ const Page = () => {
         >
           <Options cameraRef={cameraRef} />
 
-          <VectorFieldSet
+          <VectorFieldsetSpherical
             color={Color.V}
             legend="Boost velocity (v)"
-            x={boostVelocity[0]}
-            y={0}
-            z={0}
-            yDisabled
-            zDisabled
-            xSetter={setBoostVelocityX}
-            isBoostVelocity
+            r={boostVelocity[0]}
+            phi={boostVelocity[1]}
+            theta={boostVelocity[2]}
+            rSetter={setBoostVelocityR}
+            phiSetter={setBoostVelocityPhi}
+            thetaSetter={setBoostVelocityTheta}
+            isVelocity
+            flipper={flipBoostVelocity}
           />
 
-          <VectorFieldSet
+          <VectorFieldset
             color={Color.E}
             legend="Original electric field (E)"
             x={eField[0]}
@@ -271,7 +517,7 @@ const Page = () => {
             zSetter={setEFieldZ}
           />
 
-          <VectorFieldSet
+          <VectorFieldset
             color={Color.B}
             legend="Original magnetic field (B)"
             x={bField[0]}
@@ -283,7 +529,55 @@ const Page = () => {
             zSetter={setBFieldZ}
           />
 
-          <VectorFieldSet
+          <VectorFieldsetSpherical
+            color={Color.U}
+            legend="Original particle velocity (u)"
+            r={particleVelocity[0]}
+            phi={particleVelocity[1]}
+            theta={particleVelocity[2]}
+            isVelocity
+            rSetter={setParticleVelocityR}
+            phiSetter={setParticleVelocityPhi}
+            thetaSetter={setParticleVelocityTheta}
+            flipper={flipParticleVelocity}
+          />
+
+          <fieldset className={textColor[Color.U]}>
+            <legend>Particle charge and mass</legend>
+            <div>
+              <label>
+                Particle charge (q)
+                <input
+                  type="number"
+                  step="0.1"
+                  value={particleCharge}
+                  onChange={(e) => {
+                    let n = e.target.valueAsNumber;
+                    if (isNaN(n)) n = 1;
+                    setParticleCharge(n);
+                  }}
+                />
+              </label>
+            </div>
+            <div>
+              <label>
+                Particle mass (m)
+                <input
+                  type="number"
+                  step="0.1"
+                  value={particleMass}
+                  onChange={(e) => {
+                    let n = e.target.valueAsNumber;
+                    if (n < 0) n = 0;
+                    if (isNaN(n)) n = 1;
+                    setParticleMass(n);
+                  }}
+                />
+              </label>
+            </div>
+          </fieldset>
+
+          <VectorFieldset
             color={Color.S}
             legend="Original Poynting vector (S)"
             x={poynting[0]}
@@ -294,7 +588,29 @@ const Page = () => {
             zDisabled
           />
 
-          <VectorFieldSet
+          <VectorFieldset
+            color={Color.F}
+            legend="Original Lorentz force (F)"
+            x={lorentzForce[0]}
+            y={lorentzForce[1]}
+            z={lorentzForce[2]}
+            xDisabled
+            yDisabled
+            zDisabled
+          />
+
+          <VectorFieldset
+            color={Color.A}
+            legend="Original particle acceleration (A)"
+            x={particleAcceleration[0]}
+            y={particleAcceleration[1]}
+            z={particleAcceleration[2]}
+            xDisabled
+            yDisabled
+            zDisabled
+          />
+
+          <VectorFieldset
             color={Color.EPrime}
             legend="Boosted electric field (E′)"
             x={ePrime[0]}
@@ -305,7 +621,7 @@ const Page = () => {
             zDisabled
           />
 
-          <VectorFieldSet
+          <VectorFieldset
             color={Color.BPrime}
             legend="Boosted magnetic field (B′)"
             x={bPrime[0]}
@@ -316,12 +632,46 @@ const Page = () => {
             zDisabled
           />
 
-          <VectorFieldSet
+          <VectorFieldsetSpherical
+            color={Color.UPrime}
+            legend="Boosted particle velocity (u′)"
+            r={particleVelocityPrimeSpherical.radius}
+            phi={particleVelocityPrimeSpherical.phi}
+            theta={particleVelocityPrimeSpherical.theta}
+            isVelocity
+            rDisabled
+            phiDisabled
+            thetaDisabled
+          />
+
+          <VectorFieldset
             color={Color.SPrime}
             legend="Boosted Poynting vector (S′)"
             x={poyntingPrime[0]}
             y={poyntingPrime[1]}
             z={poyntingPrime[2]}
+            xDisabled
+            yDisabled
+            zDisabled
+          />
+
+          <VectorFieldset
+            color={Color.FPrime}
+            legend="Boosted Lorentz force (F′)"
+            x={lorentzForcePrime[0]}
+            y={lorentzForcePrime[1]}
+            z={lorentzForcePrime[2]}
+            xDisabled
+            yDisabled
+            zDisabled
+          />
+
+          <VectorFieldset
+            color={Color.APrime}
+            legend="Boosted particle acceleration (A′)"
+            x={particleAccelerationPrime[0]}
+            y={particleAccelerationPrime[1]}
+            z={particleAccelerationPrime[2]}
             xDisabled
             yDisabled
             zDisabled

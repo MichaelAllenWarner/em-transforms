@@ -2,7 +2,7 @@ import { ChangeEvent, memo, useCallback } from 'react';
 import { Color, textColor } from '../helpers/Color';
 import { CartesianComponents } from '../helpers/store';
 
-const round = (n: number) => parseFloat(n.toFixed(12));
+const round = (n: number) => parseFloat(n.toFixed(10));
 
 const boostVelocityMin = -0.9999;
 const boostVelocityMax = 0.9999;
@@ -27,7 +27,7 @@ interface Props {
   isBoostVelocity?: boolean;
 }
 
-const VectorFieldSet = memo(
+const VectorFieldset = memo(
   ({
     color,
     legend,
@@ -91,24 +91,26 @@ const VectorFieldSet = memo(
           const onChange = useOnChange && [onChangeX, onChangeY, onChangeZ][i];
 
           return (
-            <label key={i}>
-              {e}-component
-              <input
-                value={value}
-                type="number"
-                {...(step || isBoostVelocity
-                  ? { step: step || String(boostVelocityStep) }
-                  : {})}
-                {...(min || isBoostVelocity
-                  ? { min: min || String(boostVelocityMin) }
-                  : {})}
-                {...(max || isBoostVelocity
-                  ? { max: max || String(boostVelocityMax) }
-                  : {})}
-                {...(disabled ? { disabled } : {})}
-                {...(onChange ? { onChange } : {})}
-              />
-            </label>
+            <div key={i}>
+              <label>
+                {e}-component
+                <input
+                  value={value}
+                  type="number"
+                  {...(step || isBoostVelocity
+                    ? { step: step || String(boostVelocityStep) }
+                    : {})}
+                  {...(min || isBoostVelocity
+                    ? { min: min || String(boostVelocityMin) }
+                    : {})}
+                  {...(max || isBoostVelocity
+                    ? { max: max || String(boostVelocityMax) }
+                    : {})}
+                  {...(disabled ? { disabled } : {})}
+                  {...(onChange ? { onChange } : {})}
+                />
+              </label>
+            </div>
           );
         })}
       </fieldset>
@@ -116,6 +118,6 @@ const VectorFieldSet = memo(
   }
 );
 
-VectorFieldSet.displayName = 'VectorFieldSet';
+VectorFieldset.displayName = 'VectorFieldset';
 
-export default VectorFieldSet;
+export default VectorFieldset;
