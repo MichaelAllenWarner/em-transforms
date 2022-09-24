@@ -1,7 +1,6 @@
-/* eslint-disable react/no-unescaped-entities */
 import { forwardRef, useEffect, useRef } from 'react';
 import { Canvas, useThree } from '@react-three/fiber';
-import useStore, { CartesianComponents } from '../helpers/store';
+import useStore, { CartesianComponents, State } from '../helpers/store';
 import shallow from 'zustand/shallow';
 import Vector from '../components/Vector';
 import { OrbitControls } from 'three-stdlib';
@@ -12,6 +11,7 @@ import Options from '../components/Options';
 import VectorFieldset from '../components/VectorFieldset';
 import { Color, textColor } from '../helpers/Color';
 import VectorFieldsetSpherical from '../components/VectorFieldsetSpherical';
+import TitleAndInstructions from '../components/TitleAndInstructions';
 
 const cross = (
   [a_x, a_y, a_z]: CartesianComponents,
@@ -33,161 +33,52 @@ const particleVelocityVec = new THREE.Vector3();
 const particleVelocityPrimeVec = new THREE.Vector3();
 const particleVelocityPrimeSpherical = new THREE.Spherical();
 
-const axes = <Axes />;
-
-const CameraController = forwardRef<OrbitControls | undefined>((_, ref) => {
-  const { camera, gl } = useThree();
-  useEffect(() => {
-    const controls = new OrbitControls(camera, gl.domElement);
-    if (ref && typeof ref !== 'function') {
-      ref.current = controls;
-    }
-    return () => {
-      controls.dispose();
-    };
-  }, [camera, gl, ref]);
-  return null;
+const storeCallback = (state: State) => ({
+  eField: state.eField,
+  bField: state.bField,
+  boostVelocity: state.boostVelocity,
+  particleVelocity: state.particleVelocity,
+  particleCharge: state.particleCharge,
+  particleMass: state.particleMass,
+  setEFieldX: state.setEFieldX,
+  setEFieldY: state.setEFieldY,
+  setEFieldZ: state.setEFieldZ,
+  setBFieldX: state.setBFieldX,
+  setBFieldY: state.setBFieldY,
+  setBFieldZ: state.setBFieldZ,
+  setBoostVelocityR: state.setBoostVelocityR,
+  setBoostVelocityPhi: state.setBoostVelocityPhi,
+  setBoostVelocityTheta: state.setBoostVelocityTheta,
+  flipBoostVelocity: state.flipBoostVelocity,
+  setParticleVelocityR: state.setParticleVelocityR,
+  setParticleVelocityPhi: state.setParticleVelocityPhi,
+  setParticleVelocityTheta: state.setParticleVelocityTheta,
+  flipParticleVelocity: state.flipParticleVelocity,
+  setParticleCharge: state.setParticleCharge,
+  setParticleMass: state.setParticleMass,
+  showComponentVectors: state.showComponentVectors,
+  showPoynting: state.showPoynting,
+  showParticleVelocity: state.showParticleVelocity,
+  showLorentzForce: state.showLorentzForce,
+  showParticleAcceleration: state.showParticleAcceleration,
+  hideBoostedQuantities: state.hideBoostedQuantities,
 });
-CameraController.displayName = 'CameraController';
 
-const titleAndInstructions = (
-  <div className="space-y-10">
-    <h1 className="text-2xl sm:text-3xl">
-      Lorentz Transformation of the Electric and Magnetic Fields, Visualized
-    </h1>
-    <details>
-      <summary className="w-max cursor-pointer">Instructions</summary>
-      <div className="max-w-prose space-y-3 p-4">
-        <p>
-          This visualization demonstrates how the electric and magnetic fields
-          transform under a Lorentz boost.
-        </p>
-        <p>
-          Use the inputs below the visualization to set the Cartesian components
-          of the electric- and magnetic-field vectors in the original "unprimed"
-          frame, as well as the spherical components of the boost-velocity. The
-          electric- and magnetic-field vectors in the "primed" frame are
-          calculated and rendered automatically.
-        </p>
-        <p>
-          The Poynting vector in each frame is calculated automatically, too,
-          though by default it isn't displayed. You can toggle its visibility in
-          the Options, where you'll also find some other settings that might
-          interest you. Some of them have corresponding inputs you can control
-          (e.g., the velocity-vector of a particle co-located with the fields).
-        </p>
-        <p>
-          The inputs can only accept number-values, even while you're typing the
-          number. Since a minus-sign by itself isn't interpreted as a number,
-          entering a negative number is a bit cumbersome: you have to type at
-          least one digit <em>before</em> inserting the minus sign at the start.
-          Sorry about that.
-        </p>
-        <p>A few notes:</p>
-        <ul className="ml-4 list-disc">
-          <li>Electric and magnetic fields are measured in the same unit.</li>
-          <li>
-            The speed of light is set to 1, and speed-inputs (the r-components
-            for velocity-vectors) must be strictly less than that.
-          </li>
-          <li>
-            Spherical components are of the "math" flavor, where φ is the polar
-            angle (with reference to the y-axis) and θ is the azimuthal angle
-            (with reference to the z-axis).
-          </li>
-          <li>
-            The Cartesian axes and their labels are fixed. Perhaps in the future
-            I'll make them adjustable or have them adapt to the vectors in the
-            space, but for now they're static.
-          </li>
-        </ul>
-        <p>Here is how the "camera" works:</p>
-        <ul className="ml-4 list-disc">
-          <li>
-            To orbit, use the left mouse-button (or one-finger move for touch).
-          </li>
-          <li>
-            To zoom, use the mousewheel or the middle mouse-button (or
-            two-finger spread/squish for touch).
-          </li>
-          <li>
-            To pan, use the right mouse-button (or two-finger move for touch).
-            Panning will change the focal point for orbiting and zooming, but
-            you can restore it with the "Reset Camera" button below the
-            visualization.
-          </li>
-        </ul>
-      </div>
-    </details>
-  </div>
-);
-
-const Page = () => {
-  const cameraRef = useRef<OrbitControls>();
-
-  const {
-    eField,
-    bField,
-    boostVelocity,
-    particleVelocity,
-    particleCharge,
-    particleMass,
-    setEFieldX,
-    setEFieldY,
-    setEFieldZ,
-    setBFieldX,
-    setBFieldY,
-    setBFieldZ,
-    setBoostVelocityR,
-    setBoostVelocityPhi,
-    setBoostVelocityTheta,
-    flipBoostVelocity,
-    setParticleVelocityR,
-    setParticleVelocityPhi,
-    setParticleVelocityTheta,
-    flipParticleVelocity,
-    setParticleCharge,
-    setParticleMass,
-    showComponentVectors,
-    showPoynting,
-    showParticleVelocity,
-    showLorentzForce,
-    showParticleAcceleration,
-    hideBoostedQuantities,
-  } = useStore(
-    (state) => ({
-      eField: state.eField,
-      bField: state.bField,
-      boostVelocity: state.boostVelocity,
-      particleVelocity: state.particleVelocity,
-      particleCharge: state.particleCharge,
-      particleMass: state.particleMass,
-      setEFieldX: state.setEFieldX,
-      setEFieldY: state.setEFieldY,
-      setEFieldZ: state.setEFieldZ,
-      setBFieldX: state.setBFieldX,
-      setBFieldY: state.setBFieldY,
-      setBFieldZ: state.setBFieldZ,
-      setBoostVelocityR: state.setBoostVelocityR,
-      setBoostVelocityPhi: state.setBoostVelocityPhi,
-      setBoostVelocityTheta: state.setBoostVelocityTheta,
-      flipBoostVelocity: state.flipBoostVelocity,
-      setParticleVelocityR: state.setParticleVelocityR,
-      setParticleVelocityPhi: state.setParticleVelocityPhi,
-      setParticleVelocityTheta: state.setParticleVelocityTheta,
-      flipParticleVelocity: state.flipParticleVelocity,
-      setParticleCharge: state.setParticleCharge,
-      setParticleMass: state.setParticleMass,
-      showComponentVectors: state.showComponentVectors,
-      showPoynting: state.showPoynting,
-      showParticleVelocity: state.showParticleVelocity,
-      showLorentzForce: state.showLorentzForce,
-      showParticleAcceleration: state.showParticleAcceleration,
-      hideBoostedQuantities: state.hideBoostedQuantities,
-    }),
-    shallow
-  );
-
+const calculateQuantities = ({
+  boostVelocity,
+  eField,
+  bField,
+  particleVelocity,
+  particleCharge,
+  particleMass,
+}: {
+  boostVelocity: State['boostVelocity'];
+  eField: State['eField'];
+  bField: State['bField'];
+  particleVelocity: State['particleVelocity'];
+  particleCharge: State['particleCharge'];
+  particleMass: State['particleMass'];
+}) => {
   const boostVelocityCartesian = boostVelocityVec
     .setFromSphericalCoords(...boostVelocity)
     .toArray();
@@ -267,6 +158,97 @@ const Page = () => {
 
   const poynting = cross(eField, bField);
   const poyntingPrime = cross(ePrime, bPrime);
+
+  return {
+    boostVelocityCartesian,
+    boostUnit,
+    ePrime,
+    bPrime,
+    particleVelocityCartesian,
+    particleVelocityPrime,
+    lorentzForce,
+    lorentzForcePrime,
+    particleAcceleration,
+    particleAccelerationPrime,
+    poynting,
+    poyntingPrime,
+  };
+};
+
+const axes = <Axes />;
+
+const CameraController = forwardRef<OrbitControls | undefined>((_, ref) => {
+  const { camera, gl } = useThree();
+  useEffect(() => {
+    const controls = new OrbitControls(camera, gl.domElement);
+    if (ref && typeof ref !== 'function') {
+      ref.current = controls;
+    }
+    return () => {
+      controls.dispose();
+    };
+  }, [camera, gl, ref]);
+  return null;
+});
+CameraController.displayName = 'CameraController';
+
+const titleAndInstructions = <TitleAndInstructions />;
+
+const Page = () => {
+  const cameraRef = useRef<OrbitControls>();
+
+  const {
+    eField,
+    bField,
+    boostVelocity,
+    particleVelocity,
+    particleCharge,
+    particleMass,
+    setEFieldX,
+    setEFieldY,
+    setEFieldZ,
+    setBFieldX,
+    setBFieldY,
+    setBFieldZ,
+    setBoostVelocityR,
+    setBoostVelocityPhi,
+    setBoostVelocityTheta,
+    flipBoostVelocity,
+    setParticleVelocityR,
+    setParticleVelocityPhi,
+    setParticleVelocityTheta,
+    flipParticleVelocity,
+    setParticleCharge,
+    setParticleMass,
+    showComponentVectors,
+    showPoynting,
+    showParticleVelocity,
+    showLorentzForce,
+    showParticleAcceleration,
+    hideBoostedQuantities,
+  } = useStore(storeCallback, shallow);
+
+  const {
+    boostVelocityCartesian,
+    boostUnit,
+    ePrime,
+    bPrime,
+    particleVelocityCartesian,
+    particleVelocityPrime,
+    lorentzForce,
+    lorentzForcePrime,
+    particleAcceleration,
+    particleAccelerationPrime,
+    poynting,
+    poyntingPrime,
+  } = calculateQuantities({
+    boostVelocity,
+    eField,
+    bField,
+    particleVelocity,
+    particleCharge,
+    particleMass,
+  });
 
   return (
     <>

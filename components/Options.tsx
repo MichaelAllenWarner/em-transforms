@@ -1,4 +1,3 @@
-/* eslint-disable react/no-unescaped-entities */
 import { MutableRefObject, memo } from 'react';
 import { OrbitControls } from 'three-stdlib';
 import shallow from 'zustand/shallow';
