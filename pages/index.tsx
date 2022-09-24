@@ -392,7 +392,7 @@ const Page = () => {
             boostUnitY={boostUnit[1]}
             boostUnitZ={boostUnit[2]}
             color={Color.A}
-            label="A"
+            label="a"
             showComponentVectors={
               showComponentVectors && !hideBoostedQuantities
             }
@@ -407,7 +407,7 @@ const Page = () => {
             boostUnitY={boostUnit[1]}
             boostUnitZ={boostUnit[2]}
             color={Color.APrime}
-            label="A′"
+            label="a′"
             showComponentVectors={
               showComponentVectors && !hideBoostedQuantities
             }
@@ -568,7 +568,7 @@ const Page = () => {
                   value={particleMass}
                   onChange={(e) => {
                     let n = e.target.valueAsNumber;
-                    if (n < 0) n = 0;
+                    if (n <= 0) n = 0.1;
                     if (isNaN(n)) n = 1;
                     setParticleMass(n);
                   }}
@@ -601,7 +601,7 @@ const Page = () => {
 
           <VectorFieldset
             color={Color.A}
-            legend="Original particle acceleration (A)"
+            legend="Original particle acceleration (a)"
             x={particleAcceleration[0]}
             y={particleAcceleration[1]}
             z={particleAcceleration[2]}
@@ -668,7 +668,7 @@ const Page = () => {
 
           <VectorFieldset
             color={Color.APrime}
-            legend="Boosted particle acceleration (A′)"
+            legend="Boosted particle acceleration (a′)"
             x={particleAccelerationPrime[0]}
             y={particleAccelerationPrime[1]}
             z={particleAccelerationPrime[2]}

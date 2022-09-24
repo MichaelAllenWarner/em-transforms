@@ -4,10 +4,6 @@ import { CartesianComponents } from '../helpers/store';
 
 const round = (n: number) => parseFloat(n.toFixed(10));
 
-const boostVelocityMin = -0.9999;
-const boostVelocityMax = 0.9999;
-const boostVelocityStep = 0.05;
-
 interface Props {
   color: Color;
   legend: string;
@@ -23,8 +19,6 @@ interface Props {
   xSetter?: (newComponent: CartesianComponents[number]) => void;
   ySetter?: (newComponent: CartesianComponents[number]) => void;
   zSetter?: (newComponent: CartesianComponents[number]) => void;
-  /** Boost-velocity vector gets special `onChange`-handling as well as its own `step`, `min`, and `max`. */
-  isBoostVelocity?: boolean;
 }
 
 const VectorFieldset = memo(
@@ -43,20 +37,15 @@ const VectorFieldset = memo(
     step,
     min,
     max,
-    isBoostVelocity,
   }: Props) => {
     const onChangeX = useCallback(
       (e: ChangeEvent<HTMLInputElement>) => {
         if (!xSetter) return;
         let n = e.target.valueAsNumber;
-        if (isBoostVelocity) {
-          if (n >= 1) n = boostVelocityMax;
-          if (n <= -1) n = boostVelocityMin;
-        }
         if (isNaN(n)) n = 0;
         xSetter(n);
       },
-      [isBoostVelocity, xSetter]
+      [xSetter]
     );
 
     const onChangeY = useCallback(
@@ -86,8 +75,7 @@ const VectorFieldset = memo(
           const value = round([x, y, z][i]);
           const disabled = [xDisabled, yDisabled, zDisabled][i];
           const setter = [xSetter, ySetter, zSetter][i];
-          const useOnChange =
-            setter && !disabled && (i === 0 || !isBoostVelocity);
+          const useOnChange = setter && !disabled;
           const onChange = useOnChange && [onChangeX, onChangeY, onChangeZ][i];
 
           return (
@@ -97,15 +85,9 @@ const VectorFieldset = memo(
                 <input
                   value={value}
                   type="number"
-                  {...(step || isBoostVelocity
-                    ? { step: step || String(boostVelocityStep) }
-                    : {})}
-                  {...(min || isBoostVelocity
-                    ? { min: min || String(boostVelocityMin) }
-                    : {})}
-                  {...(max || isBoostVelocity
-                    ? { max: max || String(boostVelocityMax) }
-                    : {})}
+                  {...(step ? { step } : {})}
+                  {...(min ? { min } : {})}
+                  {...(max ? { max } : {})}
                   {...(disabled ? { disabled } : {})}
                   {...(onChange ? { onChange } : {})}
                 />
