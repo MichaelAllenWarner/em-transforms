@@ -33,7 +33,7 @@ const particleVelocityVec = new THREE.Vector3();
 const particleVelocityPrimeVec = new THREE.Vector3();
 const particleVelocityPrimeSpherical = new THREE.Spherical();
 
-const storeCallback = (state: State) => ({
+const storeSelector = (state: State) => ({
   eField: state.eField,
   bField: state.bField,
   boostVelocity: state.boostVelocity,
@@ -226,7 +226,7 @@ const Page = () => {
     showLorentzForce,
     showParticleAcceleration,
     hideBoostedQuantities,
-  } = useStore(storeCallback, shallow);
+  } = useStore(storeSelector, shallow);
 
   const {
     boostVelocityCartesian,
@@ -528,7 +528,7 @@ const Page = () => {
             <legend>Particle charge and mass</legend>
             <div>
               <label>
-                Particle charge (q)
+                Charge (q)
                 <input
                   type="number"
                   step="0.1"
@@ -543,7 +543,7 @@ const Page = () => {
             </div>
             <div>
               <label>
-                Particle mass (m)
+                Mass (m)
                 <input
                   type="number"
                   step="0.1"

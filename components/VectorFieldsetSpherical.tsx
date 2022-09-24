@@ -101,7 +101,7 @@ const VectorFieldsetSpherical = memo(
           return (
             <div key={i}>
               <label>
-                {e}-component
+                {e} {i > 0 ? ' (°)' : ''}
                 <input
                   value={value}
                   type="number"
@@ -117,7 +117,6 @@ const VectorFieldsetSpherical = memo(
                   {...(disabled ? { disabled } : {})}
                   {...(onChange ? { onChange } : {})}
                 />
-                {i > 0 ? '°' : ''}
               </label>
             </div>
           );

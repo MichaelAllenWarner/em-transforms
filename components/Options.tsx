@@ -1,3 +1,4 @@
+import { MathJax } from 'better-react-mathjax';
 import { MutableRefObject, memo } from 'react';
 import { OrbitControls } from 'three-stdlib';
 import shallow from 'zustand/shallow';
@@ -45,7 +46,7 @@ const Options = memo(({ cameraRef }: Props) => {
 
   return (
     <details className="w-full">
-      <summary className="mt-2 w-max cursor-pointer">Options</summary>
+      <summary className="mt-2 max-w-max cursor-pointer">Options</summary>
       <fieldset className="ml-4">
         <legend className="sr-only">Options</legend>
         <div>
@@ -56,7 +57,8 @@ const Options = memo(({ cameraRef }: Props) => {
               disabled={hideBoostedQuantities}
               onChange={(e) => setShowComponentVectors(e.target.checked)}
             />
-            Show component-vectors parallel and perpendicular to boost-velocity.
+            Show component-vectors parallel and perpendicular to the
+            boost-velocity <MathJax inline>{'\\( \\vec v \\)'}</MathJax>.
           </label>
         </div>
         <div>
@@ -66,7 +68,11 @@ const Options = memo(({ cameraRef }: Props) => {
               checked={showPoynting}
               onChange={(e) => setShowPoynting(e.target.checked)}
             />
-            Show the Poynting vector (S = E x B).
+            Show the Poynting vector{' '}
+            <MathJax inline>
+              {'\\( \\vec S = \\vec E \\times \\vec B \\)'}
+            </MathJax>
+            .
           </label>
         </div>
         <div>
@@ -81,7 +87,8 @@ const Options = memo(({ cameraRef }: Props) => {
               disabled={showLorentzForce || showParticleAcceleration}
               onChange={(e) => setShowParticleVelocity(e.target.checked)}
             />
-            Show particle velocity (u).
+            Show the particle velocity{' '}
+            <MathJax inline>{'\\( \\vec u \\)'}</MathJax>.
           </label>
         </div>
         <div>
@@ -92,8 +99,11 @@ const Options = memo(({ cameraRef }: Props) => {
               disabled={showParticleAcceleration}
               onChange={(e) => setShowLorentzForce(e.target.checked)}
             />
-            Show the Lorentz force (F = q(E + u x B)) acting on the particle.
-            (Will show the particle velocity, too.)
+            Show the Lorentz force acting on the particle:{' '}
+            <MathJax inline>
+              {'\\( \\vec F = q( \\vec E + \\vec u \\times \\vec B ) \\)'}
+            </MathJax>
+            . (Will show <MathJax inline>{'\\( \\vec u \\)'}</MathJax>, too.)
           </label>
         </div>
         <div>
@@ -103,9 +113,18 @@ const Options = memo(({ cameraRef }: Props) => {
               checked={showParticleAcceleration}
               onChange={(e) => setShowParticleAcceleration(e.target.checked)}
             />
-            Show the particle's acceleration (a = (F - (F • v)v) / (γm), γ =
-            1/√(1 - v²)) resulting from the Lorentz force. (Will show the
-            particle velocity and the Lorentz force, too.)
+            Show the particle's acceleration resulting from the Lorentz force:{' '}
+            <MathJax inline>
+              {
+                '\\( \\vec{a} = \\frac{ \\vec{F} - ( \\vec{F} \\cdot \\vec{u} ) \\vec{u} }{ \\gamma m } \\)'
+              }
+            </MathJax>
+            , with{' '}
+            <MathJax inline>
+              {'\\( \\gamma = \\frac{ 1 }{ \\sqrt{ 1 - u^2 } } \\)'}
+            </MathJax>
+            . (Will show <MathJax inline>{'\\( \\vec u \\)'}</MathJax> and{' '}
+            <MathJax inline>{'\\( \\vec F \\)'}</MathJax>, too.)
           </label>
         </div>
         <div>
@@ -115,9 +134,11 @@ const Options = memo(({ cameraRef }: Props) => {
               checked={hideBoostedQuantities}
               onChange={(e) => setHideBoostedQuantities(e.target.checked)}
             />
-            Hide the boost-velocity and the boosted quantities. (Will also hide
-            the component-vectors parallel and perpendicular to the
-            boost-velocity.)
+            Hide the boost-velocity{' '}
+            <MathJax inline>{'\\( \\vec v \\)'}</MathJax> and the boosted
+            ("primed") quantities. (Will also hide the component-vectors
+            parallel and perpendicular to{' '}
+            <MathJax inline>{'\\( \\vec v \\)'}</MathJax>.)
           </label>
         </div>
         <div>
@@ -134,7 +155,7 @@ const Options = memo(({ cameraRef }: Props) => {
         </div>
 
         <details className="space-y-2">
-          <summary className="mt-2 w-max cursor-pointer">
+          <summary className="mt-2 max-w-max cursor-pointer">
             Some interesting preset field configurations
           </summary>
           <div className="flex flex-wrap gap-2">

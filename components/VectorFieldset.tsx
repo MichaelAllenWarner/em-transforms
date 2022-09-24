@@ -81,7 +81,7 @@ const VectorFieldset = memo(
           return (
             <div key={i}>
               <label>
-                {e}-component
+                {e}
                 <input
                   value={value}
                   type="number"

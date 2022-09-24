@@ -4,7 +4,7 @@ const TitleAndInstructions = () => (
       Lorentz Transformation of the Electric and Magnetic Fields, Visualized
     </h1>
     <details>
-      <summary className="w-max cursor-pointer">Instructions</summary>
+      <summary className="max-w-max cursor-pointer">Instructions</summary>
       <div className="max-w-prose space-y-3 p-4">
         <p>
           This visualization demonstrates how the electric and magnetic fields
