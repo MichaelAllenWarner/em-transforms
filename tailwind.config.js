@@ -22,8 +22,7 @@ module.exports = {
       md: em(768),
       lg: em(1024),
       xl: em(1280),
-      // I prefer to stop at `xl`
-      // '2xl': em(1536)
+      '2xl': em(1536),
     },
     extend: {
       container: {
