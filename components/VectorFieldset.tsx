@@ -1,8 +1,7 @@
 import { ChangeEvent, memo, useCallback } from 'react';
 import { Color, textColor } from '../helpers/Color';
-import { CartesianComponents } from '../helpers/store';
-
-const round = (n: number) => parseFloat(n.toFixed(10));
+import round from '../helpers/round';
+import { CartesianComponents } from '../store/store';
 
 interface Props {
   color?: Color;

@@ -1,6 +1,6 @@
 import { forwardRef, useEffect, useRef } from 'react';
 import { Canvas, useThree } from '@react-three/fiber';
-import useStore, { CartesianComponents, State } from '../helpers/store';
+import useStore, { CartesianComponents, State } from '../store/store';
 import shallow from 'zustand/shallow';
 import Vector from '../components/Vector';
 import { OrbitControls } from 'three-stdlib';

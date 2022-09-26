@@ -2,7 +2,7 @@ import { MathJax } from 'better-react-mathjax';
 import { MutableRefObject, memo } from 'react';
 import { OrbitControls } from 'three-stdlib';
 import shallow from 'zustand/shallow';
-import useStore from '../helpers/store';
+import useStore from '../store/store';
 
 interface Props {
   cameraRef: MutableRefObject<OrbitControls | undefined>;

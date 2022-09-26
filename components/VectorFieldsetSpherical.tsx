@@ -1,9 +1,9 @@
 import { ChangeEvent, memo, useCallback } from 'react';
 import { Color, textColor } from '../helpers/Color';
-import { SphericalComponents } from '../helpers/store';
+import round from '../helpers/round';
+import { SphericalComponents } from '../store/store';
 import VectorFieldset from './VectorFieldset';
 
-const round = (n: number) => parseFloat(n.toFixed(10));
 const radToDeg = (n: number) => (n * 180) / Math.PI;
 const degToRad = (n: number) => (n * Math.PI) / 180;
 const trueMod = (a: number, b: number) => ((a % b) + b) % b;

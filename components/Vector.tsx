@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { type CartesianComponents } from '../helpers/store';
+import { type CartesianComponents } from '../store/store';
 import { font } from '../helpers/font';
 import { Material } from 'three';
 import { memo, useEffect, useRef, useState } from 'react';
