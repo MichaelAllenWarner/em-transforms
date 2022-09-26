@@ -485,6 +485,9 @@ const Page = () => {
             thetaSetter={setBoostVelocityTheta}
             isVelocity
             flipper={flipBoostVelocity}
+            x={boostVelocityCartesian[0]}
+            y={boostVelocityCartesian[1]}
+            z={boostVelocityCartesian[2]}
           />
 
           <VectorFieldset
@@ -522,6 +525,9 @@ const Page = () => {
             phiSetter={setParticleVelocityPhi}
             thetaSetter={setParticleVelocityTheta}
             flipper={flipParticleVelocity}
+            x={particleVelocityCartesian[0]}
+            y={particleVelocityCartesian[1]}
+            z={particleVelocityCartesian[2]}
           />
 
           <fieldset className={textColor[Color.U]}>
@@ -601,6 +607,7 @@ const Page = () => {
             xDisabled
             yDisabled
             zDisabled
+            isPrime
           />
 
           <VectorFieldset
@@ -612,6 +619,7 @@ const Page = () => {
             xDisabled
             yDisabled
             zDisabled
+            isPrime
           />
 
           <VectorFieldsetSpherical
@@ -624,6 +632,10 @@ const Page = () => {
             rDisabled
             phiDisabled
             thetaDisabled
+            isPrime
+            x={particleVelocityPrime[0]}
+            y={particleVelocityPrime[1]}
+            z={particleVelocityPrime[2]}
           />
 
           <VectorFieldset
@@ -635,6 +647,7 @@ const Page = () => {
             xDisabled
             yDisabled
             zDisabled
+            isPrime
           />
 
           <VectorFieldset
@@ -646,6 +659,7 @@ const Page = () => {
             xDisabled
             yDisabled
             zDisabled
+            isPrime
           />
 
           <VectorFieldset
@@ -657,6 +671,7 @@ const Page = () => {
             xDisabled
             yDisabled
             zDisabled
+            isPrime
           />
         </form>
       </main>

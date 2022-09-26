@@ -1,6 +1,7 @@
 import { ChangeEvent, memo, useCallback } from 'react';
 import { Color, textColor } from '../helpers/Color';
 import { SphericalComponents } from '../helpers/store';
+import VectorFieldset from './VectorFieldset';
 
 const round = (n: number) => parseFloat(n.toFixed(10));
 const radToDeg = (n: number) => (n * 180) / Math.PI;
@@ -26,6 +27,10 @@ interface Props {
   flipper?: () => void;
   /** If `true`, will keep the `r` component less than 1. */
   isVelocity?: boolean;
+  isPrime?: boolean;
+  x?: number;
+  y?: number;
+  z?: number;
 }
 
 const VectorFieldsetSpherical = memo(
@@ -43,6 +48,10 @@ const VectorFieldsetSpherical = memo(
     thetaDisabled,
     isVelocity,
     flipper,
+    isPrime,
+    x,
+    y,
+    z,
   }: Props) => {
     const onChangeR = useCallback(
       (e: ChangeEvent<HTMLInputElement>) => {
@@ -101,18 +110,19 @@ const VectorFieldsetSpherical = memo(
           return (
             <div key={i}>
               <label>
-                {e} {i > 0 ? ' (°)' : ''}
+                {e}
+                {isPrime && '′'} {i > 0 ? ' (°)' : ''}
                 <input
                   value={value}
                   type="number"
-                  {...(i === 0 && isVelocity
+                  {...(i === 0 && isVelocity && !disabled
                     ? {
                         step: String(velocityStep),
                         min: String(velocityMin),
                         max: String(velocityMax),
                       }
                     : {
-                        step: String(5),
+                        ...(!disabled ? { step: String(5) } : {}),
                       })}
                   {...(disabled ? { disabled } : {})}
                   {...(onChange ? { onChange } : {})}
@@ -121,6 +131,19 @@ const VectorFieldsetSpherical = memo(
             </div>
           );
         })}
+        {typeof x === 'number' &&
+          typeof y === 'number' &&
+          typeof z === 'number' && (
+            <VectorFieldset
+              x={x}
+              y={y}
+              z={z}
+              xDisabled
+              yDisabled
+              zDisabled
+              isPrime={isPrime}
+            />
+          )}
       </fieldset>
     );
   }

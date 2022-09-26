@@ -1,3 +1,5 @@
+import { MathJax } from 'better-react-mathjax';
+
 const TitleAndInstructions = () => (
   <div className="space-y-10">
     <h1 className="text-2xl sm:text-3xl">
@@ -29,19 +31,40 @@ const TitleAndInstructions = () => (
           number. Since a minus-sign by itself isn't interpreted as a number,
           entering a negative number is a bit cumbersome: you have to type at
           least one digit <em>before</em> inserting the minus sign at the start.
-          Sorry about that.
+          Same goes for periods—you'll have to type <kbd>0.</kbd> instead of{' '}
+          <kbd>.</kbd> for numbers between{' '}
+          <MathJax inline>{'\\( 0 \\)'}</MathJax> and{' '}
+          <MathJax inline>{'\\( 1 \\)'}</MathJax>.
         </p>
         <p>A few notes:</p>
         <ul className="ml-4 list-disc">
-          <li>Electric and magnetic fields are measured in the same unit.</li>
           <li>
-            The speed of light is set to 1, and speed-inputs (the r-components
-            for velocity-vectors) must be strictly less than that.
+            We're using Lorentz–Heaviside units, so electric and magnetic fields
+            have the same dimension.
           </li>
           <li>
-            Spherical components are of the "math" flavor, where φ is the polar
-            angle (with reference to the y-axis) and θ is the azimuthal angle
-            (with reference to the z-axis).
+            The speed of light is set to <MathJax inline>{'\\( 1 \\)'}</MathJax>
+            , and speed-inputs (the <MathJax inline>{'\\( r \\)'}</MathJax>
+            -components for velocity-vectors) must be strictly less than that.
+          </li>
+          <li>
+            Spherical components are of the "math" flavor, where{' '}
+            <MathJax inline>{'\\( \\phi \\)'}</MathJax> is the polar angle (with
+            reference to the <MathJax inline>{'\\( y \\)'}</MathJax>-axis) and{' '}
+            <MathJax inline>{'\\( \\theta \\)'}</MathJax> is the azimuthal angle
+            (with reference to the <MathJax inline>{'\\( z \\)'}</MathJax>
+            -axis).
+          </li>
+          <li>
+            The boost-velocity is directed along the{' '}
+            <MathJax inline>{'\\( x \\)'}</MathJax>-axis by default. You can
+            change that (by adjusting its polar or azimuthal angle), but if you
+            do, take care not to misinterpret the calculated Cartesian
+            components of a boosted vector—the{' '}
+            <MathJax inline>{'\\( x ^ \\prime \\)'}</MathJax>-component will no
+            longer be the component whose basis-vector is parallel to the
+            boost-axis! There's a button in the Options to reset the
+            boost-direction to <MathJax inline>{'\\( +x \\)'}</MathJax>.
           </li>
           <li>
             The Cartesian axes and their labels are fixed. Perhaps in the future
@@ -61,8 +84,7 @@ const TitleAndInstructions = () => (
           <li>
             To pan, use the right mouse-button (or two-finger move for touch).
             Panning will change the focal point for orbiting and zooming, but
-            you can restore it with the "Reset Camera" button below the
-            visualization.
+            you can restore it with the "Reset camera" button in the Options.
           </li>
         </ul>
       </div>

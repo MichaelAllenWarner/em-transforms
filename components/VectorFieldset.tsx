@@ -5,8 +5,8 @@ import { CartesianComponents } from '../helpers/store';
 const round = (n: number) => parseFloat(n.toFixed(10));
 
 interface Props {
-  color: Color;
-  legend: string;
+  color?: Color;
+  legend?: string;
   x: number;
   y: number;
   z: number;
@@ -19,6 +19,7 @@ interface Props {
   xSetter?: (newComponent: CartesianComponents[number]) => void;
   ySetter?: (newComponent: CartesianComponents[number]) => void;
   zSetter?: (newComponent: CartesianComponents[number]) => void;
+  isPrime?: boolean;
 }
 
 const VectorFieldset = memo(
@@ -37,6 +38,7 @@ const VectorFieldset = memo(
     step,
     min,
     max,
+    isPrime,
   }: Props) => {
     const onChangeX = useCallback(
       (e: ChangeEvent<HTMLInputElement>) => {
@@ -68,35 +70,42 @@ const VectorFieldset = memo(
       [zSetter]
     );
 
-    return (
-      <fieldset className={`${textColor[color]}`}>
-        <legend>{legend}</legend>
-        {['x', 'y', 'z'].map((e, i) => {
-          const value = round([x, y, z][i]);
-          const disabled = [xDisabled, yDisabled, zDisabled][i];
-          const setter = [xSetter, ySetter, zSetter][i];
-          const useOnChange = setter && !disabled;
-          const onChange = useOnChange && [onChangeX, onChangeY, onChangeZ][i];
+    const inputs = ['x', 'y', 'z'].map((e, i) => {
+      const value = round([x, y, z][i]);
+      const disabled = [xDisabled, yDisabled, zDisabled][i];
+      const setter = [xSetter, ySetter, zSetter][i];
+      const useOnChange = setter && !disabled;
+      const onChange = useOnChange && [onChangeX, onChangeY, onChangeZ][i];
 
-          return (
-            <div key={i}>
-              <label>
-                {e}
-                <input
-                  value={value}
-                  type="number"
-                  {...(step ? { step } : {})}
-                  {...(min ? { min } : {})}
-                  {...(max ? { max } : {})}
-                  {...(disabled ? { disabled } : {})}
-                  {...(onChange ? { onChange } : {})}
-                />
-              </label>
-            </div>
-          );
-        })}
-      </fieldset>
-    );
+      return (
+        <div key={i}>
+          <label>
+            {e}
+            {isPrime && '′'}
+            <input
+              value={value}
+              type="number"
+              {...(step ? { step } : {})}
+              {...(min ? { min } : {})}
+              {...(max ? { max } : {})}
+              {...(disabled ? { disabled } : {})}
+              {...(onChange ? { onChange } : {})}
+            />
+          </label>
+        </div>
+      );
+    });
+
+    if (legend) {
+      return (
+        <fieldset className={color ? `${textColor[color]}` : ''}>
+          <legend>{legend}</legend>
+          {inputs}
+        </fieldset>
+      );
+    } else {
+      return <>{inputs}</>;
+    }
   }
 );
 

@@ -72,30 +72,80 @@ const Axes = () => {
             </mesh>
           ))}
           {i < 3 && (
-            <mesh
-              position={[
-                i === 0 ? length + 0.1 : 0,
-                i === 1 ? length + 0.1 : 0,
-                i === 2 ? length + 0.1 : 0,
-              ]}
-            >
-              <textGeometry
-                args={[
-                  ['x', 'y', 'z'][i],
-                  {
-                    // @ts-ignore
-                    font,
-                    size: 0.3,
-                    height: 0,
-                  },
+            <>
+              <mesh
+                position={[
+                  i === 0 ? length + 0.1 : 0,
+                  i === 1 ? length + 0.1 : 0,
+                  i === 2 ? length + 0.1 : 0,
                 ]}
-              />
-              <meshLambertMaterial
-                color={'black'}
-                transparent
-                opacity={opacity}
-              />
-            </mesh>
+              >
+                <textGeometry
+                  args={[
+                    ['x', 'y', 'z'][i],
+                    {
+                      // @ts-ignore
+                      font,
+                      size: 0.3,
+                      height: 0,
+                    },
+                  ]}
+                />
+                <meshLambertMaterial
+                  color={'black'}
+                  transparent
+                  opacity={opacity}
+                />
+              </mesh>
+              <mesh
+                position={[
+                  i === 0 ? length + 0.35 : 0.28,
+                  i === 1 ? length + 0.1 : 0,
+                  i === 2 ? length + 0.1 : 0,
+                ]}
+              >
+                <textGeometry
+                  args={[
+                    '′',
+                    {
+                      // @ts-ignore
+                      font,
+                      size: 0.3,
+                      height: 0,
+                    },
+                  ]}
+                />
+                <meshLambertMaterial
+                  color={'black'}
+                  transparent
+                  opacity={opacity}
+                />
+              </mesh>
+              <mesh
+                position={[
+                  i === 0 ? length + 0.3 : 0.23,
+                  i === 1 ? length + 0.3 : 0.2,
+                  i === 2 ? length + 0.1 : 0,
+                ]}
+              >
+                <textGeometry
+                  args={[
+                    '[ ]',
+                    {
+                      // @ts-ignore
+                      font,
+                      size: 0.15,
+                      height: 0,
+                    },
+                  ]}
+                />
+                <meshLambertMaterial
+                  color={'black'}
+                  transparent
+                  opacity={opacity}
+                />
+              </mesh>
+            </>
           )}
         </React.Fragment>
       ))}

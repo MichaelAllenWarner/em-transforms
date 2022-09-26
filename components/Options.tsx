@@ -24,6 +24,8 @@ const Options = memo(({ cameraRef }: Props) => {
     setHideBoostedQuantities,
     setEField,
     setBField,
+    setBoostVelocityPhi,
+    setBoostVelocityTheta,
   } = useStore(
     (state) => ({
       showComponentVectors: state.showComponentVectors,
@@ -40,6 +42,8 @@ const Options = memo(({ cameraRef }: Props) => {
       setHideBoostedQuantities: state.setHideBoostedQuantities,
       setEField: state.setEField,
       setBField: state.setBField,
+      setBoostVelocityPhi: state.setBoostVelocityPhi,
+      setBoostVelocityTheta: state.setBoostVelocityTheta,
     }),
     shallow
   );
@@ -113,7 +117,9 @@ const Options = memo(({ cameraRef }: Props) => {
               checked={showParticleAcceleration}
               onChange={(e) => setShowParticleAcceleration(e.target.checked)}
             />
-            Show the particle's acceleration resulting from the Lorentz force:{' '}
+            Show the particle's acceleration resulting from the Lorentz force
+            (assuming constant particle mass{' '}
+            <MathJax inline>{'\\( m \\)'}</MathJax>):{' '}
             <MathJax inline>
               {
                 '\\( \\vec{a} = \\frac{ \\vec{F} - ( \\vec{F} \\cdot \\vec{u} ) \\vec{u} }{ \\gamma m } \\)'
@@ -141,17 +147,33 @@ const Options = memo(({ cameraRef }: Props) => {
             <MathJax inline>{'\\( \\vec v \\)'}</MathJax>.)
           </label>
         </div>
+
         <div>
-          <button
-            type="button"
-            onClick={() => {
-              if (cameraRef.current) {
-                cameraRef.current.reset();
-              }
-            }}
-          >
-            Reset Camera
-          </button>
+          <div className="mt-2 flex flex-wrap gap-2">
+            <div>
+              <button
+                type="button"
+                onClick={() => {
+                  if (cameraRef.current) {
+                    cameraRef.current.reset();
+                  }
+                }}
+              >
+                Reset camera
+              </button>
+            </div>
+            <div>
+              <button
+                type="button"
+                onClick={() => {
+                  setBoostVelocityPhi(Math.PI / 2);
+                  setBoostVelocityTheta(Math.PI / 2);
+                }}
+              >
+                Reset boost-direction (<MathJax inline>{'\\( +x \\)'}</MathJax>)
+              </button>
+            </div>
+          </div>
         </div>
 
         <details className="space-y-2">
@@ -167,7 +189,7 @@ const Options = memo(({ cameraRef }: Props) => {
                   setBField([0, 0, 1]);
                 }}
               >
-                Light-wave toward x
+                Light-wave toward <MathJax inline>{'\\( x \\)'}</MathJax>
               </button>
             </div>
             <div>
@@ -178,7 +200,7 @@ const Options = memo(({ cameraRef }: Props) => {
                   setBField([0, -1, 0]);
                 }}
               >
-                Light-wave toward z
+                Light-wave toward <MathJax inline>{'\\( z \\)'}</MathJax>
               </button>
             </div>
             <div>
@@ -189,7 +211,7 @@ const Options = memo(({ cameraRef }: Props) => {
                   setBField([0, 0, 1]);
                 }}
               >
-                Parallel fields on z
+                Parallel fields on <MathJax inline>{'\\( z \\)'}</MathJax>
               </button>
             </div>
             <div>
@@ -211,7 +233,7 @@ const Options = memo(({ cameraRef }: Props) => {
                   setBField([0, 0, -1]);
                 }}
               >
-                Anti-parallel fields on z
+                Anti-parallel fields on <MathJax inline>{'\\( z \\)'}</MathJax>
               </button>
             </div>
             <div>
