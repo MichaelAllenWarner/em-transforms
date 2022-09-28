@@ -83,13 +83,10 @@ const calculateQuantities = ({
     .setFromSphericalCoords(...boostVelocity)
     .toArray();
 
-  boostUnitVelocity.setFromSphericalCoords(...boostVelocity).normalize();
-
-  const boostUnit = [
-    boostUnitVelocity.x,
-    boostUnitVelocity.y,
-    boostUnitVelocity.z,
-  ] as CartesianComponents;
+  const boostUnit = boostUnitVelocity
+    .set(...boostVelocityCartesian)
+    .normalize()
+    .toArray();
 
   const boostRapidity = Math.atanh(boostVelocityVec.length());
   const ch = Math.cosh(boostRapidity);
