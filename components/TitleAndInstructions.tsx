@@ -66,11 +66,6 @@ const TitleAndInstructions = () => (
             boost-axis! There's a button in the Options to reset the
             boost-direction to <MathJax inline>{'\\( +x \\)'}</MathJax>.
           </li>
-          <li>
-            The Cartesian axes and their labels are fixed. Perhaps in the future
-            I'll make them adjustable or have them adapt to the vectors in the
-            space, but for now they're static.
-          </li>
         </ul>
         <p>Here is how the "camera" works:</p>
         <ul className="ml-4 list-disc">
