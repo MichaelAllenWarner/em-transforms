@@ -2,11 +2,30 @@ import { MathJax } from 'better-react-mathjax';
 import { MutableRefObject, memo } from 'react';
 import { OrbitControls } from 'three-stdlib';
 import shallow from 'zustand/shallow';
-import useStore from '../store/store';
+import useStore, { State } from '../store/store';
 
 interface Props {
   cameraRef: MutableRefObject<OrbitControls | undefined>;
 }
+
+const storeSelector = (state: State) => ({
+  showComponentVectors: state.showComponentVectors,
+  setShowComponentVectors: state.setShowComponentVectors,
+  showPoynting: state.showPoynting,
+  setShowPoynting: state.setShowPoynting,
+  showParticleVelocity: state.showParticleVelocity,
+  setShowParticleVelocity: state.setShowParticleVelocity,
+  showLorentzForce: state.showLorentzForce,
+  setShowLorentzForce: state.setShowLorentzForce,
+  showParticleAcceleration: state.showParticleAcceleration,
+  setShowParticleAcceleration: state.setShowParticleAcceleration,
+  hideBoostedQuantities: state.hideBoostedQuantities,
+  setHideBoostedQuantities: state.setHideBoostedQuantities,
+  setEField: state.setEField,
+  setBField: state.setBField,
+  setBoostVelocityPhi: state.setBoostVelocityPhi,
+  setBoostVelocityTheta: state.setBoostVelocityTheta,
+});
 
 const Options = memo(({ cameraRef }: Props) => {
   const {
@@ -26,27 +45,7 @@ const Options = memo(({ cameraRef }: Props) => {
     setBField,
     setBoostVelocityPhi,
     setBoostVelocityTheta,
-  } = useStore(
-    (state) => ({
-      showComponentVectors: state.showComponentVectors,
-      setShowComponentVectors: state.setShowComponentVectors,
-      showPoynting: state.showPoynting,
-      setShowPoynting: state.setShowPoynting,
-      showParticleVelocity: state.showParticleVelocity,
-      setShowParticleVelocity: state.setShowParticleVelocity,
-      showLorentzForce: state.showLorentzForce,
-      setShowLorentzForce: state.setShowLorentzForce,
-      showParticleAcceleration: state.showParticleAcceleration,
-      setShowParticleAcceleration: state.setShowParticleAcceleration,
-      hideBoostedQuantities: state.hideBoostedQuantities,
-      setHideBoostedQuantities: state.setHideBoostedQuantities,
-      setEField: state.setEField,
-      setBField: state.setBField,
-      setBoostVelocityPhi: state.setBoostVelocityPhi,
-      setBoostVelocityTheta: state.setBoostVelocityTheta,
-    }),
-    shallow
-  );
+  } = useStore(storeSelector, shallow);
 
   return (
     <details className="w-full">
