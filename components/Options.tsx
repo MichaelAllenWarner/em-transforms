@@ -49,7 +49,7 @@ const Options = memo(({ cameraRef }: Props) => {
 
   return (
     <details className="w-full">
-      <summary className="mt-2 max-w-max cursor-pointer">Options</summary>
+      <summary className="mt-2">Options</summary>
       <fieldset className="ml-4">
         <legend className="sr-only">Options</legend>
         <div>
@@ -176,7 +176,7 @@ const Options = memo(({ cameraRef }: Props) => {
         </div>
 
         <details className="space-y-2">
-          <summary className="mt-2 max-w-max cursor-pointer">
+          <summary className="mt-2">
             Some interesting preset field configurations
           </summary>
           <div className="flex flex-wrap gap-2">

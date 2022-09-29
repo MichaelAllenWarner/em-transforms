@@ -26,7 +26,7 @@ export interface State {
   showLorentzForce: boolean;
   /** If `true`, the acceleration on the particle resulting from the Lorentz force will be displayed (as will the particle's velocity and the Lorentz force). */
   showParticleAcceleration: boolean;
-  /** If `true`, will hide the boosted quantities (including the boost-vector). Helpful if interested in only single-frame relationships (declutters the screen). */
+  /** If `true`, will hide the boosted quantities (including the boost-vector). Helpful if interested in only single-frame relationships. */
   hideBoostedQuantities: boolean;
 
   setEField: (newEField: State['eField']) => void;

@@ -1,16 +1,39 @@
 @tailwind base;
 
-kbd {
-  background-color: #eee;
-  border-radius: 3px;
-  border: 1px solid #b4b4b4;
-  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.2),
-    0 2px 0 0 rgba(255, 255, 255, 0.7) inset;
-  color: #333;
-  display: inline-block;
-  line-height: 1;
-  padding: 2px 4px;
-  white-space: nowrap;
+@layer base {
+  fieldset {
+    @apply flex flex-col space-y-2;
+  }
+
+  legend {
+    @apply text-xl;
+  }
+
+  input {
+    @apply ml-3 border [&[type=checkbox]]:ml-0 [&[type=checkbox]]:mr-3;
+  }
+
+  summary {
+    @apply max-w-max cursor-pointer;
+  }
+
+  button,
+  [type='button'] {
+    @apply rounded bg-stone-600 py-2 px-3 text-white transition-colors hover:bg-stone-600/[.85] focus-visible:bg-stone-600/[.85];
+  }
+
+  kbd {
+    background-color: #eee;
+    border-radius: 3px;
+    border: 1px solid #b4b4b4;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.2),
+      0 2px 0 0 rgba(255, 255, 255, 0.7) inset;
+    color: #333;
+    display: inline-block;
+    line-height: 1;
+    padding: 2px 4px;
+    white-space: nowrap;
+  }
 }
 
 @tailwind components;
