@@ -144,7 +144,7 @@ const TitleAndInstructions = () => (
             <MathJax inline>{'\\( 1 \\)'}</MathJax>.
           </p>
           <p>A few notes:</p>
-          <ul className="ml-4 list-disc">
+          <ul>
             <li>
               We're using Lorentz–Heaviside units, so electric and magnetic
               fields have the same dimension.
@@ -177,7 +177,7 @@ const TitleAndInstructions = () => (
             </li>
           </ul>
           <p>Here is how the "camera" works:</p>
-          <ul className="ml-4 list-disc">
+          <ul>
             <li>
               To orbit, use the left mouse-button (or one-finger move for
               touch).
@@ -190,6 +190,137 @@ const TitleAndInstructions = () => (
               To pan, use the right mouse-button (or two-finger move for touch).
               Panning will change the focal point for orbiting and zooming, but
               you can restore it with the "Reset camera" button in the Options.
+            </li>
+          </ul>
+        </div>
+      </details>
+      <details>
+        <summary>Formulas used</summary>
+        <div className="max-w-prose space-y-3 p-4">
+          <p>
+            The most elegant way to express how quantities transform under
+            Lorentz boosts is with manifestly covariant math. In making this
+            app, however, I had no choice but to get my hands dirty with the
+            transformation formulas for non-covariant quantities. I've found
+            that using the boost <em>rapidity</em> (as opposed to the boost
+            velocity <MathJax inline>{'\\( \\vec v \\)'}</MathJax> and Lorentz
+            factor{' '}
+            <MathJax inline>
+              {'\\( \\gamma = \\frac{1}{ \\sqrt{ 1 - v ^2 } } \\)'}
+            </MathJax>
+            ) makes the formulas easier on the eyes and mind.
+          </p>
+          <p>
+            Below are the transformation formulas I used. The quantity{' '}
+            <MathJax inline>{'\\( \\hat v \\)'}</MathJax> is the <em>unit</em>{' '}
+            vector in the direction of the boost velocity{' '}
+            <MathJax inline>{'\\( \\vec v \\)'}</MathJax>, and the
+            aforementioned boost rapidity is{' '}
+            <MathJax inline>{'\\( \\eta = \\tanh ^{-1} v \\)'}</MathJax> (that's
+            the inverse hyperbolic tangent, and{' '}
+            <MathJax inline>{'\\(  v \\)'}</MathJax> is the magnitude of{' '}
+            <MathJax inline>{'\\( \\vec v \\)'}</MathJax>).
+          </p>
+          <ul>
+            <li>
+              <MathJax inline>
+                {
+                  '\\( \\vec E ^ \\prime = \\cosh \\eta \\, \\vec E + \\sinh \\eta \\, ( \\hat v \\times \\vec B ) - 2 \\sinh ^2 \\frac{\\eta}{2} \\, ( \\hat v \\cdot \\vec E ) \\hat v \\)'
+                }
+              </MathJax>
+            </li>
+            <li>
+              <MathJax inline>
+                {
+                  '\\( \\vec B ^ \\prime = \\cosh \\eta \\, \\vec B - \\sinh \\eta \\, ( \\hat v \\times \\vec E ) - 2 \\sinh ^2 \\frac{\\eta}{2} \\, ( \\hat v \\cdot \\vec B ) \\hat v \\)'
+                }
+              </MathJax>
+            </li>
+            <li>
+              <MathJax inline>
+                {
+                  '\\( \\vec u ^ \\prime = \\dfrac{ \\vec u + \\left ( 2 \\sinh ^2 \\frac{ \\eta }{ 2 } \\, ( \\hat v \\cdot \\vec u ) - \\sinh \\eta \\right ) \\hat v }{ \\cosh \\eta - \\sinh \\eta \\, ( \\hat v \\cdot \\vec u ) } \\)'
+                }
+              </MathJax>
+            </li>
+          </ul>
+          <p>(I didn't say they were pretty!)</p>
+          <p>
+            It follows from the definition of{' '}
+            <MathJax inline>{'\\( \\eta \\)'}</MathJax> that{' '}
+            <MathJax inline>{'\\( \\cosh \\eta = \\gamma \\)'}</MathJax> and
+            that <MathJax inline>{'\\( \\sinh \\eta = \\gamma v \\)'}</MathJax>.
+            To write the formulas in their more familiar "non-rapidity" form,
+            make those substitutions, use{' '}
+            <MathJax inline>{'\\( \\vec v = v \\hat v \\)'}</MathJax> and the
+            identity{' '}
+            <MathJax inline>
+              {'\\( 2 \\sinh ^2 \\frac{ \\eta }{ 2 } = \\cosh \\eta - 1 \\)'}
+            </MathJax>
+            , and simplify.
+          </p>
+          <p>
+            I didn't have to transform any of the other quantities, since I
+            could calculate them in the "primed" frame from boosted quantities
+            I'd already obtained.
+          </p>
+        </div>
+      </details>
+      <details>
+        <summary>Observations</summary>
+        <div className="max-w-prose space-y-3 p-4">
+          <p>Here are some interesting things to note:</p>
+          <ul>
+            <li>
+              The quantities{' '}
+              <MathJax inline>{'\\( \\vec E \\cdot \\vec B \\)'}</MathJax> and{' '}
+              <MathJax inline>{'\\( E^2 - B^2 \\)'}</MathJax> are invariant,
+              meaning that their values don't change under a boost. So if the
+              vectors are perpendicular in one inertial frame, then they're
+              perpendicular in all inertial frames; and if they share a
+              magnitude in one inertial frame, then they share a magnitude in
+              all inertial frames. A light wave is characterized by both of
+              these properties, so a light wave in one inertial frame is a light
+              wave in all inertial frames, as of course it must be.
+            </li>
+            <li>
+              Under a Lorentz boost, only the components of{' '}
+              <MathJax inline>{'\\( \\vec E \\)'}</MathJax> and{' '}
+              <MathJax inline>{'\\( \\vec B \\)'}</MathJax> that are{' '}
+              <em>perpendicular</em> to the boost-velocity{' '}
+              <MathJax inline>{'\\( \\vec v \\)'}</MathJax> change. The
+              components that are <em>parallel</em> to{' '}
+              <MathJax inline>{'\\( \\vec v \\)'}</MathJax> retain their value.
+            </li>
+            <li>
+              Under a Lorentz boost, <em>all</em> components of a
+              velocity-vector (<MathJax inline>{'\\( \\vec u \\)'}</MathJax>)
+              generally change. This differs from the Galilean/Newtonian model,
+              where only the velocity-component <em>parallel</em> to the
+              boost-axis changes.
+            </li>
+            <li>
+              The force and acceleration vectors generally aren't parallel.
+            </li>
+            <li>
+              When a force acts on a particle, the component of force that's
+              parallel to the particle's velocity is invariant under a
+              "longitudinal" boost, by which I mean a Lorentz boost that's
+              parallel to the particle's velocity. In other words, if you set
+              the particle-velocity{' '}
+              <MathJax inline>{'\\( \\vec u \\)'}</MathJax> to be parallel to
+              the boost-velocity <MathJax inline>{'\\( \\vec v \\)'}</MathJax>,
+              then you'll find that the component of{' '}
+              <MathJax inline>{'\\( \\vec F \\)'}</MathJax> that's parallel to
+              those vectors is equal to the corresponding component of{' '}
+              <MathJax inline>{'\\( \\vec F ^ \\prime \\)'}</MathJax>. So try
+              setting both <MathJax inline>{'\\( \\vec v \\)'}</MathJax> and{' '}
+              <MathJax inline>{'\\( \\vec u \\)'}</MathJax> to point along the{' '}
+              <MathJax inline>{'\\( x \\)'}</MathJax>-axis (by using the "Reset"
+              buttons in the Options, or simply by reloading the page);{' '}
+              <MathJax inline>{'\\( F_x \\)'}</MathJax> and{' '}
+              <MathJax inline>{'\\( F ^ \\prime _x \\)'}</MathJax> should then
+              have the same value.
             </li>
           </ul>
         </div>

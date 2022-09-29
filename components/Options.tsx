@@ -25,6 +25,8 @@ const storeSelector = (state: State) => ({
   setBField: state.setBField,
   setBoostVelocityPhi: state.setBoostVelocityPhi,
   setBoostVelocityTheta: state.setBoostVelocityTheta,
+  setParticleVelocityPhi: state.setParticleVelocityPhi,
+  setParticleVelocityTheta: state.setParticleVelocityTheta,
 });
 
 const Options = memo(({ cameraRef }: Props) => {
@@ -45,6 +47,8 @@ const Options = memo(({ cameraRef }: Props) => {
     setBField,
     setBoostVelocityPhi,
     setBoostVelocityTheta,
+    setParticleVelocityPhi,
+    setParticleVelocityTheta,
   } = useStore(storeSelector, shallow);
 
   return (
@@ -170,6 +174,18 @@ const Options = memo(({ cameraRef }: Props) => {
                 }}
               >
                 Reset boost-direction (<MathJax inline>{'\\( +x \\)'}</MathJax>)
+              </button>
+            </div>
+            <div>
+              <button
+                type="button"
+                onClick={() => {
+                  setParticleVelocityPhi(-Math.PI / 2);
+                  setParticleVelocityTheta(Math.PI / 2);
+                }}
+              >
+                Reset particle's velocity-direction (
+                <MathJax inline>{'\\( -x \\)'}</MathJax>)
               </button>
             </div>
           </div>

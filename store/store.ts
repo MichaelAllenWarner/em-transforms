@@ -87,7 +87,7 @@ const useStore = create<State>()((set) => {
     eField: [1, 1, 1],
     bField: [-1, -1, -1],
     boostVelocity: [0.5, Math.PI / 2, Math.PI / 2],
-    particleVelocity: [0.5, Math.PI / 4, -Math.PI / 4],
+    particleVelocity: [0.25, -Math.PI / 2, Math.PI / 2],
     particleCharge: 1,
     particleMass: 1,
     showComponentVectors: false,
