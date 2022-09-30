@@ -23,7 +23,7 @@
   }
 
   ul {
-    @apply ml-4 list-disc space-y-1.5;
+    @apply ml-4 list-disc space-y-2;
   }
 
   kbd {
@@ -41,4 +41,34 @@
 }
 
 @tailwind components;
+
+@layer components {
+  /* give equations invisible horizontal scrollbars if they're too wide */
+  mjx-container[jax='CHTML'] {
+    overflow-x: auto;
+    overflow-y: hidden; /* might have to undo this if anything gets cut off, or apply it only to not-display */
+    max-width: 100%;
+    min-width: 0px !important;
+    scrollbar-width: none; /* for FF (webkit pseudoelement rule below) */
+  }
+  mjx-container[jax='CHTML']::-webkit-scrollbar {
+    display: none; /* make scrollbars invisible in webkit */
+  }
+  mjx-container[jax='CHTML'][display='true'] {
+    padding: 0.11rem 0; /* otherwise some display eqs cut off a bit at top/bottom */
+  }
+  mjx-container[jax='CHTML']:not([display='true']) {
+    display: inline-flex; /* inline-block ruins vertical alignment (unfixable w/ `vertical-align`) */
+    padding: 0 0.11rem; /* otherwise some inline eqs cut off a bit on left/right */
+    margin: 0 -0.11rem; /* "undo" padding to keep in right position w/ text */
+  }
+  mjx-assistive-mml {
+    max-width: 100%;
+  }
+  /* adjust equation label vertically */
+  mjx-container[jax='CHTML'][display='true'] mjx-mtext {
+    transform: translateY(-0.14em);
+  }
+}
+
 @tailwind utilities;

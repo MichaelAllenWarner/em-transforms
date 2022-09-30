@@ -65,7 +65,10 @@ const Options = memo(({ cameraRef }: Props) => {
               onChange={(e) => setShowComponentVectors(e.target.checked)}
             />
             Show component-vectors parallel and perpendicular to the
-            boost-velocity <MathJax inline>{'\\( \\vec v \\)'}</MathJax>.
+            boost-velocity{' '}
+            <span className="whitespace-nowrap">
+              <MathJax inline>{'\\( \\vec v \\)'}</MathJax>.
+            </span>
           </label>
         </div>
         <div>
@@ -76,10 +79,12 @@ const Options = memo(({ cameraRef }: Props) => {
               onChange={(e) => setShowPoynting(e.target.checked)}
             />
             Show the Poynting vector{' '}
-            <MathJax inline>
-              {'\\( \\vec S = \\vec E \\times \\vec B \\)'}
-            </MathJax>
-            .
+            <span className="whitespace-nowrap">
+              <MathJax inline>
+                {'\\( \\vec S = \\vec E \\times \\vec B \\)'}
+              </MathJax>
+              .
+            </span>
           </label>
         </div>
         <div>
@@ -95,7 +100,9 @@ const Options = memo(({ cameraRef }: Props) => {
               onChange={(e) => setShowParticleVelocity(e.target.checked)}
             />
             Show the particle velocity{' '}
-            <MathJax inline>{'\\( \\vec u \\)'}</MathJax>.
+            <span className="whitespace-nowrap">
+              <MathJax inline>{'\\( \\vec u \\)'}</MathJax>.
+            </span>
           </label>
         </div>
         <div>
@@ -107,10 +114,17 @@ const Options = memo(({ cameraRef }: Props) => {
               onChange={(e) => setShowLorentzForce(e.target.checked)}
             />
             Show the Lorentz force acting on the particle:{' '}
-            <MathJax inline>
-              {'\\( \\vec F = q( \\vec E + \\vec u \\times \\vec B ) \\)'}
-            </MathJax>
-            . (Will show <MathJax inline>{'\\( \\vec u \\)'}</MathJax>, too.)
+            <span className="whitespace-nowrap">
+              <MathJax inline>
+                {'\\( \\vec F = q( \\vec E + \\vec u \\times \\vec B ) \\)'}
+              </MathJax>
+              .
+            </span>{' '}
+            (Will show{' '}
+            <span className="whitespace-nowrap">
+              <MathJax inline>{'\\( \\vec u \\)'}</MathJax>,
+            </span>{' '}
+            too.)
           </label>
         </div>
         <div>
@@ -122,18 +136,29 @@ const Options = memo(({ cameraRef }: Props) => {
             />
             Show the particle's acceleration resulting from the Lorentz force
             (assuming constant particle mass{' '}
-            <MathJax inline>{'\\( m \\)'}</MathJax>):{' '}
-            <MathJax inline>
-              {
-                '\\( \\vec{a} = \\frac{ \\vec{F} - ( \\vec{F} \\cdot \\vec{u} ) \\vec{u} }{ \\gamma m } \\)'
-              }
-            </MathJax>
-            , with{' '}
-            <MathJax inline>
-              {'\\( \\gamma = \\frac{ 1 }{ \\sqrt{ 1 - u^2 } } \\)'}
-            </MathJax>
-            . (Will show <MathJax inline>{'\\( \\vec u \\)'}</MathJax> and{' '}
-            <MathJax inline>{'\\( \\vec F \\)'}</MathJax>, too.)
+            <span className="whitespace-nowrap">
+              <MathJax inline>{'\\( m \\)'}</MathJax>):
+            </span>{' '}
+            <span className="whitespace-nowrap">
+              <MathJax inline>
+                {
+                  '\\( \\vec{a} = \\frac{ \\vec{F} - ( \\vec{F} \\cdot \\vec{u} ) \\vec{u} }{ \\gamma m } \\)'
+                }
+              </MathJax>
+              ,
+            </span>{' '}
+            with{' '}
+            <span className="whitespace-nowrap">
+              <MathJax inline>
+                {'\\( \\gamma = \\frac{ 1 }{ \\sqrt{ 1 - u^2 } } \\)'}
+              </MathJax>
+              .
+            </span>{' '}
+            (Will show <MathJax inline>{'\\( \\vec u \\)'}</MathJax> and{' '}
+            <span className="whitespace-nowrap">
+              <MathJax inline>{'\\( \\vec F \\)'}</MathJax>,
+            </span>{' '}
+            too.)
           </label>
         </div>
         <div>
@@ -147,7 +172,9 @@ const Options = memo(({ cameraRef }: Props) => {
             <MathJax inline>{'\\( \\vec v \\)'}</MathJax> and the boosted
             ("primed") quantities. (Will also hide the component-vectors
             parallel and perpendicular to{' '}
-            <MathJax inline>{'\\( \\vec v \\)'}</MathJax>.)
+            <span className="whitespace-nowrap">
+              <MathJax inline>{'\\( \\vec v \\)'}</MathJax>.)
+            </span>
           </label>
         </div>
 
@@ -173,7 +200,10 @@ const Options = memo(({ cameraRef }: Props) => {
                   setBoostVelocityTheta(Math.PI / 2);
                 }}
               >
-                Reset boost-direction (<MathJax inline>{'\\( +x \\)'}</MathJax>)
+                Reset boost-direction{' '}
+                <span className="whitespace-nowrap">
+                  (<MathJax inline>{'\\( +x \\)'}</MathJax>)
+                </span>
               </button>
             </div>
             <div>
@@ -184,8 +214,10 @@ const Options = memo(({ cameraRef }: Props) => {
                   setParticleVelocityTheta(Math.PI / 2);
                 }}
               >
-                Reset particle's velocity-direction (
-                <MathJax inline>{'\\( -x \\)'}</MathJax>)
+                Reset particle's velocity-direction{' '}
+                <span className="whitespace-nowrap">
+                  (<MathJax inline>{'\\( -x \\)'}</MathJax>)
+                </span>
               </button>
             </div>
           </div>
