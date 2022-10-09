@@ -5,10 +5,14 @@ const TitleAndInstructions = () => (
     <h1 className="text-2xl sm:text-3xl">
       Lorentz Transformation of the Electric and Magnetic Fields, Visualized
     </h1>
-    <div className="space-y-4">
+    <div className="space-y-4 [&_summary+div]:max-w-prose [&_summary+div]:space-y-5 [&_summary+div]:p-4">
       <details>
-        <summary>Background for beginners</summary>
-        <div className="max-w-prose space-y-3 p-4">
+        <summary>Background for those who need it</summary>
+        <div>
+          <p>
+            (The reader is assumed to have some familiarity with vectors,
+            including the dot product and the cross product.)
+          </p>
           <p>
             An <em>event</em> is a point in spacetime—a particular location in
             space at a particular moment in time. At every event there's an
@@ -31,9 +35,10 @@ const TitleAndInstructions = () => (
             of reference. You tell the app what the values of{' '}
             <MathJax inline>{'\\( \\vec E \\)'}</MathJax> and{' '}
             <MathJax inline>{'\\( \\vec B \\)'}</MathJax> are at some event as
-            measured in some initial frame of reference (the "unprimed" frame),
+            measured in some inertial frame of reference (the "unprimed" frame),
             and it will show you their values as measured in <em>another</em>{' '}
-            frame of reference (the "primed" frame). The "boost velocity"{' '}
+            inertial frame of reference (the "primed" frame). The "boost
+            velocity"{' '}
             <span className="whitespace-nowrap">
               <MathJax inline>{'\\( \\vec v \\)'}</MathJax>,
             </span>{' '}
@@ -105,27 +110,28 @@ const TitleAndInstructions = () => (
               ,
             </span>{' '}
             with{' '}
+            <MathJax inline>
+              {'\\( \\gamma = \\frac{ 1 }{ \\sqrt{ 1 - u^2 } } \\)'}
+            </MathJax>
+            (where <MathJax inline>{'\\( u \\)'}</MathJax> is the magnitude of{' '}
             <span className="whitespace-nowrap">
-              <MathJax inline>
-                {'\\( \\gamma = \\frac{ 1 }{ \\sqrt{ 1 - u^2 } } \\)'}
-              </MathJax>
-              .
+              <MathJax inline>{'\\( \\vec u \\)'}</MathJax>).
             </span>{' '}
             By the way, a particle's charge and mass are quantities whose values{' '}
-            <em>don't</em> depend on your frame of reference. Velocity,
-            acceleration, and force <em>do</em>.
+            <em>don't</em> depend on your frame of reference. The values of
+            velocity, acceleration, and force <em>do</em>.
           </p>
           <p>
-            I brought up the particle because this app <em>also</em> lets you
-            visualize the velocity, force, and acceleration of a particle at the
-            same event as the displayed electric- and magnetic-field vectors
-            (see the Options below the visualization). You can specify the
-            particle's charge, mass, and ("unprimed") velocity, and you'll see
-            the Lorentz force that the field-vectors exert on the particle, as
-            well as the particle's resulting acceleration. You'll see all of
-            these quantities in both frames by default, but if you'd rather
-            study the particle's dynamics in a single frame then you can
-            optionally hide the "primed" vectors.
+            I brought up the particle because this app also lets you visualize
+            the velocity, force, and acceleration of a particle at the same
+            event as the displayed electric- and magnetic-field vectors (see the
+            Options below the visualization). You can specify the particle's
+            charge, mass, and ("unprimed") velocity, and you'll see the Lorentz
+            force that the field-vectors exert on the particle, as well as the
+            particle's resulting acceleration. You'll see all of these
+            quantities in both frames by default, but if you'd rather study the
+            particle's dynamics in a single frame then you can optionally hide
+            the "primed" vectors.
           </p>
           <p>
             Another available option lets you see the Poynting vector in both
@@ -142,25 +148,27 @@ const TitleAndInstructions = () => (
       </details>
       <details>
         <summary>Instructions</summary>
-        <div className="max-w-prose space-y-3 p-4">
+        <div>
           <p>
-            This visualization demonstrates how the electric and magnetic fields
-            transform under a Lorentz boost.
+            This visualization demonstrates how the electric- and magnetic-field
+            vectors at an event (a point in spacetime) transform under a Lorentz
+            boost.
           </p>
           <p>
             Use the inputs below the visualization to set the Cartesian
             components of the electric- and magnetic-field vectors in the
-            original "unprimed" frame, as well as the spherical components of
-            the boost-velocity. The electric- and magnetic-field vectors in the
-            "primed" frame are calculated and rendered automatically.
+            original "unprimed" inertial frame, as well as the spherical
+            components of the boost-velocity. The electric- and magnetic-field
+            vectors in the "primed" inertial frame are calculated and rendered
+            automatically.
           </p>
           <p>
             The Poynting vector in each frame is calculated automatically, too,
             though by default it isn't displayed. You can toggle its visibility
             in the Options, where you'll also find some other settings that
             might interest you. Some of them have corresponding inputs you can
-            control (e.g., the velocity-vector of a particle co-located with the
-            fields).
+            control (the charge, mass, and velocity of a particle co-located
+            with the field vectors).
           </p>
           <p>
             The inputs can only accept number-values, even while you're typing
@@ -246,7 +254,7 @@ const TitleAndInstructions = () => (
       </details>
       <details>
         <summary>Formulas used</summary>
-        <div className="max-w-prose space-y-3 p-4">
+        <div>
           <p>
             The most elegant way to express how quantities transform under
             Lorentz boosts is with manifestly covariant math. In making this
@@ -331,7 +339,7 @@ const TitleAndInstructions = () => (
       </details>
       <details>
         <summary>Observations</summary>
-        <div className="max-w-prose space-y-3 p-4">
+        <div>
           <p>Here are some interesting things to note:</p>
           <ul>
             <li>

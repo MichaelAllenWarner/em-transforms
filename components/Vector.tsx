@@ -38,6 +38,22 @@ const Vector = memo(
   }: Props) => {
     const [ready, setReady] = useState(false);
 
+    /*
+      Use refs for the needed THREE.js objects, and mutate them in the `useEffect()`.
+      This prevents them from getting destroyed and recreated on re-renders, which
+      helps with performance.
+
+      For further optimization, could use zustand's transient update mechanism to handle
+      changes to x/y/z state (instead of passing those values in as props). This would prevent
+      the component from having to re-render at all in that scenario. See:
+
+      https://github.com/pmndrs/zustand#transient-updates-for-often-occurring-state-changes
+
+      However, that would require quite a bit of refactoring, since right now most of the vectors
+      are calculated on the fly in response to state-changes. Performance seems all right
+      at the moment, so leaving it be.
+    */
+
     // define refs for main vector
     const vector = useRef<THREE.Vector3>();
     const dir = useRef<THREE.Vector3>();
@@ -56,8 +72,6 @@ const Vector = memo(
     const perpCompDir = useRef<THREE.Vector3>();
     const perpCompArrow = useRef<THREE.ArrowHelper>();
 
-    // define/set all the needed canvas objects here
-    // (is this the right hook to use? I'm wondering about fast changes)
     useEffect(() => {
       // main vector
 
