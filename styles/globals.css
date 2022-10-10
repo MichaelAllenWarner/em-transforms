@@ -26,8 +26,22 @@
     @apply rounded bg-stone-600 py-2 px-3 leading-normal text-white transition-colors hover:bg-stone-600/[.85] focus-visible:bg-stone-600/[.85];
   }
 
+  ul,
+  ol {
+    @apply ml-8 space-y-2;
+  }
+
+  li > ul,
+  li > ol {
+    @apply mt-4;
+  }
+
   ul {
-    @apply ml-4 list-disc space-y-2;
+    @apply list-disc;
+  }
+
+  ol {
+    @apply list-decimal;
   }
 
   kbd {
@@ -37,10 +51,11 @@
     box-shadow: 0 1px 1px rgba(0, 0, 0, 0.2),
       0 2px 0 0 rgba(255, 255, 255, 0.7) inset;
     color: #333;
-    display: inline-block;
     line-height: 1;
-    padding: 2px 4px;
+    padding: 1px 4px;
     white-space: nowrap;
+    margin-left: 1px;
+    margin-right: 1px;
   }
 }
 

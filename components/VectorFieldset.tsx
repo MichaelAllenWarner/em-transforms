@@ -1,4 +1,4 @@
-import { ChangeEvent, memo, useCallback } from 'react';
+import { ChangeEvent, memo, MutableRefObject, useCallback } from 'react';
 import { Color, textColor } from '../helpers/Color';
 import round from '../helpers/round';
 import { CartesianComponents } from '../store/store';
@@ -12,6 +12,9 @@ interface Props {
   xDisabled?: boolean;
   yDisabled?: boolean;
   zDisabled?: boolean;
+  xRef?: MutableRefObject<HTMLInputElement | null>;
+  yRef?: MutableRefObject<HTMLInputElement | null>;
+  zRef?: MutableRefObject<HTMLInputElement | null>;
   step?: string;
   min?: string;
   max?: string;
@@ -34,6 +37,9 @@ const VectorFieldset = memo(
     xDisabled,
     yDisabled,
     zDisabled,
+    xRef,
+    yRef,
+    zRef,
     step,
     min,
     max,
@@ -75,6 +81,7 @@ const VectorFieldset = memo(
       const setter = [xSetter, ySetter, zSetter][i];
       const useOnChange = setter && !disabled;
       const onChange = useOnChange && [onChangeX, onChangeY, onChangeZ][i];
+      const ref = !disabled && [xRef, yRef, zRef][i];
 
       return (
         <div key={i}>
@@ -89,6 +96,7 @@ const VectorFieldset = memo(
               {...(max ? { max } : {})}
               {...(disabled ? { disabled } : {})}
               {...(onChange ? { onChange } : {})}
+              {...(ref ? { ref: ref } : {})}
             />
           </label>
         </div>

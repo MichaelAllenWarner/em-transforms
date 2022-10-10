@@ -1,4 +1,4 @@
-import { ChangeEvent, memo, useCallback } from 'react';
+import { ChangeEvent, memo, MutableRefObject, useCallback } from 'react';
 import { Color, textColor } from '../helpers/Color';
 import round from '../helpers/round';
 import { SphericalComponents } from '../store/store';
@@ -21,6 +21,9 @@ interface Props {
   rDisabled?: boolean;
   phiDisabled?: boolean;
   thetaDisabled?: boolean;
+  rRef?: MutableRefObject<HTMLInputElement | null>;
+  phiRef?: MutableRefObject<HTMLInputElement | null>;
+  thetaRef?: MutableRefObject<HTMLInputElement | null>;
   rSetter?: (newComponent: SphericalComponents[number]) => void;
   phiSetter?: (newComponent: SphericalComponents[number]) => void;
   thetaSetter?: (newComponent: SphericalComponents[number]) => void;
@@ -40,6 +43,9 @@ const VectorFieldsetSpherical = memo(
     r,
     phi,
     theta,
+    rRef,
+    phiRef,
+    thetaRef,
     rSetter,
     phiSetter,
     thetaSetter,
@@ -106,6 +112,7 @@ const VectorFieldsetSpherical = memo(
           const useOnChange = setter && !disabled;
           const onChange =
             useOnChange && [onChangeR, onChangePhi, onChangeTheta][i];
+          const ref = !disabled && [rRef, phiRef, thetaRef][i];
 
           return (
             <div key={i}>
@@ -126,6 +133,7 @@ const VectorFieldsetSpherical = memo(
                       })}
                   {...(disabled ? { disabled } : {})}
                   {...(onChange ? { onChange } : {})}
+                  {...(ref ? { ref: ref } : {})}
                 />
               </label>
             </div>

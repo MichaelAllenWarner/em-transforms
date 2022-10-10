@@ -253,6 +253,86 @@ const TitleAndInstructions = () => (
         </div>
       </details>
       <details>
+        <summary>Hotkeys</summary>
+        <div>
+          <p>
+            You can use the keyboard to control the input-settings and many of
+            the Options.
+          </p>
+          <p>To increase or decrease the magnitude of a vector-component:</p>
+          <ol>
+            <li>
+              hold the key for the vector's name (<kbd>e</kbd> for the electric
+              field, <kbd>b</kbd> for the magnetic field, <kbd>v</kbd> for the
+              boost velocity, or <kbd>u</kbd> for the particle velocity);
+            </li>
+            <li>
+              hold the key for the component you're changing (<kbd>x</kbd>,{' '}
+              <kbd>y</kbd>, or <kbd>z</kbd> for a Cartesian component of the
+              electric or magnetic field, and <kbd>r</kbd>, <kbd>p</kbd> [for
+              phi], or <kbd>t</kbd> [for theta] for a spherical component of a
+              velocity);
+            </li>
+            <li>
+              and press either the up- or down-arrow (<kbd>↑</kbd> or{' '}
+              <kbd>↓</kbd>).
+            </li>
+          </ol>
+          <p>
+            For example, to decrease the{' '}
+            <MathJax inline>{'\\( E_x \\)'}</MathJax> component, press{' '}
+            <kbd>e</kbd> + <kbd>x</kbd> + <kbd>↓</kbd>. And to increase the{' '}
+            <MathJax inline>{'\\( u_{ \\phi } \\)'}</MathJax> component, press{' '}
+            <kbd>u</kbd> + <kbd>p</kbd> + <kbd>↑</kbd>.
+          </p>
+          <p>
+            The velocity vectors have a couple of additional controls. To
+            reverse the direction of the boost velocity, press <kbd>v</kbd> +{' '}
+            <kbd>-</kbd>. To reverse the direction of the particle velocity,
+            press <kbd>u</kbd> + <kbd>-</kbd>. To reset the direction of the
+            boost velocity (to the <MathJax inline>{'\\( +x \\)'}</MathJax>{' '}
+            direction), press <kbd>v</kbd> + <kbd>0</kbd>. To reset the
+            direction of the particle velocity (to the{' '}
+            <MathJax inline>{'\\( -x \\)'}</MathJax> direction), press{' '}
+            <kbd>u</kbd> + <kbd>0</kbd>.
+          </p>
+          <p>
+            The particle's charge can be increased with <kbd>q</kbd> +{' '}
+            <kbd>↑</kbd> and decreased with <kbd>q</kbd> + <kbd>↓</kbd>. Use{' '}
+            <kbd>m</kbd> + <kbd>↑</kbd> and <kbd>m</kbd> + <kbd>↓</kbd> to
+            control the particle's mass.
+          </p>
+          <p>
+            The show/hide settings in the Options have the following hotkeys:
+          </p>
+          <ul>
+            <li>
+              <kbd>c</kbd> toggles the component-vectors parallel and
+              perpendicular to the boost-velocity;
+            </li>
+            <li>
+              <kbd>s</kbd> toggles the Poynting vector;
+            </li>
+            <li>
+              <kbd>w</kbd> (not <kbd>u</kbd>!) toggles the particle velocity;
+            </li>
+            <li>
+              <kbd>f</kbd> toggles the Lorentz force;
+            </li>
+            <li>
+              <kbd>a</kbd> toggles the particle acceleration;
+            </li>
+            <li>
+              <kbd>h</kbd> toggles the boost-velocity and the boosted
+              quantities.
+            </li>
+          </ul>
+          <p>
+            Use <kbd>k</kbd> to reset the camera.
+          </p>
+        </div>
+      </details>
+      <details>
         <summary>Formulas used</summary>
         <div>
           <p>
