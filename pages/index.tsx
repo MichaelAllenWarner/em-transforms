@@ -566,10 +566,16 @@ const Page = () => {
           Lorentz Transformation of the Electric and Magnetic Fields, Visualized
         </title>
       </Head>
-      <main className="container mt-10 flex h-screen w-screen flex-col space-y-10">
+      {/*
+        Needs explicit height (any height will do, apparently), or the canvas continually
+        grows vertically for some reason. Also therefore needs visible y-overflow, which
+        should be the case by default, but we set it explicitly just to be safe.
+      */}
+      <main className="container mt-10 flex !h-0 flex-col space-y-10 !overflow-y-visible">
         {titleAndInstructions}
 
-        <Canvas className="max-h-screen min-h-[600px] flex-1 px-6 [&>*]:border">
+        {/* Needs to be min-height. Not sure why, but it works. */}
+        <Canvas className="min-h-[600px] px-6 [&>*]:border">
           <CameraController ref={cameraRef} />
           <ambientLight />
 
