@@ -1,4 +1,4 @@
-import { ChangeEvent, memo, MutableRefObject, useCallback } from 'react';
+import { ChangeEvent, memo, RefObject, useCallback } from 'react';
 import { Color, textColor } from '../helpers/Color';
 import round from '../helpers/round';
 import { CartesianComponents } from '../store/store';
@@ -12,9 +12,9 @@ interface Props {
   xDisabled?: boolean;
   yDisabled?: boolean;
   zDisabled?: boolean;
-  xRef?: MutableRefObject<HTMLInputElement | null>;
-  yRef?: MutableRefObject<HTMLInputElement | null>;
-  zRef?: MutableRefObject<HTMLInputElement | null>;
+  xRef?: RefObject<HTMLInputElement>;
+  yRef?: RefObject<HTMLInputElement>;
+  zRef?: RefObject<HTMLInputElement>;
   step?: string;
   min?: string;
   max?: string;

@@ -1,4 +1,4 @@
-import { ChangeEvent, memo, MutableRefObject, useCallback } from 'react';
+import { ChangeEvent, memo, RefObject, useCallback } from 'react';
 import { Color, textColor } from '../helpers/Color';
 import round from '../helpers/round';
 import { SphericalComponents } from '../store/store';
@@ -21,9 +21,9 @@ interface Props {
   rDisabled?: boolean;
   phiDisabled?: boolean;
   thetaDisabled?: boolean;
-  rRef?: MutableRefObject<HTMLInputElement | null>;
-  phiRef?: MutableRefObject<HTMLInputElement | null>;
-  thetaRef?: MutableRefObject<HTMLInputElement | null>;
+  rRef?: RefObject<HTMLInputElement>;
+  phiRef?: RefObject<HTMLInputElement>;
+  thetaRef?: RefObject<HTMLInputElement>;
   rSetter?: (newComponent: SphericalComponents[number]) => void;
   phiSetter?: (newComponent: SphericalComponents[number]) => void;
   thetaSetter?: (newComponent: SphericalComponents[number]) => void;

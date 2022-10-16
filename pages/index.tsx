@@ -175,7 +175,7 @@ const calculateQuantities = ({
 
 const axes = <Axes />;
 
-const CameraController = forwardRef<OrbitControls | undefined>((_, ref) => {
+const CameraController = forwardRef<OrbitControls>((_, ref) => {
   const { camera, gl } = useThree();
   useEffect(() => {
     const controls = new OrbitControls(camera, gl.domElement);
@@ -195,7 +195,7 @@ const titleAndInstructions = <TitleAndInstructions />;
 const inputEvent = new Event('input', { bubbles: true });
 
 const Page = () => {
-  const cameraRef = useRef<OrbitControls>();
+  const cameraRef = useRef<OrbitControls>(null);
 
   const {
     eField,
@@ -259,42 +259,42 @@ const Page = () => {
 
   // set up show/hide hotkeys
 
-  const showCompsRef = useRef<HTMLInputElement | null>(null);
+  const showCompsRef = useRef<HTMLInputElement>(null);
   const toggleComps = useCallback(() => {
     if (!showCompsRef.current || showCompsRef.current.disabled) return;
     showCompsRef.current.click();
   }, []);
   useHotkeys('c', toggleComps);
 
-  const showSRef = useRef<HTMLInputElement | null>(null);
+  const showSRef = useRef<HTMLInputElement>(null);
   const toggleS = useCallback(() => {
     if (!showSRef.current || showSRef.current.disabled) return;
     showSRef.current.click();
   }, []);
   useHotkeys('s', toggleS);
 
-  const showURef = useRef<HTMLInputElement | null>(null);
+  const showURef = useRef<HTMLInputElement>(null);
   const toggleU = useCallback(() => {
     if (!showURef.current || showURef.current.disabled) return;
     showURef.current.click();
   }, []);
   useHotkeys('w', toggleU);
 
-  const showFRef = useRef<HTMLInputElement | null>(null);
+  const showFRef = useRef<HTMLInputElement>(null);
   const toggleF = useCallback(() => {
     if (!showFRef.current || showFRef.current.disabled) return;
     showFRef.current.click();
   }, []);
   useHotkeys('f', toggleF);
 
-  const showARef = useRef<HTMLInputElement | null>(null);
+  const showARef = useRef<HTMLInputElement>(null);
   const toggleA = useCallback(() => {
     if (!showARef.current || showARef.current.disabled) return;
     showARef.current.click();
   }, []);
   useHotkeys('a', toggleA);
 
-  const hideVRef = useRef<HTMLInputElement | null>(null);
+  const hideVRef = useRef<HTMLInputElement>(null);
   const toggleV = useCallback(() => {
     if (!hideVRef.current || hideVRef.current.disabled) return;
     hideVRef.current.click();
@@ -303,7 +303,7 @@ const Page = () => {
 
   // set up E hotkeys
 
-  const eXRef = useRef<HTMLInputElement | null>(null);
+  const eXRef = useRef<HTMLInputElement>(null);
   const eXUp = useCallback((event: KeyboardEvent) => {
     if (!eXRef.current) return;
     event.preventDefault();
@@ -317,7 +317,7 @@ const Page = () => {
     eXRef.current.dispatchEvent(inputEvent);
   }, []);
 
-  const eYRef = useRef<HTMLInputElement | null>(null);
+  const eYRef = useRef<HTMLInputElement>(null);
   const eYUp = useCallback((event: KeyboardEvent) => {
     if (!eYRef.current) return;
     event.preventDefault();
@@ -331,7 +331,7 @@ const Page = () => {
     eYRef.current.dispatchEvent(inputEvent);
   }, []);
 
-  const eZRef = useRef<HTMLInputElement | null>(null);
+  const eZRef = useRef<HTMLInputElement>(null);
   const eZUp = useCallback((event: KeyboardEvent) => {
     if (!eZRef.current) return;
     event.preventDefault();
@@ -354,7 +354,7 @@ const Page = () => {
 
   // set up B hotkeys
 
-  const bXRef = useRef<HTMLInputElement | null>(null);
+  const bXRef = useRef<HTMLInputElement>(null);
   const bXUp = useCallback((event: KeyboardEvent) => {
     if (!bXRef.current) return;
     event.preventDefault();
@@ -368,7 +368,7 @@ const Page = () => {
     bXRef.current.dispatchEvent(inputEvent);
   }, []);
 
-  const bYRef = useRef<HTMLInputElement | null>(null);
+  const bYRef = useRef<HTMLInputElement>(null);
   const bYUp = useCallback((event: KeyboardEvent) => {
     if (!bYRef.current) return;
     event.preventDefault();
@@ -382,7 +382,7 @@ const Page = () => {
     bYRef.current.dispatchEvent(inputEvent);
   }, []);
 
-  const bZRef = useRef<HTMLInputElement | null>(null);
+  const bZRef = useRef<HTMLInputElement>(null);
   const bZUp = useCallback((event: KeyboardEvent) => {
     if (!bZRef.current) return;
     event.preventDefault();
@@ -405,7 +405,7 @@ const Page = () => {
 
   // set up v hotkeys (boost velocity)
 
-  const vRRef = useRef<HTMLInputElement | null>(null);
+  const vRRef = useRef<HTMLInputElement>(null);
   const vRUp = useCallback((event: KeyboardEvent) => {
     if (!vRRef.current) return;
     event.preventDefault();
@@ -419,7 +419,7 @@ const Page = () => {
     vRRef.current.dispatchEvent(inputEvent);
   }, []);
 
-  const vPhiRef = useRef<HTMLInputElement | null>(null);
+  const vPhiRef = useRef<HTMLInputElement>(null);
   const vPhiUp = useCallback((event: KeyboardEvent) => {
     if (!vPhiRef.current) return;
     event.preventDefault();
@@ -433,7 +433,7 @@ const Page = () => {
     vPhiRef.current.dispatchEvent(inputEvent);
   }, []);
 
-  const vThetaRef = useRef<HTMLInputElement | null>(null);
+  const vThetaRef = useRef<HTMLInputElement>(null);
   const vThetaUp = useCallback((event: KeyboardEvent) => {
     if (!vThetaRef.current) return;
     event.preventDefault();
@@ -447,7 +447,7 @@ const Page = () => {
     vThetaRef.current.dispatchEvent(inputEvent);
   }, []);
 
-  const vResetRef = useRef<HTMLButtonElement | null>(null);
+  const vResetRef = useRef<HTMLButtonElement>(null);
   const vReset = useCallback(() => {
     if (!vResetRef.current) return;
     vResetRef.current.click();
@@ -464,7 +464,7 @@ const Page = () => {
 
   // set up u hotkeys (particle velocity)
 
-  const uRRef = useRef<HTMLInputElement | null>(null);
+  const uRRef = useRef<HTMLInputElement>(null);
   const uRUp = useCallback((event: KeyboardEvent) => {
     if (!uRRef.current) return;
     event.preventDefault();
@@ -478,7 +478,7 @@ const Page = () => {
     uRRef.current.dispatchEvent(inputEvent);
   }, []);
 
-  const uPhiRef = useRef<HTMLInputElement | null>(null);
+  const uPhiRef = useRef<HTMLInputElement>(null);
   const uPhiUp = useCallback((event: KeyboardEvent) => {
     if (!uPhiRef.current) return;
     event.preventDefault();
@@ -492,7 +492,7 @@ const Page = () => {
     uPhiRef.current.dispatchEvent(inputEvent);
   }, []);
 
-  const uThetaRef = useRef<HTMLInputElement | null>(null);
+  const uThetaRef = useRef<HTMLInputElement>(null);
   const uThetaUp = useCallback((event: KeyboardEvent) => {
     if (!uThetaRef.current) return;
     event.preventDefault();
@@ -506,7 +506,7 @@ const Page = () => {
     uThetaRef.current.dispatchEvent(inputEvent);
   }, []);
 
-  const uResetRef = useRef<HTMLButtonElement | null>(null);
+  const uResetRef = useRef<HTMLButtonElement>(null);
   const uReset = useCallback(() => {
     if (!uResetRef.current) return;
     uResetRef.current.click();
@@ -523,7 +523,7 @@ const Page = () => {
 
   // set up hotkeys for particle charge
 
-  const qRef = useRef<HTMLInputElement | null>(null);
+  const qRef = useRef<HTMLInputElement>(null);
   const qUp = useCallback((event: KeyboardEvent) => {
     if (!qRef.current) return;
     event.preventDefault();
@@ -542,7 +542,7 @@ const Page = () => {
 
   // set up hotkeys for particle mass
 
-  const mRef = useRef<HTMLInputElement | null>(null);
+  const mRef = useRef<HTMLInputElement>(null);
   const mUp = useCallback((event: KeyboardEvent) => {
     if (!mRef.current) return;
     event.preventDefault();

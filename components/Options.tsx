@@ -1,19 +1,19 @@
 import { MathJax } from 'better-react-mathjax';
-import { MutableRefObject, memo } from 'react';
+import { RefObject, memo } from 'react';
 import { OrbitControls } from 'three-stdlib';
 import shallow from 'zustand/shallow';
 import useStore, { State } from '../store/store';
 
 interface Props {
-  cameraRef: MutableRefObject<OrbitControls | undefined>;
-  vResetRef: MutableRefObject<HTMLButtonElement | null>;
-  uResetRef: MutableRefObject<HTMLButtonElement | null>;
-  showCompsRef: MutableRefObject<HTMLInputElement | null>;
-  showSRef: MutableRefObject<HTMLInputElement | null>;
-  showURef: MutableRefObject<HTMLInputElement | null>;
-  showFRef: MutableRefObject<HTMLInputElement | null>;
-  showARef: MutableRefObject<HTMLInputElement | null>;
-  hideVRef: MutableRefObject<HTMLInputElement | null>;
+  cameraRef: RefObject<OrbitControls>;
+  vResetRef: RefObject<HTMLButtonElement>;
+  uResetRef: RefObject<HTMLButtonElement>;
+  showCompsRef: RefObject<HTMLInputElement>;
+  showSRef: RefObject<HTMLInputElement>;
+  showURef: RefObject<HTMLInputElement>;
+  showFRef: RefObject<HTMLInputElement>;
+  showARef: RefObject<HTMLInputElement>;
+  hideVRef: RefObject<HTMLInputElement>;
 }
 
 const storeSelector = (state: State) => ({
