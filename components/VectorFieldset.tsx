@@ -96,7 +96,7 @@ const VectorFieldset = memo(
               {...(max ? { max } : {})}
               {...(disabled ? { disabled } : {})}
               {...(onChange ? { onChange } : {})}
-              {...(ref ? { ref: ref } : {})}
+              {...(ref ? { ref } : {})}
             />
           </label>
         </div>

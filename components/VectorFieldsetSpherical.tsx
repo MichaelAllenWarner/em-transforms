@@ -133,7 +133,7 @@ const VectorFieldsetSpherical = memo(
                       })}
                   {...(disabled ? { disabled } : {})}
                   {...(onChange ? { onChange } : {})}
-                  {...(ref ? { ref: ref } : {})}
+                  {...(ref ? { ref } : {})}
                 />
               </label>
             </div>
