@@ -1,4 +1,4 @@
-import create from 'zustand';
+import { create } from 'zustand';
 
 export type CartesianComponents = [number, number, number];
 export type SphericalComponents = [number, number, number];

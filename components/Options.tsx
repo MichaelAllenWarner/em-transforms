@@ -1,7 +1,7 @@
 import { MathJax } from 'better-react-mathjax';
 import { RefObject, memo } from 'react';
 import { OrbitControls } from 'three-stdlib';
-import shallow from 'zustand/shallow';
+import { shallow } from 'zustand/shallow';
 import useStore, { State } from '../store/store';
 
 interface Props {

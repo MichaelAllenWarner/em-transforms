@@ -293,9 +293,9 @@ const Vector = memo(
           <primitive object={parCompArrow.current || {}} />
         </mesh>
         <mesh visible={!hide}>
-          <primitive object={arrow.current} />
+          <primitive object={arrow.current || {}} />
         </mesh>
-        <primitive object={labelMesh.current} />
+        <primitive object={labelMesh.current || {}} />
       </>
     ) : (
       <></>

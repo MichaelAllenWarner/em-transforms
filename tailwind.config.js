@@ -1,3 +1,5 @@
+// @ts-check
+
 /** @param {number} num */
 const round = (num) =>
   num

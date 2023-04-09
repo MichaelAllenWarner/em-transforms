@@ -1,6 +1,6 @@
 import { Canvas } from '@react-three/fiber';
 import useStore, { State } from '../store/store';
-import shallow from 'zustand/shallow';
+import { shallow } from 'zustand/shallow';
 import Vector from '../components/Vector';
 import Axes from '../components/Axes';
 import Head from 'next/head';

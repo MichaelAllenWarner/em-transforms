@@ -1,8 +1,9 @@
 import { useCallback, useRef } from 'react';
 import { useHotkeys } from 'react-hotkeys-hook';
 import { OrbitControls } from 'three-stdlib';
-import shallow from 'zustand/shallow';
+import { shallow } from 'zustand/shallow';
 import useStore, { State } from '../store/store';
+import { hotkeys } from '../helpers/hotkeys';
 
 const storeSelector = (state: State) => ({
   flipBoostVelocity: state.flipBoostVelocity,
@@ -17,59 +18,59 @@ export const useRefsAndHotkeys = () => {
     shallow
   );
 
-  // set up camera-reset hotkey
+  // set up camera ref and camera-reset hotkey
 
   const cameraRef = useRef<OrbitControls>(null);
-  useHotkeys('k', () => {
+  useHotkeys(hotkeys.oneKey.resetCamera, () => {
     if (!cameraRef.current) return;
     cameraRef.current.reset();
   });
 
-  // set up show/hide hotkeys
+  // set up show/hide refs and hotkeys
 
   const showCompsRef = useRef<HTMLInputElement>(null);
   const toggleComps = useCallback(() => {
     if (!showCompsRef.current || showCompsRef.current.disabled) return;
     showCompsRef.current.click();
   }, []);
-  useHotkeys('c', toggleComps);
+  useHotkeys(hotkeys.oneKey.toggleComps, toggleComps);
 
   const showSRef = useRef<HTMLInputElement>(null);
   const toggleS = useCallback(() => {
     if (!showSRef.current || showSRef.current.disabled) return;
     showSRef.current.click();
   }, []);
-  useHotkeys('s', toggleS);
+  useHotkeys(hotkeys.oneKey.toggleS, toggleS);
 
   const showURef = useRef<HTMLInputElement>(null);
   const toggleU = useCallback(() => {
     if (!showURef.current || showURef.current.disabled) return;
     showURef.current.click();
   }, []);
-  useHotkeys('w', toggleU);
+  useHotkeys(hotkeys.oneKey.toggleU, toggleU);
 
   const showFRef = useRef<HTMLInputElement>(null);
   const toggleF = useCallback(() => {
     if (!showFRef.current || showFRef.current.disabled) return;
     showFRef.current.click();
   }, []);
-  useHotkeys('f', toggleF);
+  useHotkeys(hotkeys.oneKey.toggleF, toggleF);
 
   const showARef = useRef<HTMLInputElement>(null);
   const toggleA = useCallback(() => {
     if (!showARef.current || showARef.current.disabled) return;
     showARef.current.click();
   }, []);
-  useHotkeys('a', toggleA);
+  useHotkeys(hotkeys.oneKey.toggleA, toggleA);
 
   const hideVRef = useRef<HTMLInputElement>(null);
   const toggleV = useCallback(() => {
     if (!hideVRef.current || hideVRef.current.disabled) return;
     hideVRef.current.click();
   }, []);
-  useHotkeys('h', toggleV);
+  useHotkeys(hotkeys.oneKey.toggleV, toggleV);
 
-  // set up E hotkeys
+  // set up E refs and hotkeys
 
   const eXRef = useRef<HTMLInputElement>(null);
   const eXUp = useCallback((event: KeyboardEvent) => {
@@ -113,14 +114,14 @@ export const useRefsAndHotkeys = () => {
     eZRef.current.dispatchEvent(inputEvent);
   }, []);
 
-  useHotkeys('e+x+up', eXUp);
-  useHotkeys('e+x+down', eXDown);
-  useHotkeys('e+y+up', eYUp);
-  useHotkeys('e+y+down', eYDown);
-  useHotkeys('e+z+up', eZUp);
-  useHotkeys('e+z+down', eZDown);
+  useHotkeys(hotkeys.vectorComp.e.x.up, eXUp);
+  useHotkeys(hotkeys.vectorComp.e.x.down, eXDown);
+  useHotkeys(hotkeys.vectorComp.e.y.up, eYUp);
+  useHotkeys(hotkeys.vectorComp.e.y.down, eYDown);
+  useHotkeys(hotkeys.vectorComp.e.z.up, eZUp);
+  useHotkeys(hotkeys.vectorComp.e.z.down, eZDown);
 
-  // set up B hotkeys
+  // set up B refs and hotkeys
 
   const bXRef = useRef<HTMLInputElement>(null);
   const bXUp = useCallback((event: KeyboardEvent) => {
@@ -164,14 +165,14 @@ export const useRefsAndHotkeys = () => {
     bZRef.current.dispatchEvent(inputEvent);
   }, []);
 
-  useHotkeys('b+x+up', bXUp);
-  useHotkeys('b+x+down', bXDown);
-  useHotkeys('b+y+up', bYUp);
-  useHotkeys('b+y+down', bYDown);
-  useHotkeys('b+z+up', bZUp);
-  useHotkeys('b+z+down', bZDown);
+  useHotkeys(hotkeys.vectorComp.b.x.up, bXUp);
+  useHotkeys(hotkeys.vectorComp.b.x.down, bXDown);
+  useHotkeys(hotkeys.vectorComp.b.y.up, bYUp);
+  useHotkeys(hotkeys.vectorComp.b.y.down, bYDown);
+  useHotkeys(hotkeys.vectorComp.b.z.up, bZUp);
+  useHotkeys(hotkeys.vectorComp.b.z.down, bZDown);
 
-  // set up v hotkeys (boost velocity)
+  // set up v refs and hotkeys (boost velocity)
 
   const vRRef = useRef<HTMLInputElement>(null);
   const vRUp = useCallback((event: KeyboardEvent) => {
@@ -221,16 +222,16 @@ export const useRefsAndHotkeys = () => {
     vResetRef.current.click();
   }, []);
 
-  useHotkeys('v+r+up', vRUp);
-  useHotkeys('v+r+down', vRDown);
-  useHotkeys('v+p+up', vPhiUp);
-  useHotkeys('v+p+down', vPhiDown);
-  useHotkeys('v+t+up', vThetaUp);
-  useHotkeys('v+t+down', vThetaDown);
-  useHotkeys('v+0', vReset);
-  useHotkeys('v+-', flipBoostVelocity);
+  useHotkeys(hotkeys.vectorComp.v.r.up, vRUp);
+  useHotkeys(hotkeys.vectorComp.v.r.down, vRDown);
+  useHotkeys(hotkeys.vectorComp.v.p.up, vPhiUp);
+  useHotkeys(hotkeys.vectorComp.v.p.down, vPhiDown);
+  useHotkeys(hotkeys.vectorComp.v.t.up, vThetaUp);
+  useHotkeys(hotkeys.vectorComp.v.t.down, vThetaDown);
+  useHotkeys(hotkeys.vectorReset.v, vReset);
+  useHotkeys(hotkeys.vectorFlip.v, flipBoostVelocity);
 
-  // set up u hotkeys (particle velocity)
+  // set up u refs and hotkeys (particle velocity)
 
   const uRRef = useRef<HTMLInputElement>(null);
   const uRUp = useCallback((event: KeyboardEvent) => {
@@ -280,16 +281,16 @@ export const useRefsAndHotkeys = () => {
     uResetRef.current.click();
   }, []);
 
-  useHotkeys('u+r+up', uRUp);
-  useHotkeys('u+r+down', uRDown);
-  useHotkeys('u+p+up', uPhiUp);
-  useHotkeys('u+p+down', uPhiDown);
-  useHotkeys('u+t+up', uThetaUp);
-  useHotkeys('u+t+down', uThetaDown);
-  useHotkeys('u+0', uReset);
-  useHotkeys('u+-', flipParticleVelocity);
+  useHotkeys(hotkeys.vectorComp.u.r.up, uRUp);
+  useHotkeys(hotkeys.vectorComp.u.r.down, uRDown);
+  useHotkeys(hotkeys.vectorComp.u.p.up, uPhiUp);
+  useHotkeys(hotkeys.vectorComp.u.p.down, uPhiDown);
+  useHotkeys(hotkeys.vectorComp.u.t.up, uThetaUp);
+  useHotkeys(hotkeys.vectorComp.u.t.down, uThetaDown);
+  useHotkeys(hotkeys.vectorReset.u, uReset);
+  useHotkeys(hotkeys.vectorFlip.u, flipParticleVelocity);
 
-  // set up hotkeys for particle charge
+  // set up ref and hotkeys for particle charge
 
   const qRef = useRef<HTMLInputElement>(null);
   const qUp = useCallback((event: KeyboardEvent) => {
@@ -305,10 +306,10 @@ export const useRefsAndHotkeys = () => {
     qRef.current.dispatchEvent(inputEvent);
   }, []);
 
-  useHotkeys('q+up', qUp);
-  useHotkeys('q+down', qDown);
+  useHotkeys(hotkeys.particle.q.up, qUp);
+  useHotkeys(hotkeys.particle.q.down, qDown);
 
-  // set up hotkeys for particle mass
+  // set up ref and hotkeys for particle mass
 
   const mRef = useRef<HTMLInputElement>(null);
   const mUp = useCallback((event: KeyboardEvent) => {
@@ -324,8 +325,8 @@ export const useRefsAndHotkeys = () => {
     mRef.current.dispatchEvent(inputEvent);
   }, []);
 
-  useHotkeys('m+up', mUp);
-  useHotkeys('m+down', mDown);
+  useHotkeys(hotkeys.particle.m.up, mUp);
+  useHotkeys(hotkeys.particle.m.down, mDown);
 
   return {
     cameraRef,
