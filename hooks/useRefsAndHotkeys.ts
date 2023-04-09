@@ -1,4 +1,4 @@
-import { useCallback, useRef } from 'react';
+import { RefObject, useCallback, useMemo, useRef } from 'react';
 import { useHotkeys } from 'react-hotkeys-hook';
 import { OrbitControls } from 'three-stdlib';
 import { shallow } from 'zustand/shallow';
@@ -12,8 +12,31 @@ const storeSelector = (state: State) => ({
 
 const inputEvent = new Event('input', { bubbles: true });
 
+/** Use like `useMemo(() => click(ref), [])` */
+const click = (ref: RefObject<HTMLInputElement | HTMLButtonElement>) => () => {
+  if (!ref.current || ref.current.disabled) return;
+  ref.current.click();
+};
+
+/** Use like `useMemo(() => stepUp(ref), [])` */
+const stepUp = (ref: RefObject<HTMLInputElement>) => (event: KeyboardEvent) => {
+  if (!ref.current || ref.current.disabled) return;
+  event.preventDefault();
+  ref.current.stepUp();
+  ref.current.dispatchEvent(inputEvent);
+};
+
+/** Use like `useMemo(() => stepDown(ref), [])` */
+const stepDown =
+  (ref: RefObject<HTMLInputElement>) => (event: KeyboardEvent) => {
+    if (!ref.current || ref.current.disabled) return;
+    event.preventDefault();
+    ref.current.stepDown();
+    ref.current.dispatchEvent(inputEvent);
+  };
+
 export const useRefsAndHotkeys = () => {
-  const { flipBoostVelocity, flipParticleVelocity } = useStore(
+  const { flipBoostVelocity: vFlip, flipParticleVelocity: uFlip } = useStore(
     storeSelector,
     shallow
   );
@@ -21,98 +44,48 @@ export const useRefsAndHotkeys = () => {
   // set up camera ref and camera-reset hotkey
 
   const cameraRef = useRef<OrbitControls>(null);
-  useHotkeys(hotkeys.oneKey.resetCamera, () => {
-    if (!cameraRef.current) return;
-    cameraRef.current.reset();
-  });
+  const resetCamera = useCallback(() => cameraRef.current?.reset(), []);
+  useHotkeys(hotkeys.oneKey.resetCamera, resetCamera);
 
   // set up show/hide refs and hotkeys
 
   const showCompsRef = useRef<HTMLInputElement>(null);
-  const toggleComps = useCallback(() => {
-    if (!showCompsRef.current || showCompsRef.current.disabled) return;
-    showCompsRef.current.click();
-  }, []);
+  const toggleComps = useMemo(() => click(showCompsRef), []);
   useHotkeys(hotkeys.oneKey.toggleComps, toggleComps);
 
   const showSRef = useRef<HTMLInputElement>(null);
-  const toggleS = useCallback(() => {
-    if (!showSRef.current || showSRef.current.disabled) return;
-    showSRef.current.click();
-  }, []);
+  const toggleS = useMemo(() => click(showSRef), []);
   useHotkeys(hotkeys.oneKey.toggleS, toggleS);
 
   const showURef = useRef<HTMLInputElement>(null);
-  const toggleU = useCallback(() => {
-    if (!showURef.current || showURef.current.disabled) return;
-    showURef.current.click();
-  }, []);
+  const toggleU = useMemo(() => click(showURef), []);
   useHotkeys(hotkeys.oneKey.toggleU, toggleU);
 
   const showFRef = useRef<HTMLInputElement>(null);
-  const toggleF = useCallback(() => {
-    if (!showFRef.current || showFRef.current.disabled) return;
-    showFRef.current.click();
-  }, []);
+  const toggleF = useMemo(() => click(showFRef), []);
   useHotkeys(hotkeys.oneKey.toggleF, toggleF);
 
   const showARef = useRef<HTMLInputElement>(null);
-  const toggleA = useCallback(() => {
-    if (!showARef.current || showARef.current.disabled) return;
-    showARef.current.click();
-  }, []);
+  const toggleA = useMemo(() => click(showARef), []);
   useHotkeys(hotkeys.oneKey.toggleA, toggleA);
 
   const hideVRef = useRef<HTMLInputElement>(null);
-  const toggleV = useCallback(() => {
-    if (!hideVRef.current || hideVRef.current.disabled) return;
-    hideVRef.current.click();
-  }, []);
+  const toggleV = useMemo(() => click(hideVRef), []);
   useHotkeys(hotkeys.oneKey.toggleV, toggleV);
 
   // set up E refs and hotkeys
 
   const eXRef = useRef<HTMLInputElement>(null);
-  const eXUp = useCallback((event: KeyboardEvent) => {
-    if (!eXRef.current) return;
-    event.preventDefault();
-    eXRef.current.stepUp();
-    eXRef.current.dispatchEvent(inputEvent);
-  }, []);
-  const eXDown = useCallback((event: KeyboardEvent) => {
-    if (!eXRef.current) return;
-    event.preventDefault();
-    eXRef.current.stepDown();
-    eXRef.current.dispatchEvent(inputEvent);
-  }, []);
+  const eXUp = useMemo(() => stepUp(eXRef), []);
+  const eXDown = useMemo(() => stepDown(eXRef), []);
 
   const eYRef = useRef<HTMLInputElement>(null);
-  const eYUp = useCallback((event: KeyboardEvent) => {
-    if (!eYRef.current) return;
-    event.preventDefault();
-    eYRef.current.stepUp();
-    eYRef.current.dispatchEvent(inputEvent);
-  }, []);
-  const eYDown = useCallback((event: KeyboardEvent) => {
-    if (!eYRef.current) return;
-    event.preventDefault();
-    eYRef.current.stepDown();
-    eYRef.current.dispatchEvent(inputEvent);
-  }, []);
+  const eYUp = useMemo(() => stepUp(eYRef), []);
+  const eYDown = useMemo(() => stepDown(eYRef), []);
 
   const eZRef = useRef<HTMLInputElement>(null);
-  const eZUp = useCallback((event: KeyboardEvent) => {
-    if (!eZRef.current) return;
-    event.preventDefault();
-    eZRef.current.stepUp();
-    eZRef.current.dispatchEvent(inputEvent);
-  }, []);
-  const eZDown = useCallback((event: KeyboardEvent) => {
-    if (!eZRef.current) return;
-    event.preventDefault();
-    eZRef.current.stepDown();
-    eZRef.current.dispatchEvent(inputEvent);
-  }, []);
+  const eZUp = useMemo(() => stepUp(eZRef), []);
+  const eZDown = useMemo(() => stepDown(eZRef), []);
 
   useHotkeys(hotkeys.vectorComp.e.x.up, eXUp);
   useHotkeys(hotkeys.vectorComp.e.x.down, eXDown);
@@ -124,46 +97,16 @@ export const useRefsAndHotkeys = () => {
   // set up B refs and hotkeys
 
   const bXRef = useRef<HTMLInputElement>(null);
-  const bXUp = useCallback((event: KeyboardEvent) => {
-    if (!bXRef.current) return;
-    event.preventDefault();
-    bXRef.current.stepUp();
-    bXRef.current.dispatchEvent(inputEvent);
-  }, []);
-  const bXDown = useCallback((event: KeyboardEvent) => {
-    if (!bXRef.current) return;
-    event.preventDefault();
-    bXRef.current.stepDown();
-    bXRef.current.dispatchEvent(inputEvent);
-  }, []);
+  const bXUp = useMemo(() => stepUp(bXRef), []);
+  const bXDown = useMemo(() => stepDown(bXRef), []);
 
   const bYRef = useRef<HTMLInputElement>(null);
-  const bYUp = useCallback((event: KeyboardEvent) => {
-    if (!bYRef.current) return;
-    event.preventDefault();
-    bYRef.current.stepUp();
-    bYRef.current.dispatchEvent(inputEvent);
-  }, []);
-  const bYDown = useCallback((event: KeyboardEvent) => {
-    if (!bYRef.current) return;
-    event.preventDefault();
-    bYRef.current.stepDown();
-    bYRef.current.dispatchEvent(inputEvent);
-  }, []);
+  const bYUp = useMemo(() => stepUp(bYRef), []);
+  const bYDown = useMemo(() => stepDown(bYRef), []);
 
   const bZRef = useRef<HTMLInputElement>(null);
-  const bZUp = useCallback((event: KeyboardEvent) => {
-    if (!bZRef.current) return;
-    event.preventDefault();
-    bZRef.current.stepUp();
-    bZRef.current.dispatchEvent(inputEvent);
-  }, []);
-  const bZDown = useCallback((event: KeyboardEvent) => {
-    if (!bZRef.current) return;
-    event.preventDefault();
-    bZRef.current.stepDown();
-    bZRef.current.dispatchEvent(inputEvent);
-  }, []);
+  const bZUp = useMemo(() => stepUp(bZRef), []);
+  const bZDown = useMemo(() => stepDown(bZRef), []);
 
   useHotkeys(hotkeys.vectorComp.b.x.up, bXUp);
   useHotkeys(hotkeys.vectorComp.b.x.down, bXDown);
@@ -175,52 +118,19 @@ export const useRefsAndHotkeys = () => {
   // set up v refs and hotkeys (boost velocity)
 
   const vRRef = useRef<HTMLInputElement>(null);
-  const vRUp = useCallback((event: KeyboardEvent) => {
-    if (!vRRef.current) return;
-    event.preventDefault();
-    vRRef.current.stepUp();
-    vRRef.current.dispatchEvent(inputEvent);
-  }, []);
-  const vRDown = useCallback((event: KeyboardEvent) => {
-    if (!vRRef.current) return;
-    event.preventDefault();
-    vRRef.current.stepDown();
-    vRRef.current.dispatchEvent(inputEvent);
-  }, []);
+  const vRUp = useMemo(() => stepUp(vRRef), []);
+  const vRDown = useMemo(() => stepDown(vRRef), []);
 
   const vPhiRef = useRef<HTMLInputElement>(null);
-  const vPhiUp = useCallback((event: KeyboardEvent) => {
-    if (!vPhiRef.current) return;
-    event.preventDefault();
-    vPhiRef.current.stepUp();
-    vPhiRef.current.dispatchEvent(inputEvent);
-  }, []);
-  const vPhiDown = useCallback((event: KeyboardEvent) => {
-    if (!vPhiRef.current) return;
-    event.preventDefault();
-    vPhiRef.current.stepDown();
-    vPhiRef.current.dispatchEvent(inputEvent);
-  }, []);
+  const vPhiUp = useMemo(() => stepUp(vPhiRef), []);
+  const vPhiDown = useMemo(() => stepDown(vPhiRef), []);
 
   const vThetaRef = useRef<HTMLInputElement>(null);
-  const vThetaUp = useCallback((event: KeyboardEvent) => {
-    if (!vThetaRef.current) return;
-    event.preventDefault();
-    vThetaRef.current.stepUp();
-    vThetaRef.current.dispatchEvent(inputEvent);
-  }, []);
-  const vThetaDown = useCallback((event: KeyboardEvent) => {
-    if (!vThetaRef.current) return;
-    event.preventDefault();
-    vThetaRef.current.stepDown();
-    vThetaRef.current.dispatchEvent(inputEvent);
-  }, []);
+  const vThetaUp = useMemo(() => stepUp(vThetaRef), []);
+  const vThetaDown = useMemo(() => stepDown(vThetaRef), []);
 
   const vResetRef = useRef<HTMLButtonElement>(null);
-  const vReset = useCallback(() => {
-    if (!vResetRef.current) return;
-    vResetRef.current.click();
-  }, []);
+  const vReset = useMemo(() => click(vResetRef), []);
 
   useHotkeys(hotkeys.vectorComp.v.r.up, vRUp);
   useHotkeys(hotkeys.vectorComp.v.r.down, vRDown);
@@ -229,57 +139,24 @@ export const useRefsAndHotkeys = () => {
   useHotkeys(hotkeys.vectorComp.v.t.up, vThetaUp);
   useHotkeys(hotkeys.vectorComp.v.t.down, vThetaDown);
   useHotkeys(hotkeys.vectorReset.v, vReset);
-  useHotkeys(hotkeys.vectorFlip.v, flipBoostVelocity);
+  useHotkeys(hotkeys.vectorFlip.v, vFlip);
 
   // set up u refs and hotkeys (particle velocity)
 
   const uRRef = useRef<HTMLInputElement>(null);
-  const uRUp = useCallback((event: KeyboardEvent) => {
-    if (!uRRef.current) return;
-    event.preventDefault();
-    uRRef.current.stepUp();
-    uRRef.current.dispatchEvent(inputEvent);
-  }, []);
-  const uRDown = useCallback((event: KeyboardEvent) => {
-    if (!uRRef.current) return;
-    event.preventDefault();
-    uRRef.current.stepDown();
-    uRRef.current.dispatchEvent(inputEvent);
-  }, []);
+  const uRUp = useMemo(() => stepUp(uRRef), []);
+  const uRDown = useMemo(() => stepDown(uRRef), []);
 
   const uPhiRef = useRef<HTMLInputElement>(null);
-  const uPhiUp = useCallback((event: KeyboardEvent) => {
-    if (!uPhiRef.current) return;
-    event.preventDefault();
-    uPhiRef.current.stepUp();
-    uPhiRef.current.dispatchEvent(inputEvent);
-  }, []);
-  const uPhiDown = useCallback((event: KeyboardEvent) => {
-    if (!uPhiRef.current) return;
-    event.preventDefault();
-    uPhiRef.current.stepDown();
-    uPhiRef.current.dispatchEvent(inputEvent);
-  }, []);
+  const uPhiUp = useMemo(() => stepUp(uPhiRef), []);
+  const uPhiDown = useMemo(() => stepDown(uPhiRef), []);
 
   const uThetaRef = useRef<HTMLInputElement>(null);
-  const uThetaUp = useCallback((event: KeyboardEvent) => {
-    if (!uThetaRef.current) return;
-    event.preventDefault();
-    uThetaRef.current.stepUp();
-    uThetaRef.current.dispatchEvent(inputEvent);
-  }, []);
-  const uThetaDown = useCallback((event: KeyboardEvent) => {
-    if (!uThetaRef.current) return;
-    event.preventDefault();
-    uThetaRef.current.stepDown();
-    uThetaRef.current.dispatchEvent(inputEvent);
-  }, []);
+  const uThetaUp = useMemo(() => stepUp(uThetaRef), []);
+  const uThetaDown = useMemo(() => stepDown(uThetaRef), []);
 
   const uResetRef = useRef<HTMLButtonElement>(null);
-  const uReset = useCallback(() => {
-    if (!uResetRef.current) return;
-    uResetRef.current.click();
-  }, []);
+  const uReset = useMemo(() => click(uResetRef), []);
 
   useHotkeys(hotkeys.vectorComp.u.r.up, uRUp);
   useHotkeys(hotkeys.vectorComp.u.r.down, uRDown);
@@ -288,23 +165,13 @@ export const useRefsAndHotkeys = () => {
   useHotkeys(hotkeys.vectorComp.u.t.up, uThetaUp);
   useHotkeys(hotkeys.vectorComp.u.t.down, uThetaDown);
   useHotkeys(hotkeys.vectorReset.u, uReset);
-  useHotkeys(hotkeys.vectorFlip.u, flipParticleVelocity);
+  useHotkeys(hotkeys.vectorFlip.u, uFlip);
 
   // set up ref and hotkeys for particle charge
 
   const qRef = useRef<HTMLInputElement>(null);
-  const qUp = useCallback((event: KeyboardEvent) => {
-    if (!qRef.current) return;
-    event.preventDefault();
-    qRef.current.stepUp();
-    qRef.current.dispatchEvent(inputEvent);
-  }, []);
-  const qDown = useCallback((event: KeyboardEvent) => {
-    if (!qRef.current) return;
-    event.preventDefault();
-    qRef.current.stepDown();
-    qRef.current.dispatchEvent(inputEvent);
-  }, []);
+  const qUp = useMemo(() => stepUp(qRef), []);
+  const qDown = useMemo(() => stepDown(qRef), []);
 
   useHotkeys(hotkeys.particle.q.up, qUp);
   useHotkeys(hotkeys.particle.q.down, qDown);
@@ -312,18 +179,8 @@ export const useRefsAndHotkeys = () => {
   // set up ref and hotkeys for particle mass
 
   const mRef = useRef<HTMLInputElement>(null);
-  const mUp = useCallback((event: KeyboardEvent) => {
-    if (!mRef.current) return;
-    event.preventDefault();
-    mRef.current.stepUp();
-    mRef.current.dispatchEvent(inputEvent);
-  }, []);
-  const mDown = useCallback((event: KeyboardEvent) => {
-    if (!mRef.current) return;
-    event.preventDefault();
-    mRef.current.stepDown();
-    mRef.current.dispatchEvent(inputEvent);
-  }, []);
+  const mUp = useMemo(() => stepUp(mRef), []);
+  const mDown = useMemo(() => stepDown(mRef), []);
 
   useHotkeys(hotkeys.particle.m.up, mUp);
   useHotkeys(hotkeys.particle.m.down, mDown);
