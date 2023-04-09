@@ -1,4 +1,4 @@
-import { MathJax } from 'better-react-mathjax';
+import MathJaxInline from './MathJaxInline';
 
 const TitleAndInstructions = () => (
   <div className="space-y-10">
@@ -16,108 +16,84 @@ const TitleAndInstructions = () => (
           <p>
             An <em>event</em> is a point in spacetime—a particular location in
             space at a particular moment in time. At every event there's an
-            electric-field vector <MathJax inline>{'\\( \\vec E \\)'}</MathJax>{' '}
+            electric-field vector <MathJaxInline content={'\\( \\vec E \\)'} />{' '}
             and a magnetic-field vector{' '}
-            <span className="whitespace-nowrap">
-              <MathJax inline>{'\\( \\vec B \\)'}</MathJax>.
-            </span>{' '}
-            Like many quantities in physics, their values depend on your frame
-            of reference. If you and your friend are moving relative to one
-            another, you'll measure different values for the{' '}
-            <MathJax inline>{'\\( \\vec E \\)'}</MathJax> and{' '}
-            <MathJax inline>{'\\( \\vec B \\)'}</MathJax> vectors at a given
+            <MathJaxInline content={'\\( \\vec B \\).'} /> Like many quantities
+            in physics, their values depend on your frame of reference. If you
+            and your friend are moving relative to one another, you'll measure
+            different values for the{' '}
+            <MathJaxInline content={'\\( \\vec E \\)'} /> and{' '}
+            <MathJaxInline content={'\\( \\vec B \\)'} /> vectors at a given
             event.
           </p>
           <p>
             The purpose of this app is to demonstrate <em>how</em> the values of{' '}
-            <MathJax inline>{'\\( \\vec E \\)'}</MathJax> and{' '}
-            <MathJax inline>{'\\( \\vec B \\)'}</MathJax> depend on your frame
+            <MathJaxInline content={'\\( \\vec E \\)'} /> and{' '}
+            <MathJaxInline content={'\\( \\vec B \\)'} /> depend on your frame
             of reference. You tell the app what the values of{' '}
-            <MathJax inline>{'\\( \\vec E \\)'}</MathJax> and{' '}
-            <MathJax inline>{'\\( \\vec B \\)'}</MathJax> are at some event as
+            <MathJaxInline content={'\\( \\vec E \\)'} /> and{' '}
+            <MathJaxInline content={'\\( \\vec B \\)'} /> are at some event as
             measured in some inertial frame of reference (the "unprimed" frame),
             and it will show you their values as measured in <em>another</em>{' '}
             inertial frame of reference (the "primed" frame). The "boost
-            velocity"{' '}
-            <span className="whitespace-nowrap">
-              <MathJax inline>{'\\( \\vec v \\)'}</MathJax>,
-            </span>{' '}
-            which you can also set, is the velocity of the primed frame relative
-            to the unprimed frame.
+            velocity" <MathJaxInline content={'\\( \\vec v \\),'} /> which you
+            can also set, is the velocity of the primed frame relative to the
+            unprimed frame.
           </p>
           <p>
             Note that we're working in units where the speed of light{' '}
-            <MathJax inline>{'\\( c \\)'}</MathJax> is set to{' '}
-            <span className="whitespace-nowrap">
-              <MathJax inline>{'\\( 1 \\)'}</MathJax>.
-            </span>{' '}
-            That might seem strange if you've never seen it before, but remember
-            that <MathJax inline>{'\\( c \\)'}</MathJax> is the cosmic speed
-            limit, which means that all speeds can be expressed as{' '}
-            <em>fractions</em> of{' '}
-            <span className="whitespace-nowrap">
-              <MathJax inline>{'\\( c \\)'}</MathJax>.
-            </span>{' '}
-            Setting <MathJax inline>{'\\( c = 1 \\)'}</MathJax> therefore lets
-            us express every speed as a fraction of{' '}
-            <span className="whitespace-nowrap">
-              <MathJax inline>{'\\( 1 \\)'}</MathJax>—
-            </span>
+            <MathJaxInline content={'\\( c \\)'} /> is set to{' '}
+            <MathJaxInline content={'\\( 1 \\).'} /> That might seem strange if
+            you've never seen it before, but remember that{' '}
+            <MathJaxInline content={'\\( c \\)'} /> is the cosmic speed limit,
+            which means that all speeds can be expressed as <em>fractions</em>{' '}
+            of <MathJaxInline content={'\\( c \\).'} /> Setting{' '}
+            <MathJaxInline content={'\\( c = 1 \\)'} /> therefore lets us
+            express every speed as a fraction of{' '}
+            <MathJaxInline content={'\\( 1 \\)—'} />
             i.e., as a unitless number between{' '}
-            <MathJax inline>{'\\( 0 \\)'}</MathJax> and{' '}
-            <span className="whitespace-nowrap">
-              <MathJax inline>{'\\( 1 \\)'}</MathJax>.
-            </span>{' '}
-            It also lets us omit <MathJax inline>{'\\( c \\)'}</MathJax> from
-            all of our equations! Oh, and we're using the same unit for{' '}
-            <MathJax inline>{'\\( \\vec E \\)'}</MathJax> that we're using for{' '}
-            <span className="whitespace-nowrap">
-              <MathJax inline>{'\\( \\vec B \\)'}</MathJax>.
-            </span>
+            <MathJaxInline content={'\\( 0 \\)'} /> and{' '}
+            <MathJaxInline content={'\\( 1 \\).'} /> It also lets us omit{' '}
+            <MathJaxInline content={'\\( c \\)'} /> from all of our equations!
+            Oh, and we're using the same unit for{' '}
+            <MathJaxInline content={'\\( \\vec E \\)'} /> that we're using for{' '}
+            <MathJaxInline content={'\\( \\vec B \\).'} />
           </p>
           <p>
             Now, the reason we care about the{' '}
-            <MathJax inline>{'\\( \\vec E \\)'}</MathJax> and{' '}
-            <MathJax inline>{'\\( \\vec B \\)'}</MathJax> vectors is that they
+            <MathJaxInline content={'\\( \\vec E \\)'} /> and{' '}
+            <MathJaxInline content={'\\( \\vec B \\)'} /> vectors is that they
             affect the motion of charged particles. Specifically: if there's a
-            particle with charge <MathJax inline>{'\\( q \\)'}</MathJax> at an
+            particle with charge <MathJaxInline content={'\\( q \\)'} /> at an
             event, then the electric- and magnetic-field vectors at that event
             exert a force on the particle—called the <em>Lorentz force</em>
             —whose value is{' '}
-            <span className="whitespace-nowrap">
-              <MathJax inline>
-                {'\\( \\vec F = q( \\vec E + \\vec u \\times \\vec B ) \\)'}
-              </MathJax>
-              ,
-            </span>{' '}
-            where <MathJax inline>{'\\( \\vec u \\)'}</MathJax> is the
+            <MathJaxInline
+              content={
+                '\\( \\vec F = q( \\vec E + \\vec u \\times \\vec B ) \\),'
+              }
+            />{' '}
+            where <MathJaxInline content={'\\( \\vec u \\)'} /> is the
             particle's velocity (as measured in the reference frame in
             question). As a result, the particle undergoes an acceleration. You
             probably learned that the relationship between acceleration and
             force is simply{' '}
-            <span className="whitespace-nowrap">
-              <MathJax inline>{'\\( \\vec a = \\vec F / m \\)'}</MathJax>,
-            </span>{' '}
-            where <MathJax inline>{'\\( m \\)'}</MathJax> is the particle's
-            (constant) mass. Einstein showed that that isn't quite right. The
-            relationship is actually{' '}
-            <span className="whitespace-nowrap">
-              <MathJax inline>
-                {
-                  '\\( \\vec{a} = \\frac{ \\vec{F} - ( \\vec{F} \\cdot \\vec{u} ) \\vec{u} }{ \\gamma m } \\)'
-                }
-              </MathJax>
-              ,
-            </span>{' '}
+            <MathJaxInline content={'\\( \\vec a = \\vec F / m \\),'} /> where{' '}
+            <MathJaxInline content={'\\( m \\)'} /> is the particle's (constant)
+            mass. Einstein showed that that isn't quite right. The relationship
+            is actually{' '}
+            <MathJaxInline
+              content={
+                '\\( \\vec{a} = \\frac{ \\vec{F} - ( \\vec{F} \\cdot \\vec{u} ) \\vec{u} }{ \\gamma m } \\),'
+              }
+            />{' '}
             with{' '}
-            <MathJax inline>
-              {'\\( \\gamma = \\frac{ 1 }{ \\sqrt{ 1 - u^2 } } \\)'}
-            </MathJax>
-            (where <MathJax inline>{'\\( u \\)'}</MathJax> is the magnitude of{' '}
-            <span className="whitespace-nowrap">
-              <MathJax inline>{'\\( \\vec u \\)'}</MathJax>).
-            </span>{' '}
-            By the way, a particle's charge and mass are quantities whose values{' '}
+            <MathJaxInline
+              content={'\\( \\gamma = \\frac{ 1 }{ \\sqrt{ 1 - u^2 } } \\)'}
+            />
+            (where <MathJaxInline content={'\\( u \\)'} /> is the magnitude of{' '}
+            <MathJaxInline content={'\\( \\vec u \\)).'} /> By the way, a
+            particle's charge and mass are quantities whose values{' '}
             <em>don't</em> depend on your frame of reference. The values of
             velocity, acceleration, and force <em>do</em>.
           </p>
@@ -137,12 +113,9 @@ const TitleAndInstructions = () => (
             Another available option lets you see the Poynting vector in both
             frames. The Poynting vector represents the flow of energy within the
             electric and magnetic fields. It's given by the cross product{' '}
-            <span className="whitespace-nowrap">
-              <MathJax inline>
-                {'\\( \\vec S = \\vec E \\times \\vec B \\)'}
-              </MathJax>
-              .
-            </span>
+            <MathJaxInline
+              content={'\\( \\vec S = \\vec E \\times \\vec B \\).'}
+            />
           </p>
         </div>
       </details>
@@ -177,10 +150,8 @@ const TitleAndInstructions = () => (
             type at least one digit <em>before</em> inserting the minus sign at
             the start. Same goes for periods—you'll have to type <kbd>0.</kbd>{' '}
             instead of <kbd>.</kbd> for numbers between{' '}
-            <MathJax inline>{'\\( 0 \\)'}</MathJax> and{' '}
-            <span className="whitespace-nowrap">
-              <MathJax inline>{'\\( 1 \\)'}</MathJax>.
-            </span>
+            <MathJaxInline content={'\\( 0 \\)'} /> and{' '}
+            <MathJaxInline content={'\\( 1 \\).'} />
           </p>
           <p>A few notes:</p>
           <ul>
@@ -190,48 +161,29 @@ const TitleAndInstructions = () => (
             </li>
             <li>
               The speed of light is set to{' '}
-              <span className="whitespace-nowrap">
-                <MathJax inline>{'\\( 1 \\)'}</MathJax>,
-              </span>{' '}
-              and speed-inputs (the{' '}
-              <span className="whitespace-nowrap">
-                <MathJax inline>{'\\( r \\)'}</MathJax>
-                -components
-              </span>{' '}
-              for velocity-vectors) must be strictly less than that.
+              <MathJaxInline content={'\\( 1 \\),'} /> and speed-inputs (the{' '}
+              <MathJaxInline content={'\\( r \\)-components'} /> for
+              velocity-vectors) must be strictly less than that.
             </li>
             <li>
               Spherical components are of the "math" flavor, where{' '}
-              <MathJax inline>{'\\( \\phi \\)'}</MathJax> is the polar angle
+              <MathJaxInline content={'\\( \\phi \\)'} /> is the polar angle
               (with reference to the{' '}
-              <span className="whitespace-nowrap">
-                <MathJax inline>{'\\( y \\)'}</MathJax>
-                -axis)
-              </span>{' '}
-              and <MathJax inline>{'\\( \\theta \\)'}</MathJax> is the azimuthal
+              <MathJaxInline content={'\\( y \\)-axis)'} /> and{' '}
+              <MathJaxInline content={'\\( \\theta \\)'} /> is the azimuthal
               angle (with reference to the{' '}
-              <span className="whitespace-nowrap">
-                <MathJax inline>{'\\( z \\)'}</MathJax>
-                -axis).
-              </span>
+              <MathJaxInline content={'\\( z \\)-axis).'} />
             </li>
             <li>
               The boost-velocity is directed along the{' '}
-              <span className="whitespace-nowrap">
-                <MathJax inline>{'\\( x \\)'}</MathJax>-axis
-              </span>{' '}
-              by default. You can change that (by adjusting its polar or
-              azimuthal angle), but if you do, take care not to misinterpret the
-              calculated Cartesian components of a boosted vector—the{' '}
-              <span className="whitespace-nowrap">
-                <MathJax inline>{'\\( x ^ \\prime \\)'}</MathJax>-component
-              </span>{' '}
-              will no longer be the component whose basis-vector is parallel to
-              the boost-axis! There's a button in the Options to reset the
-              boost-direction to{' '}
-              <span className="whitespace-nowrap">
-                <MathJax inline>{'\\( +x \\)'}</MathJax>.
-              </span>
+              <MathJaxInline content={'\\( x \\)-axis'} /> by default. You can
+              change that (by adjusting its polar or azimuthal angle), but if
+              you do, take care not to misinterpret the calculated Cartesian
+              components of a boosted vector—the{' '}
+              <MathJaxInline content={'\\( x ^ \\prime \\)-component'} /> will
+              no longer be the component whose basis-vector is parallel to the
+              boost-axis! There's a button in the Options to reset the
+              boost-direction to <MathJaxInline content={'\\( +x \\).'} />
             </li>
           </ul>
           <p>Here is how the "camera" works:</p>
@@ -280,9 +232,9 @@ const TitleAndInstructions = () => (
           </ol>
           <p>
             For example, to decrease the{' '}
-            <MathJax inline>{'\\( E_x \\)'}</MathJax> component, press{' '}
+            <MathJaxInline content={'\\( E_x \\)'} /> component, press{' '}
             <kbd>e</kbd> + <kbd>x</kbd> + <kbd>↓</kbd>. And to increase the{' '}
-            <MathJax inline>{'\\( u_{ \\phi } \\)'}</MathJax> component, press{' '}
+            <MathJaxInline content={'\\( u_{ \\phi } \\)'} /> component, press{' '}
             <kbd>u</kbd> + <kbd>p</kbd> + <kbd>↑</kbd>.
           </p>
           <p>
@@ -290,10 +242,10 @@ const TitleAndInstructions = () => (
             reverse the direction of the boost velocity, press <kbd>v</kbd> +{' '}
             <kbd>-</kbd>. To reverse the direction of the particle velocity,
             press <kbd>u</kbd> + <kbd>-</kbd>. To reset the direction of the
-            boost velocity (to the <MathJax inline>{'\\( +x \\)'}</MathJax>{' '}
+            boost velocity (to the <MathJaxInline content={'\\( +x \\)'} />{' '}
             direction), press <kbd>v</kbd> + <kbd>0</kbd>. To reset the
             direction of the particle velocity (to the{' '}
-            <MathJax inline>{'\\( -x \\)'}</MathJax> direction), press{' '}
+            <MathJaxInline content={'\\( -x \\)'} /> direction), press{' '}
             <kbd>u</kbd> + <kbd>0</kbd>.
           </p>
           <p>
@@ -341,73 +293,62 @@ const TitleAndInstructions = () => (
             app, however, I had no choice but to get my hands dirty with the
             transformation formulas for non-covariant quantities. I've found
             that using the boost <em>rapidity</em> (as opposed to the boost
-            velocity <MathJax inline>{'\\( \\vec v \\)'}</MathJax> and Lorentz
+            velocity <MathJaxInline content={'\\( \\vec v \\)'} /> and Lorentz
             factor{' '}
-            <span className="whitespace-nowrap">
-              <MathJax inline>
-                {'\\( \\gamma = \\frac{1}{ \\sqrt{ 1 - v ^2 } } \\)'}
-              </MathJax>
-              )
-            </span>{' '}
+            <MathJaxInline
+              content={'\\( \\gamma = \\frac{1}{ \\sqrt{ 1 - v ^2 } } \\))'}
+            />{' '}
             makes the formulas easier on the eyes and mind.
           </p>
           <p>
             Below are the transformation formulas I used. The quantity{' '}
-            <MathJax inline>{'\\( \\hat v \\)'}</MathJax> is the <em>unit</em>{' '}
+            <MathJaxInline content={'\\( \\hat v \\)'} /> is the <em>unit</em>{' '}
             vector in the direction of the boost velocity{' '}
-            <span className="whitespace-nowrap">
-              <MathJax inline>{'\\( \\vec v \\)'}</MathJax>,
-            </span>{' '}
-            and the aforementioned boost rapidity is{' '}
-            <MathJax inline>{'\\( \\eta = \\tanh ^{-1} v \\)'}</MathJax> (that's
+            <MathJaxInline content={'\\( \\vec v \\),'} /> and the
+            aforementioned boost rapidity is{' '}
+            <MathJaxInline content={'\\( \\eta = \\tanh ^{-1} v \\)'} /> (that's
             the inverse hyperbolic tangent, and{' '}
-            <MathJax inline>{'\\(  v \\)'}</MathJax> is the magnitude of{' '}
-            <span className="whitespace-nowrap">
-              <MathJax inline>{'\\( \\vec v \\)'}</MathJax>).
-            </span>
+            <MathJaxInline content={'\\(  v \\)'} /> is the magnitude of{' '}
+            <MathJaxInline content={'\\( \\vec v \\)).'} />
           </p>
           <ul>
             <li>
-              <MathJax inline>
-                {
+              <MathJaxInline
+                content={
                   '\\( \\vec E ^ \\prime = \\cosh \\eta \\, \\vec E + \\sinh \\eta \\, ( \\hat v \\times \\vec B ) - 2 \\sinh ^2 \\frac{\\eta}{2} \\, ( \\hat v \\cdot \\vec E ) \\hat v \\)'
                 }
-              </MathJax>
+              />
             </li>
             <li>
-              <MathJax inline>
-                {
+              <MathJaxInline
+                content={
                   '\\( \\vec B ^ \\prime = \\cosh \\eta \\, \\vec B - \\sinh \\eta \\, ( \\hat v \\times \\vec E ) - 2 \\sinh ^2 \\frac{\\eta}{2} \\, ( \\hat v \\cdot \\vec B ) \\hat v \\)'
                 }
-              </MathJax>
+              />
             </li>
             <li>
-              <MathJax inline>
-                {
+              <MathJaxInline
+                content={
                   '\\( \\vec u ^ \\prime = \\dfrac{ \\vec u + \\left ( 2 \\sinh ^2 \\frac{ \\eta }{ 2 } \\, ( \\hat v \\cdot \\vec u ) - \\sinh \\eta \\right ) \\hat v }{ \\cosh \\eta - \\sinh \\eta \\, ( \\hat v \\cdot \\vec u ) } \\)'
                 }
-              </MathJax>
+              />
             </li>
           </ul>
           <p>(I didn't say they were pretty!)</p>
           <p>
             It follows from the definition of{' '}
-            <MathJax inline>{'\\( \\eta \\)'}</MathJax> that{' '}
-            <MathJax inline>{'\\( \\cosh \\eta = \\gamma \\)'}</MathJax> and
-            that{' '}
-            <span className="whitespace-nowrap">
-              <MathJax inline>{'\\( \\sinh \\eta = \\gamma v \\)'}</MathJax>.
-            </span>{' '}
+            <MathJaxInline content={'\\( \\eta \\)'} /> that{' '}
+            <MathJaxInline content={'\\( \\cosh \\eta = \\gamma \\)'} /> and
+            that <MathJaxInline content={'\\( \\sinh \\eta = \\gamma v \\).'} />{' '}
             To write the formulas in their more familiar "non-rapidity" form,
             make those substitutions, use{' '}
-            <MathJax inline>{'\\( \\vec v = v \\hat v \\)'}</MathJax> and the
+            <MathJaxInline content={'\\( \\vec v = v \\hat v \\)'} /> and the
             identity{' '}
-            <span className="whitespace-nowrap">
-              <MathJax inline>
-                {'\\( 2 \\sinh ^2 \\frac{ \\eta }{ 2 } = \\cosh \\eta - 1 \\)'}
-              </MathJax>
-              ,
-            </span>{' '}
+            <MathJaxInline
+              content={
+                '\\( 2 \\sinh ^2 \\frac{ \\eta }{ 2 } = \\cosh \\eta - 1 \\),'
+              }
+            />{' '}
             and simplify.
           </p>
           <p>
@@ -424,8 +365,8 @@ const TitleAndInstructions = () => (
           <ul>
             <li>
               The quantities{' '}
-              <MathJax inline>{'\\( \\vec E \\cdot \\vec B \\)'}</MathJax> and{' '}
-              <MathJax inline>{'\\( E^2 - B^2 \\)'}</MathJax> are invariant,
+              <MathJaxInline content={'\\( \\vec E \\cdot \\vec B \\)'} /> and{' '}
+              <MathJaxInline content={'\\( E^2 - B^2 \\)'} /> are invariant,
               meaning that their values don't change under a boost. So if the
               vectors are perpendicular in one inertial frame, then they're
               perpendicular in all inertial frames; and if they share a
@@ -436,19 +377,16 @@ const TitleAndInstructions = () => (
             </li>
             <li>
               Under a Lorentz boost, only the components of{' '}
-              <MathJax inline>{'\\( \\vec E \\)'}</MathJax> and{' '}
-              <MathJax inline>{'\\( \\vec B \\)'}</MathJax> that are{' '}
+              <MathJaxInline content={'\\( \\vec E \\)'} /> and{' '}
+              <MathJaxInline content={'\\( \\vec B \\)'} /> that are{' '}
               <em>perpendicular</em> to the boost-velocity{' '}
-              <MathJax inline>{'\\( \\vec v \\)'}</MathJax> change. The
+              <MathJaxInline content={'\\( \\vec v \\)'} /> change. The
               components that are <em>parallel</em> to{' '}
-              <MathJax inline>{'\\( \\vec v \\)'}</MathJax> retain their value.
+              <MathJaxInline content={'\\( \\vec v \\)'} /> retain their value.
             </li>
             <li>
               Under a Lorentz boost, <em>all</em> components of a
-              velocity-vector{' '}
-              <span className="whitespace-nowrap">
-                (<MathJax inline>{'\\( \\vec u \\)'}</MathJax>)
-              </span>{' '}
+              velocity-vector <MathJaxInline content={'(\\( \\vec u \\))'} />{' '}
               generally change. This differs from the Galilean/Newtonian model,
               where only the velocity-component <em>parallel</em> to the
               boost-axis changes.
@@ -462,26 +400,18 @@ const TitleAndInstructions = () => (
               "longitudinal" boost, by which I mean a Lorentz boost that's
               parallel to the particle's velocity. In other words, if you set
               the particle-velocity{' '}
-              <MathJax inline>{'\\( \\vec u \\)'}</MathJax> to be parallel to
-              the boost-velocity{' '}
-              <span className="whitespace-nowrap">
-                <MathJax inline>{'\\( \\vec v \\)'}</MathJax>,
-              </span>{' '}
+              <MathJaxInline content={'\\( \\vec u \\)'} /> to be parallel to
+              the boost-velocity <MathJaxInline content={'\\( \\vec v \\),'} />{' '}
               then you'll find that the component of{' '}
-              <MathJax inline>{'\\( \\vec F \\)'}</MathJax> that's parallel to
+              <MathJaxInline content={'\\( \\vec F \\)'} /> that's parallel to
               those vectors is equal to the corresponding component of{' '}
-              <span className="whitespace-nowrap">
-                <MathJax inline>{'\\( \\vec F ^ \\prime \\)'}</MathJax>.
-              </span>{' '}
-              So try setting both <MathJax inline>{'\\( \\vec v \\)'}</MathJax>{' '}
-              and <MathJax inline>{'\\( \\vec u \\)'}</MathJax> to point along
-              the{' '}
-              <span className="whitespace-nowrap">
-                <MathJax inline>{'\\( x \\)'}</MathJax>-axis
-              </span>{' '}
-              (by using the "Reset" buttons in the Options, or simply by
-              reloading the page); <MathJax inline>{'\\( F_x \\)'}</MathJax> and{' '}
-              <MathJax inline>{'\\( F ^ \\prime _x \\)'}</MathJax> should then
+              <MathJaxInline content={'\\( \\vec F ^ \\prime \\).'} /> So try
+              setting both <MathJaxInline content={'\\( \\vec v \\)'} /> and{' '}
+              <MathJaxInline content={'\\( \\vec u \\)'} /> to point along the{' '}
+              <MathJaxInline content={'\\( x \\)-axis'} /> (by using the "Reset"
+              buttons in the Options, or simply by reloading the page);{' '}
+              <MathJaxInline content={'\\( F_x \\)'} /> and{' '}
+              <MathJaxInline content={'\\( F ^ \\prime _x \\)'} /> should then
               have the same value.
             </li>
           </ul>

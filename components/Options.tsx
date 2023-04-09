@@ -1,8 +1,8 @@
-import { MathJax } from 'better-react-mathjax';
 import { RefObject, memo } from 'react';
 import { OrbitControls } from 'three-stdlib';
 import { shallow } from 'zustand/shallow';
 import useStore, { State } from '../store/store';
+import MathJaxInline from './MathJaxInline';
 
 interface Props {
   cameraRef: RefObject<OrbitControls>;
@@ -85,10 +85,7 @@ const Options = memo(
                 onChange={(e) => setShowComponentVectors(e.target.checked)}
               />
               Show component-vectors parallel and perpendicular to the
-              boost-velocity{' '}
-              <span className="whitespace-nowrap">
-                <MathJax inline>{'\\( \\vec v \\)'}</MathJax>.
-              </span>
+              boost-velocity <MathJaxInline content={'\\( \\vec v \\).'} />
             </label>
           </div>
           <div>
@@ -100,12 +97,9 @@ const Options = memo(
                 onChange={(e) => setShowPoynting(e.target.checked)}
               />
               Show the Poynting vector{' '}
-              <span className="whitespace-nowrap">
-                <MathJax inline>
-                  {'\\( \\vec S = \\vec E \\times \\vec B \\)'}
-                </MathJax>
-                .
-              </span>
+              <MathJaxInline
+                content={'\\( \\vec S = \\vec E \\times \\vec B \\).'}
+              />
             </label>
           </div>
           <div>
@@ -122,9 +116,7 @@ const Options = memo(
                 onChange={(e) => setShowParticleVelocity(e.target.checked)}
               />
               Show the particle velocity{' '}
-              <span className="whitespace-nowrap">
-                <MathJax inline>{'\\( \\vec u \\)'}</MathJax>.
-              </span>
+              <MathJaxInline content={'\\( \\vec u \\).'} />
             </label>
           </div>
           <div>
@@ -137,17 +129,12 @@ const Options = memo(
                 onChange={(e) => setShowLorentzForce(e.target.checked)}
               />
               Show the Lorentz force acting on the particle:{' '}
-              <span className="whitespace-nowrap">
-                <MathJax inline>
-                  {'\\( \\vec F = q( \\vec E + \\vec u \\times \\vec B ) \\)'}
-                </MathJax>
-                .
-              </span>{' '}
-              (Will show{' '}
-              <span className="whitespace-nowrap">
-                <MathJax inline>{'\\( \\vec u \\)'}</MathJax>,
-              </span>{' '}
-              too.)
+              <MathJaxInline
+                content={
+                  '\\( \\vec F = q( \\vec E + \\vec u \\times \\vec B ) \\).'
+                }
+              />{' '}
+              (Will show <MathJaxInline content={'\\( \\vec u \\),'} /> too.)
             </label>
           </div>
           <div>
@@ -160,29 +147,18 @@ const Options = memo(
               />
               Show the particle's acceleration resulting from the Lorentz force
               (assuming constant particle mass{' '}
-              <span className="whitespace-nowrap">
-                <MathJax inline>{'\\( m \\)'}</MathJax>):
-              </span>{' '}
-              <span className="whitespace-nowrap">
-                <MathJax inline>
-                  {
-                    '\\( \\vec{a} = \\frac{ \\vec{F} - ( \\vec{F} \\cdot \\vec{u} ) \\vec{u} }{ \\gamma m } \\)'
-                  }
-                </MathJax>
-                ,
-              </span>{' '}
+              <MathJaxInline content={'\\( m \\)):'} />{' '}
+              <MathJaxInline
+                content={
+                  '\\( \\vec{a} = \\frac{ \\vec{F} - ( \\vec{F} \\cdot \\vec{u} ) \\vec{u} }{ \\gamma m } \\),'
+                }
+              />{' '}
               with{' '}
-              <span className="whitespace-nowrap">
-                <MathJax inline>
-                  {'\\( \\gamma = \\frac{ 1 }{ \\sqrt{ 1 - u^2 } } \\)'}
-                </MathJax>
-                .
-              </span>{' '}
-              (Will show <MathJax inline>{'\\( \\vec u \\)'}</MathJax> and{' '}
-              <span className="whitespace-nowrap">
-                <MathJax inline>{'\\( \\vec F \\)'}</MathJax>,
-              </span>{' '}
-              too.)
+              <MathJaxInline
+                content={'\\( \\gamma = \\frac{ 1 }{ \\sqrt{ 1 - u^2 } } \\).'}
+              />{' '}
+              (Will show <MathJaxInline content={'\\( \\vec u \\)'} /> and{' '}
+              <MathJaxInline content={'\\( \\vec F \\),'} /> too.)
             </label>
           </div>
           <div>
@@ -194,12 +170,10 @@ const Options = memo(
                 onChange={(e) => setHideBoostedQuantities(e.target.checked)}
               />
               Hide the boost-velocity{' '}
-              <MathJax inline>{'\\( \\vec v \\)'}</MathJax> and the boosted
+              <MathJaxInline content={'\\( \\vec v \\)'} /> and the boosted
               ("primed") quantities. (Will also hide the component-vectors
               parallel and perpendicular to{' '}
-              <span className="whitespace-nowrap">
-                <MathJax inline>{'\\( \\vec v \\)'}</MathJax>.)
-              </span>
+              <MathJaxInline content={'\\( \\vec v \\).)'} />
             </label>
           </div>
 
@@ -227,9 +201,7 @@ const Options = memo(
                   }}
                 >
                   Reset boost-direction{' '}
-                  <span className="whitespace-nowrap">
-                    (<MathJax inline>{'\\( +x \\)'}</MathJax>)
-                  </span>
+                  <MathJaxInline content={'(\\( +x \\))'} />
                 </button>
               </div>
               <div>
@@ -242,9 +214,7 @@ const Options = memo(
                   }}
                 >
                   Reset particle's velocity-direction{' '}
-                  <span className="whitespace-nowrap">
-                    (<MathJax inline>{'\\( -x \\)'}</MathJax>)
-                  </span>
+                  <MathJaxInline content={'(\\( -x \\))'} />
                 </button>
               </div>
             </div>
@@ -263,7 +233,7 @@ const Options = memo(
                     setBField([0, 0, 1]);
                   }}
                 >
-                  Light-wave toward <MathJax inline>{'\\( x \\)'}</MathJax>
+                  Light-wave toward <MathJaxInline content={'\\( x \\)'} />
                 </button>
               </div>
               <div>
@@ -274,7 +244,7 @@ const Options = memo(
                     setBField([0, -1, 0]);
                   }}
                 >
-                  Light-wave toward <MathJax inline>{'\\( z \\)'}</MathJax>
+                  Light-wave toward <MathJaxInline content={'\\( z \\)'} />
                 </button>
               </div>
               <div>
@@ -285,7 +255,7 @@ const Options = memo(
                     setBField([0, 0, 1]);
                   }}
                 >
-                  Parallel fields on <MathJax inline>{'\\( z \\)'}</MathJax>
+                  Parallel fields on <MathJaxInline content={'\\( z \\)'} />
                 </button>
               </div>
               <div>
@@ -308,7 +278,7 @@ const Options = memo(
                   }}
                 >
                   Anti-parallel fields on{' '}
-                  <MathJax inline>{'\\( z \\)'}</MathJax>
+                  <MathJaxInline content={'\\( z \\)'} />
                 </button>
               </div>
               <div>

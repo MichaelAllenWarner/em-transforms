@@ -1,6 +1,6 @@
 import { ChangeEvent, memo, RefObject, useCallback } from 'react';
 import { Color, textColor } from '../helpers/Color';
-import round from '../helpers/round';
+import { round } from '../helpers/round';
 import { CartesianComponents } from '../store/store';
 
 interface Props {
