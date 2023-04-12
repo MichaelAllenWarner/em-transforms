@@ -209,7 +209,9 @@ const TitleAndInstructions = () => (
         <div>
           <p>
             You can use the keyboard to control the input-settings and many of
-            the Options.
+            the Options. (Disclaimer: I can't guarantee that all hotkeys work in
+            all browsers on all operating systems. On my Mac, they do work in
+            every browser I've tested: Safari, Chrome, Firefox, and Edge.)
           </p>
           <p>To increase or decrease the magnitude of a vector-component:</p>
           <ol>
