@@ -37,3 +37,6 @@ report.*.json
 
 # .vscode Debugging
 .vscode/*-debug-profile
+/test-results/
+/playwright-report/
+/playwright/.cache/

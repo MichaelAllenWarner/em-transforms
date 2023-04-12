@@ -29,7 +29,7 @@ const keys = {
   // 'modifier' keys
   cartesianComponentKeys: ['x', 'y', 'z'],
   sphericalComponentKeys: ['r', 'p', 't'],
-  upDownKeys: ['up', 'down'],
+  upDownKeys: ['ArrowUp', 'ArrowDown'],
   resetKey: '0',
   flipKey: '-',
 } as const;
@@ -66,58 +66,58 @@ const vectorCompHotkeys: {
 } = {
   e: {
     x: {
-      up: 'e+x+up',
-      down: 'e+x+down',
+      ArrowUp: 'e+x+ArrowUp',
+      ArrowDown: 'e+x+ArrowDown',
     },
     y: {
-      up: 'e+y+up',
-      down: 'e+y+down',
+      ArrowUp: 'e+y+ArrowUp',
+      ArrowDown: 'e+y+ArrowDown',
     },
     z: {
-      up: 'e+z+up',
-      down: 'e+z+down',
+      ArrowUp: 'e+z+ArrowUp',
+      ArrowDown: 'e+z+ArrowDown',
     },
   },
   b: {
     x: {
-      up: 'b+x+up',
-      down: 'b+x+down',
+      ArrowUp: 'b+x+ArrowUp',
+      ArrowDown: 'b+x+ArrowDown',
     },
     y: {
-      up: 'b+y+up',
-      down: 'b+y+down',
+      ArrowUp: 'b+y+ArrowUp',
+      ArrowDown: 'b+y+ArrowDown',
     },
     z: {
-      up: 'b+z+up',
-      down: 'b+z+down',
+      ArrowUp: 'b+z+ArrowUp',
+      ArrowDown: 'b+z+ArrowDown',
     },
   },
   v: {
     r: {
-      up: 'v+r+up',
-      down: 'v+r+down',
+      ArrowUp: 'v+r+ArrowUp',
+      ArrowDown: 'v+r+ArrowDown',
     },
     p: {
-      up: 'v+p+up',
-      down: 'v+p+down',
+      ArrowUp: 'v+p+ArrowUp',
+      ArrowDown: 'v+p+ArrowDown',
     },
     t: {
-      up: 'v+t+up',
-      down: 'v+t+down',
+      ArrowUp: 'v+t+ArrowUp',
+      ArrowDown: 'v+t+ArrowDown',
     },
   },
   u: {
     r: {
-      up: 'u+r+up',
-      down: 'u+r+down',
+      ArrowUp: 'u+r+ArrowUp',
+      ArrowDown: 'u+r+ArrowDown',
     },
     p: {
-      up: 'u+p+up',
-      down: 'u+p+down',
+      ArrowUp: 'u+p+ArrowUp',
+      ArrowDown: 'u+p+ArrowDown',
     },
     t: {
-      up: 'u+t+up',
-      down: 'u+t+down',
+      ArrowUp: 'u+t+ArrowUp',
+      ArrowDown: 'u+t+ArrowDown',
     },
   },
 };
@@ -142,12 +142,12 @@ const particleHotkeys: {
   };
 } = {
   q: {
-    up: 'q+up',
-    down: 'q+down',
+    ArrowUp: 'q+ArrowUp',
+    ArrowDown: 'q+ArrowDown',
   },
   m: {
-    up: 'm+up',
-    down: 'm+down',
+    ArrowUp: 'm+ArrowUp',
+    ArrowDown: 'm+ArrowDown',
   },
 };
 

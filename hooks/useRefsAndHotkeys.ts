@@ -87,12 +87,12 @@ export const useRefsAndHotkeys = () => {
   const eZUp = useMemo(() => stepUp(eZRef), []);
   const eZDown = useMemo(() => stepDown(eZRef), []);
 
-  useHotkeys(hotkeys.vectorComp.e.x.up, eXUp);
-  useHotkeys(hotkeys.vectorComp.e.x.down, eXDown);
-  useHotkeys(hotkeys.vectorComp.e.y.up, eYUp);
-  useHotkeys(hotkeys.vectorComp.e.y.down, eYDown);
-  useHotkeys(hotkeys.vectorComp.e.z.up, eZUp);
-  useHotkeys(hotkeys.vectorComp.e.z.down, eZDown);
+  useHotkeys(hotkeys.vectorComp.e.x.ArrowUp, eXUp);
+  useHotkeys(hotkeys.vectorComp.e.x.ArrowDown, eXDown);
+  useHotkeys(hotkeys.vectorComp.e.y.ArrowUp, eYUp);
+  useHotkeys(hotkeys.vectorComp.e.y.ArrowDown, eYDown);
+  useHotkeys(hotkeys.vectorComp.e.z.ArrowUp, eZUp);
+  useHotkeys(hotkeys.vectorComp.e.z.ArrowDown, eZDown);
 
   // set up B refs and hotkeys
 
@@ -108,12 +108,12 @@ export const useRefsAndHotkeys = () => {
   const bZUp = useMemo(() => stepUp(bZRef), []);
   const bZDown = useMemo(() => stepDown(bZRef), []);
 
-  useHotkeys(hotkeys.vectorComp.b.x.up, bXUp);
-  useHotkeys(hotkeys.vectorComp.b.x.down, bXDown);
-  useHotkeys(hotkeys.vectorComp.b.y.up, bYUp);
-  useHotkeys(hotkeys.vectorComp.b.y.down, bYDown);
-  useHotkeys(hotkeys.vectorComp.b.z.up, bZUp);
-  useHotkeys(hotkeys.vectorComp.b.z.down, bZDown);
+  useHotkeys(hotkeys.vectorComp.b.x.ArrowUp, bXUp);
+  useHotkeys(hotkeys.vectorComp.b.x.ArrowDown, bXDown);
+  useHotkeys(hotkeys.vectorComp.b.y.ArrowUp, bYUp);
+  useHotkeys(hotkeys.vectorComp.b.y.ArrowDown, bYDown);
+  useHotkeys(hotkeys.vectorComp.b.z.ArrowUp, bZUp);
+  useHotkeys(hotkeys.vectorComp.b.z.ArrowDown, bZDown);
 
   // set up v refs and hotkeys (boost velocity)
 
@@ -132,12 +132,12 @@ export const useRefsAndHotkeys = () => {
   const vResetRef = useRef<HTMLButtonElement>(null);
   const vReset = useMemo(() => click(vResetRef), []);
 
-  useHotkeys(hotkeys.vectorComp.v.r.up, vRUp);
-  useHotkeys(hotkeys.vectorComp.v.r.down, vRDown);
-  useHotkeys(hotkeys.vectorComp.v.p.up, vPhiUp);
-  useHotkeys(hotkeys.vectorComp.v.p.down, vPhiDown);
-  useHotkeys(hotkeys.vectorComp.v.t.up, vThetaUp);
-  useHotkeys(hotkeys.vectorComp.v.t.down, vThetaDown);
+  useHotkeys(hotkeys.vectorComp.v.r.ArrowUp, vRUp);
+  useHotkeys(hotkeys.vectorComp.v.r.ArrowDown, vRDown);
+  useHotkeys(hotkeys.vectorComp.v.p.ArrowUp, vPhiUp);
+  useHotkeys(hotkeys.vectorComp.v.p.ArrowDown, vPhiDown);
+  useHotkeys(hotkeys.vectorComp.v.t.ArrowUp, vThetaUp);
+  useHotkeys(hotkeys.vectorComp.v.t.ArrowDown, vThetaDown);
   useHotkeys(hotkeys.vectorReset.v, vReset);
   useHotkeys(hotkeys.vectorFlip.v, vFlip);
 
@@ -158,12 +158,12 @@ export const useRefsAndHotkeys = () => {
   const uResetRef = useRef<HTMLButtonElement>(null);
   const uReset = useMemo(() => click(uResetRef), []);
 
-  useHotkeys(hotkeys.vectorComp.u.r.up, uRUp);
-  useHotkeys(hotkeys.vectorComp.u.r.down, uRDown);
-  useHotkeys(hotkeys.vectorComp.u.p.up, uPhiUp);
-  useHotkeys(hotkeys.vectorComp.u.p.down, uPhiDown);
-  useHotkeys(hotkeys.vectorComp.u.t.up, uThetaUp);
-  useHotkeys(hotkeys.vectorComp.u.t.down, uThetaDown);
+  useHotkeys(hotkeys.vectorComp.u.r.ArrowUp, uRUp);
+  useHotkeys(hotkeys.vectorComp.u.r.ArrowDown, uRDown);
+  useHotkeys(hotkeys.vectorComp.u.p.ArrowUp, uPhiUp);
+  useHotkeys(hotkeys.vectorComp.u.p.ArrowDown, uPhiDown);
+  useHotkeys(hotkeys.vectorComp.u.t.ArrowUp, uThetaUp);
+  useHotkeys(hotkeys.vectorComp.u.t.ArrowDown, uThetaDown);
   useHotkeys(hotkeys.vectorReset.u, uReset);
   useHotkeys(hotkeys.vectorFlip.u, uFlip);
 
@@ -173,8 +173,8 @@ export const useRefsAndHotkeys = () => {
   const qUp = useMemo(() => stepUp(qRef), []);
   const qDown = useMemo(() => stepDown(qRef), []);
 
-  useHotkeys(hotkeys.particle.q.up, qUp);
-  useHotkeys(hotkeys.particle.q.down, qDown);
+  useHotkeys(hotkeys.particle.q.ArrowUp, qUp);
+  useHotkeys(hotkeys.particle.q.ArrowDown, qDown);
 
   // set up ref and hotkeys for particle mass
 
@@ -182,8 +182,8 @@ export const useRefsAndHotkeys = () => {
   const mUp = useMemo(() => stepUp(mRef), []);
   const mDown = useMemo(() => stepDown(mRef), []);
 
-  useHotkeys(hotkeys.particle.m.up, mUp);
-  useHotkeys(hotkeys.particle.m.down, mDown);
+  useHotkeys(hotkeys.particle.m.ArrowUp, mUp);
+  useHotkeys(hotkeys.particle.m.ArrowDown, mDown);
 
   return {
     cameraRef,
