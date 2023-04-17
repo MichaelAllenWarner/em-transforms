@@ -1,186 +1,284 @@
-import { test, expect } from '@playwright/test';
-import { hotkeys } from '../helpers/hotkeys';
+import { test, expect, Locator } from '@playwright/test';
+import { isProxy } from 'util/types';
+import { hotkeys as _hotkeys } from '../helpers/hotkeys';
+import { testUp, testDown, deepStringValsOf, isObject } from './helpers';
 
-// TODO (if feasible): test camera-reset hotkey (`hotkeys.oneKey.resetCamera`)
+/*
+  TODO (if feasible): test camera-reset hotkey (`hotkeys.oneKey.resetCamera`)
+    - I think would require snapshot-comparison and some canvas-click/dragging?
+  TODO: improve flip/reset tests
+  TODO: can (and should) we combine spherical and cartesian sets?
+*/
 
-test('Velocity-vector hotkeys should affect the corresponding input values', async ({
-  page,
-}) => {
-  await page.goto('/');
+type Fieldset = { fieldset: Locator };
+type Input = { input: Locator; initialValue: number };
+type Checkbox = { checkbox: Locator; initialChecked: boolean };
 
-  const vFieldset = page.getByRole('group', { name: 'boost velocity' });
+/**
+ * Initially includes all hotkeys. When a hotkey is tested,
+ * it gets removed. At the end of testing, will only
+ * contain those hotkeys that weren't tested at all.
+ * (See final test at bottom of file.)
+ */
+const untestedHotkeys = new Set(deepStringValsOf(_hotkeys));
 
-  const uFieldset = page.getByRole('group', {
-    name: 'original particle velocity',
-  });
+/** Automates the removal of hotkeys from `untestedHotkeys` on property-access. */
+const proxyHandler: ProxyHandler<object> = {
+  get(target, propKey) {
+    let propValue = Reflect.get(target, propKey);
 
-  for (const { fieldset, vectorObjectKey } of [
-    { fieldset: vFieldset, vectorObjectKey: 'v' },
-    { fieldset: uFieldset, vectorObjectKey: 'u' },
-  ] as const) {
-    await expect(fieldset).toBeVisible();
-
-    const rInput = fieldset.getByLabel('r');
-    const φInput = fieldset.getByLabel('φ');
-    const θInput = fieldset.getByLabel('θ');
-
-    const φValue1 = Number(await φInput.inputValue());
-
-    // flip
-    await page.keyboard.press(hotkeys.vectorFlip[vectorObjectKey]);
-    const φValue2 = Number(await φInput.inputValue());
-    expect(φValue2).not.toEqual(φValue1);
-
-    // reset
-    await page.keyboard.press(hotkeys.vectorReset[vectorObjectKey]);
-    const φValue3 = Number(await φInput.inputValue());
-    expect(φValue3).toEqual(φValue1);
-
-    for (const { input, compObjectKey } of [
-      { input: rInput, compObjectKey: 'r' },
-      { input: φInput, compObjectKey: 'p' },
-      { input: θInput, compObjectKey: 't' },
-    ] as const) {
-      await expect(input).toBeVisible();
-      const value1 = Number(await input.inputValue());
-
-      // up
-      await page.keyboard.press(
-        hotkeys.vectorComp[vectorObjectKey][compObjectKey].ArrowUp
-      );
-      const value2 = Number(await input.inputValue());
-      expect(value2).toBeGreaterThan(value1);
-
-      // down
-      await page.keyboard.press(
-        hotkeys.vectorComp[vectorObjectKey][compObjectKey].ArrowDown
-      );
-      const value3 = Number(await input.inputValue());
-      expect(value3).toBeLessThan(value2);
+    if (typeof propValue === 'string' && untestedHotkeys.has(propValue)) {
+      untestedHotkeys.delete(propValue);
+    } else if (isObject(propValue) && !isProxy(propValue)) {
+      Reflect.set(target, propKey, new Proxy(propValue, proxyHandler));
+      propValue = Reflect.get(target, propKey);
     }
-  }
+
+    return propValue;
+  },
+};
+
+const hotkeys = new Proxy<typeof _hotkeys>(_hotkeys, proxyHandler);
+
+test.beforeEach(async ({ page }) => {
+  await page.goto('/');
 });
 
-test('Field-vector hotkeys should affect the corresponding input values', async ({
-  page,
-}) => {
-  await page.goto('/');
+// velocity-vectors (spherical components)
 
-  const eFieldset = page.getByRole('group', {
-    name: 'original electric field',
+for (const { fieldsetName, vectorObjectKey } of [
+  { fieldsetName: 'boost velocity', vectorObjectKey: 'v' },
+  { fieldsetName: 'original particle velocity', vectorObjectKey: 'u' },
+] as const) {
+  const fieldsetTest = test.extend<Fieldset>({
+    fieldset: ({ page }, use) =>
+      use(page.getByRole('group', { name: fieldsetName })),
   });
 
-  const bFieldset = page.getByRole('group', {
-    name: 'original magnetic field',
-  });
+  fieldsetTest.describe(`Fieldset '${fieldsetName}'`, () => {
+    fieldsetTest('is visible.', async ({ fieldset }) => {
+      await expect(fieldset).toBeVisible();
+    });
 
-  for (const { fieldset, vectorObjectKey } of [
-    { fieldset: eFieldset, vectorObjectKey: 'e' },
-    { fieldset: bFieldset, vectorObjectKey: 'b' },
-  ] as const) {
-    await expect(fieldset).toBeVisible();
-
-    const xInput = fieldset.getByLabel('x');
-    const yInput = fieldset.getByLabel('y');
-    const zInput = fieldset.getByLabel('z');
-
-    for (const { input, compObjectKey } of [
-      { input: xInput, compObjectKey: 'x' },
-      { input: yInput, compObjectKey: 'y' },
-      { input: zInput, compObjectKey: 'z' },
+    for (const { inputLabel, compObjectKey } of [
+      { inputLabel: 'r', compObjectKey: 'r' },
+      { inputLabel: 'φ', compObjectKey: 'p' },
+      { inputLabel: 'θ', compObjectKey: 't' },
     ] as const) {
-      await expect(input).toBeVisible();
-      const value1 = Number(await input.inputValue());
+      const inputTest = fieldsetTest.extend<Input>({
+        input: ({ fieldset }, use) => use(fieldset.getByLabel(inputLabel)),
+        initialValue: async ({ fieldset }, use) => {
+          const initialValue = await fieldset
+            .getByLabel(inputLabel)
+            .inputValue();
+          await use(Number(initialValue));
+        },
+      });
 
-      // up
-      await page.keyboard.press(
-        hotkeys.vectorComp[vectorObjectKey][compObjectKey].ArrowUp
-      );
-      const value2 = Number(await input.inputValue());
-      expect(value2).toBeGreaterThan(value1);
+      inputTest.describe(`has input '${inputLabel}'`, () => {
+        inputTest(`that is visible.`, async ({ input }) => {
+          await expect(input).toBeVisible();
+        });
 
-      // down
-      await page.keyboard.press(
-        hotkeys.vectorComp[vectorObjectKey][compObjectKey].ArrowDown
-      );
-      const value3 = Number(await input.inputValue());
-      expect(value3).toBeLessThan(value2);
+        const up = hotkeys.vectorComp[vectorObjectKey][compObjectKey].ArrowUp;
+        inputTest(`that increments with hotkey '${up}'.`, testUp(up));
+
+        const down =
+          hotkeys.vectorComp[vectorObjectKey][compObjectKey].ArrowDown;
+        inputTest(`that decrements with hotkey '${down}'.`, testDown(down));
+
+        if (inputLabel !== 'φ') return;
+
+        // for 'φ' only:
+
+        const flip = hotkeys.vectorFlip[vectorObjectKey];
+        const reset = hotkeys.vectorReset[vectorObjectKey];
+
+        // improve (probably w/ all 3 inputs)
+        inputTest(
+          `that "flips" with hotkey '${flip}'.`,
+          async ({ page, input, initialValue }) => {
+            await page.keyboard.press(flip);
+            const newValue = Number(await input.inputValue());
+            expect(newValue).not.toEqual(initialValue);
+          }
+        );
+
+        // improve (probably w/ all 3 inputs)
+        inputTest(
+          `that resets with hotkey '${reset}'.`,
+          async ({ page, input, initialValue }) => {
+            // flip first to change value
+            await page.keyboard.press(flip);
+            let newValue = Number(await input.inputValue());
+            expect(newValue).not.toEqual(initialValue);
+
+            // now test reset
+            await page.keyboard.press(reset);
+            newValue = Number(await input.inputValue());
+            expect(newValue).toEqual(initialValue);
+          }
+        );
+      });
     }
+  });
+}
+
+// field-vectors (Cartesian components)
+
+for (const { fieldsetName, vectorObjectKey } of [
+  { fieldsetName: 'original electric field', vectorObjectKey: 'e' },
+  { fieldsetName: 'original magnetic field', vectorObjectKey: 'b' },
+] as const) {
+  const fieldsetTest = test.extend<Fieldset>({
+    fieldset: ({ page }, use) =>
+      use(page.getByRole('group', { name: fieldsetName })),
+  });
+
+  fieldsetTest.describe(`Fieldset '${fieldsetName}'`, () => {
+    fieldsetTest('is visible.', async ({ fieldset }) => {
+      await expect(fieldset).toBeVisible();
+    });
+
+    for (const { inputLabel, compObjectKey } of [
+      { inputLabel: 'x', compObjectKey: 'x' },
+      { inputLabel: 'y', compObjectKey: 'y' },
+      { inputLabel: 'z', compObjectKey: 'z' },
+    ] as const) {
+      const inputTest = fieldsetTest.extend<Input>({
+        input: ({ fieldset }, use) => use(fieldset.getByLabel(inputLabel)),
+        initialValue: async ({ fieldset }, use) => {
+          const initialValue = await fieldset
+            .getByLabel(inputLabel)
+            .inputValue();
+          await use(Number(initialValue));
+        },
+      });
+
+      inputTest.describe(`has input '${inputLabel}'`, () => {
+        inputTest(`that is visible and enabled.`, async ({ input }) => {
+          await expect(input).toBeVisible();
+          await expect(input).toBeEnabled();
+        });
+
+        const up = hotkeys.vectorComp[vectorObjectKey][compObjectKey].ArrowUp;
+        inputTest(`that increments with hotkey '${up}'.`, testUp(up));
+
+        const down =
+          hotkeys.vectorComp[vectorObjectKey][compObjectKey].ArrowDown;
+        inputTest(`that decrements with hotkey '${down}'.`, testDown(down));
+      });
+    }
+  });
+}
+
+// particle charge and mass
+
+const particleFieldsetName = 'charge and mass';
+
+const particleFieldsetTest = test.extend<Fieldset>({
+  fieldset: ({ page }, use) =>
+    use(page.getByRole('group', { name: particleFieldsetName })),
+});
+
+particleFieldsetTest.describe(`Fieldset '${particleFieldsetName}'`, () => {
+  particleFieldsetTest('is visible.', async ({ fieldset }) => {
+    await expect(fieldset).toBeVisible();
+  });
+
+  for (const { inputLabel, objectKey } of [
+    { inputLabel: 'q', objectKey: 'q' },
+    { inputLabel: 'm', objectKey: 'm' },
+  ] as const) {
+    const inputTest = particleFieldsetTest.extend<Input>({
+      input: ({ fieldset }, use) => use(fieldset.getByLabel(inputLabel)),
+      initialValue: async ({ fieldset }, use) => {
+        const initialValue = await fieldset.getByLabel(inputLabel).inputValue();
+        await use(Number(initialValue));
+      },
+    });
+
+    inputTest.describe(`has input '${inputLabel}'`, () => {
+      inputTest(`that is visible and enabled.`, async ({ input }) => {
+        await expect(input).toBeVisible();
+        await expect(input).toBeEnabled();
+      });
+
+      const up = hotkeys.particle[objectKey].ArrowUp;
+      inputTest(`that increments with hotkey '${up}'.`, testUp(up));
+
+      const down = hotkeys.particle[objectKey].ArrowDown;
+      inputTest(`that decrements with hotkey '${down}'.`, testDown(down));
+    });
   }
 });
 
-test('Charge and mass hotkeys should affect the corresponding input values', async ({
-  page,
-}) => {
-  await page.goto('/');
+// options
 
-  const fieldset = page.getByRole('group', {
-    name: 'charge and mass',
+const optionsFieldsetName = 'options';
+
+const optionsFieldsetTest = test.extend<Fieldset>({
+  fieldset: async ({ page }, use) => {
+    // 'options' are hidden in `details`/`summary`, which must be opened first
+    const summary = page.locator('summary').filter({ hasText: 'options' });
+    await summary.click();
+    await use(page.getByRole('group', { name: optionsFieldsetName }));
+  },
+});
+
+optionsFieldsetTest.describe(`Fieldset '${optionsFieldsetName}'`, () => {
+  optionsFieldsetTest('is visible.', async ({ fieldset }) => {
+    await expect(fieldset).toBeVisible();
   });
 
-  await expect(fieldset).toBeVisible();
-
-  const qInput = fieldset.getByLabel('q');
-  const mInput = fieldset.getByLabel('m');
-
-  for (const { input, objectKey } of [
-    { input: qInput, objectKey: 'q' },
-    { input: mInput, objectKey: 'm' },
+  for (const { checkboxLabel, objectKey } of [
+    { checkboxLabel: 'show component-vectors', objectKey: 'toggleComps' },
+    { checkboxLabel: 'show the poynting vector', objectKey: 'toggleS' },
+    { checkboxLabel: 'show the particle velocity', objectKey: 'toggleU' },
+    { checkboxLabel: 'show the lorentz force', objectKey: 'toggleF' },
+    { checkboxLabel: `show the particle's acceleration`, objectKey: 'toggleA' },
+    { checkboxLabel: 'hide the boost-velocity', objectKey: 'toggleV' },
   ] as const) {
-    await expect(input).toBeVisible();
-    const value1 = Number(await input.inputValue());
+    const checkboxTest = optionsFieldsetTest.extend<Checkbox>({
+      checkbox: ({ fieldset }, use) => use(fieldset.getByLabel(checkboxLabel)),
+      initialChecked: async ({ fieldset }, use) => {
+        const initialChecked = await fieldset
+          .getByLabel(checkboxLabel)
+          .isChecked();
+        await use(initialChecked);
+      },
+    });
 
-    // up
-    await page.keyboard.press(hotkeys.particle[objectKey].ArrowUp);
-    const value2 = Number(await input.inputValue());
-    expect(value2).toBeGreaterThan(value1);
+    checkboxTest.describe(`has checkbox '${checkboxLabel}'`, () => {
+      checkboxTest('that is visible and enabled.', async ({ checkbox }) => {
+        await expect(checkbox).toBeVisible();
+        await expect(checkbox).toBeEnabled();
+      });
 
-    // down
-    await page.keyboard.press(hotkeys.particle[objectKey].ArrowDown);
-    const value3 = Number(await input.inputValue());
-    expect(value3).toBeLessThan(value2);
+      const toggle = hotkeys.oneKey[objectKey];
+      checkboxTest(
+        `that toggles with hotkey '${toggle}'.`,
+        async ({ page, checkbox, initialChecked }) => {
+          await page.keyboard.press(toggle);
+          const newChecked = await checkbox.isChecked();
+          expect(newChecked).not.toEqual(initialChecked);
+        }
+      );
+    });
   }
 });
 
-test('Show/hide hotkeys should toggle the corresponding checkboxes', async ({
-  page,
-}) => {
-  await page.goto('/');
+test('All hotkeys were tested. (This test is allowed to fail.)', async () => {
+  const message = `The following hotkeys weren't tested: ${[
+    ...untestedHotkeys.values(),
+  ]
+    .map((e) => `'${e}'`)
+    .join(', ')}.`;
 
-  // first open the "Options" details/summary
-  const summary = page.locator('summary').filter({ hasText: 'options' });
-  await expect(summary).toBeVisible();
-  await summary.click();
-
-  const fieldset = page.getByRole('group', {
-    name: 'options',
-  });
-
-  await expect(fieldset).toBeVisible();
-
-  const toggleCompsInput = fieldset.getByLabel('show component-vectors');
-  const toggleSInput = fieldset.getByLabel('show the poynting vector');
-  const toggleUInput = fieldset.getByLabel('show the particle velocity');
-  const toggleFInput = fieldset.getByLabel('show the lorentz force');
-  const toggleAInput = fieldset.getByLabel(`show the particle's acceleration`);
-  const toggleVInput = fieldset.getByLabel('hide the boost-velocity');
-
-  for (const { input, objectKey } of [
-    { input: toggleCompsInput, objectKey: 'toggleComps' },
-    { input: toggleSInput, objectKey: 'toggleS' },
-    { input: toggleUInput, objectKey: 'toggleU' },
-    { input: toggleFInput, objectKey: 'toggleF' },
-    { input: toggleAInput, objectKey: 'toggleA' },
-    { input: toggleVInput, objectKey: 'toggleV' },
-  ] as const) {
-    await expect(input).toBeVisible();
-    await expect(input).toBeEnabled();
-
-    const isChecked1 = await input.isChecked();
-
-    // toggle checkbox
-    await page.keyboard.press(hotkeys.oneKey[objectKey]);
-    const isChecked2 = await input.isChecked();
-    expect(isChecked2).not.toEqual(isChecked1);
+  if (untestedHotkeys.size > 0) {
+    console.warn(`Note: ${message}`);
+    test.fail();
   }
+
+  expect(untestedHotkeys.size, message).toEqual(0);
 });
