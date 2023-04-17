@@ -76,8 +76,9 @@ for (const { fieldsetName, vectorObjectKey } of [
       });
 
       inputTest.describe(`has input '${inputLabel}'`, () => {
-        inputTest(`that is visible.`, async ({ input }) => {
+        inputTest('that is visible and enabled.', async ({ input }) => {
           await expect(input).toBeVisible();
+          await expect(input).toBeEnabled();
         });
 
         const up = hotkeys.vectorComp[vectorObjectKey][compObjectKey].ArrowUp;
@@ -156,7 +157,7 @@ for (const { fieldsetName, vectorObjectKey } of [
       });
 
       inputTest.describe(`has input '${inputLabel}'`, () => {
-        inputTest(`that is visible and enabled.`, async ({ input }) => {
+        inputTest('that is visible and enabled.', async ({ input }) => {
           await expect(input).toBeVisible();
           await expect(input).toBeEnabled();
         });
@@ -199,7 +200,7 @@ particleFieldsetTest.describe(`Fieldset '${particleFieldsetName}'`, () => {
     });
 
     inputTest.describe(`has input '${inputLabel}'`, () => {
-      inputTest(`that is visible and enabled.`, async ({ input }) => {
+      inputTest('that is visible and enabled.', async ({ input }) => {
         await expect(input).toBeVisible();
         await expect(input).toBeEnabled();
       });
@@ -268,7 +269,7 @@ optionsFieldsetTest.describe(`Fieldset '${optionsFieldsetName}'`, () => {
   }
 });
 
-test('All hotkeys were tested. (This test is allowed to fail.)', async () => {
+test('All hotkeys were tested. (This test is allowed to fail; see logs for results.)', async () => {
   const message = `The following hotkeys weren't tested: ${[
     ...untestedHotkeys.values(),
   ]
