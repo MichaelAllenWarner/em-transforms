@@ -55,7 +55,6 @@ export const useStateFromQueryParams = () => {
 
   useEffect(() => {
     const queryParams = new URLSearchParams(window.location.search);
-    if (!queryParams.size) return;
 
     // Cartesian components
     for (const { key, setter } of [
