@@ -73,6 +73,10 @@ export const useRefsAndHotkeys = () => {
   const toggleV = useMemo(() => click(hideVRef), []);
   useHotkeys(hotkeys.oneKey.toggleV, toggleV);
 
+  const hideEandBRef = useRef<HTMLInputElement>(null);
+  const toggleEandB = useMemo(() => click(hideEandBRef), []);
+  useHotkeys(hotkeys.oneKey.toggleEandB, toggleEandB);
+
   // set up E refs and hotkeys
 
   const eXRef = useRef<HTMLInputElement>(null);
@@ -193,6 +197,7 @@ export const useRefsAndHotkeys = () => {
     showFRef,
     showARef,
     hideVRef,
+    hideEandBRef,
     eXRef,
     eYRef,
     eZRef,

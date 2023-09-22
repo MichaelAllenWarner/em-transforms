@@ -14,6 +14,7 @@ interface Props {
   showFRef: RefObject<HTMLInputElement>;
   showARef: RefObject<HTMLInputElement>;
   hideVRef: RefObject<HTMLInputElement>;
+  hideEandBRef: RefObject<HTMLInputElement>;
 }
 
 const storeSelector = (state: State) => ({
@@ -29,6 +30,8 @@ const storeSelector = (state: State) => ({
   setShowParticleAcceleration: state.setShowParticleAcceleration,
   hideBoostedQuantities: state.hideBoostedQuantities,
   setHideBoostedQuantities: state.setHideBoostedQuantities,
+  hideFieldVectors: state.hideFieldVectors,
+  setHideFieldVectors: state.setHideFieldVectors,
   setEField: state.setEField,
   setBField: state.setBField,
   setBoostVelocityPhi: state.setBoostVelocityPhi,
@@ -48,6 +51,7 @@ const Options = memo(
     showFRef,
     showARef,
     hideVRef,
+    hideEandBRef,
   }: Props) => {
     const {
       showComponentVectors,
@@ -62,6 +66,8 @@ const Options = memo(
       setShowParticleAcceleration,
       hideBoostedQuantities,
       setHideBoostedQuantities,
+      hideFieldVectors,
+      setHideFieldVectors,
       setEField,
       setBField,
       setBoostVelocityPhi,
@@ -93,7 +99,8 @@ const Options = memo(
               <input
                 ref={showSRef}
                 type="checkbox"
-                checked={showPoynting}
+                checked={showPoynting && !hideFieldVectors}
+                disabled={hideFieldVectors}
                 onChange={(e) => setShowPoynting(e.target.checked)}
               />
               Show the Poynting vector{' '}
@@ -124,8 +131,11 @@ const Options = memo(
               <input
                 ref={showFRef}
                 type="checkbox"
-                checked={showLorentzForce || showParticleAcceleration}
-                disabled={showParticleAcceleration}
+                checked={
+                  (showLorentzForce || showParticleAcceleration) &&
+                  !hideFieldVectors
+                }
+                disabled={showParticleAcceleration || hideFieldVectors}
                 onChange={(e) => setShowLorentzForce(e.target.checked)}
               />
               Show the Lorentz force acting on the particle:{' '}
@@ -142,7 +152,8 @@ const Options = memo(
               <input
                 ref={showARef}
                 type="checkbox"
-                checked={showParticleAcceleration}
+                checked={showParticleAcceleration && !hideFieldVectors}
+                disabled={hideFieldVectors}
                 onChange={(e) => setShowParticleAcceleration(e.target.checked)}
               />
               Show the particle's acceleration resulting from the Lorentz force
@@ -174,6 +185,20 @@ const Options = memo(
               ("primed") quantities. (Will also hide the component-vectors
               parallel and perpendicular to{' '}
               <MathJaxInline content={'\\( \\vec v \\).)'} />
+            </label>
+          </div>
+          <div>
+            <label>
+              <input
+                ref={hideEandBRef}
+                type="checkbox"
+                checked={hideFieldVectors}
+                onChange={(e) => setHideFieldVectors(e.target.checked)}
+              />
+              Hide the field-vectors{' '}
+              <MathJaxInline content={'\\( \\vec E \\)'} /> and{' '}
+              <MathJaxInline content={'\\( \\vec B \\).'} /> (Will also hide any
+              quantities derived from them.)
             </label>
           </div>
 

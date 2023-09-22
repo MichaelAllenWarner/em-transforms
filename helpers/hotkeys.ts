@@ -17,6 +17,7 @@ const oneKeyHotkeys = {
   toggleF: 'f',
   toggleA: 'a',
   toggleV: 'h', // not 'v' to avoid conflict w/ 'v+' hotkeys ('h' for 'hide')
+  toggleEandB: 'd', // 'd' b/c it isn't used yet, I guess!
 } as const;
 
 const keys = {

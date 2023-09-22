@@ -45,6 +45,7 @@ const storeSelector = (state: State) => ({
   showLorentzForce: state.showLorentzForce,
   showParticleAcceleration: state.showParticleAcceleration,
   hideBoostedQuantities: state.hideBoostedQuantities,
+  hideFieldVectors: state.hideFieldVectors,
 });
 
 const Page = () => {
@@ -56,6 +57,7 @@ const Page = () => {
     showFRef,
     showARef,
     hideVRef,
+    hideEandBRef,
     eXRef,
     eYRef,
     eZRef,
@@ -103,6 +105,7 @@ const Page = () => {
     showLorentzForce,
     showParticleAcceleration,
     hideBoostedQuantities,
+    hideFieldVectors,
   } = useStore(storeSelector, shallow);
 
   const {
@@ -164,6 +167,7 @@ const Page = () => {
             showComponentVectors={
               showComponentVectors && !hideBoostedQuantities
             }
+            hide={hideFieldVectors}
           />
 
           <Vector
@@ -178,6 +182,7 @@ const Page = () => {
             showComponentVectors={
               showComponentVectors && !hideBoostedQuantities
             }
+            hide={hideFieldVectors}
           />
 
           <Vector
@@ -231,7 +236,10 @@ const Page = () => {
             showComponentVectors={
               showComponentVectors && !hideBoostedQuantities
             }
-            hide={!showLorentzForce && !showParticleAcceleration}
+            hide={
+              (!showLorentzForce && !showParticleAcceleration) ||
+              hideFieldVectors
+            }
           />
 
           <Vector
@@ -248,7 +256,8 @@ const Page = () => {
             }
             hide={
               (!showLorentzForce && !showParticleAcceleration) ||
-              hideBoostedQuantities
+              hideBoostedQuantities ||
+              hideFieldVectors
             }
           />
 
@@ -264,7 +273,7 @@ const Page = () => {
             showComponentVectors={
               showComponentVectors && !hideBoostedQuantities
             }
-            hide={!showParticleAcceleration}
+            hide={!showParticleAcceleration || hideFieldVectors}
           />
 
           <Vector
@@ -279,7 +288,11 @@ const Page = () => {
             showComponentVectors={
               showComponentVectors && !hideBoostedQuantities
             }
-            hide={!showParticleAcceleration || hideBoostedQuantities}
+            hide={
+              !showParticleAcceleration ||
+              hideBoostedQuantities ||
+              hideFieldVectors
+            }
           />
 
           <Vector
@@ -303,7 +316,7 @@ const Page = () => {
             showComponentVectors={
               showComponentVectors && !hideBoostedQuantities
             }
-            hide={hideBoostedQuantities}
+            hide={hideBoostedQuantities || hideFieldVectors}
           />
 
           <Vector
@@ -318,7 +331,7 @@ const Page = () => {
             showComponentVectors={
               showComponentVectors && !hideBoostedQuantities
             }
-            hide={hideBoostedQuantities}
+            hide={hideBoostedQuantities || hideFieldVectors}
           />
 
           <Vector
@@ -333,7 +346,7 @@ const Page = () => {
             showComponentVectors={
               showComponentVectors && !hideBoostedQuantities
             }
-            hide={!showPoynting}
+            hide={!showPoynting || hideFieldVectors}
           />
 
           <Vector
@@ -348,7 +361,7 @@ const Page = () => {
             showComponentVectors={
               showComponentVectors && !hideBoostedQuantities
             }
-            hide={!showPoynting || hideBoostedQuantities}
+            hide={!showPoynting || hideBoostedQuantities || hideFieldVectors}
           />
         </Canvas>
 
@@ -368,6 +381,7 @@ const Page = () => {
             showFRef={showFRef}
             showARef={showARef}
             hideVRef={hideVRef}
+            hideEandBRef={hideEandBRef}
           />
 
           <VectorFieldsetSpherical

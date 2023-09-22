@@ -141,7 +141,10 @@ const TitleAndInstructions = () => (
             in the Options, where you'll also find some other settings that
             might interest you. Some of them have corresponding inputs you can
             control (the charge, mass, and velocity of a particle co-located
-            with the field vectors).
+            with the field-vectors). You can even suppress the field-vectors
+            altogether (and all quantities derived from them), effectively
+            turning the app into a "velocity-transformation visualizer," since
+            then only the velocity-vectors can be displayed.
           </p>
           <p>
             The inputs can only accept number-values, even while you're typing
@@ -240,7 +243,7 @@ const TitleAndInstructions = () => (
             <kbd>u</kbd> + <kbd>p</kbd> + <kbd>↑</kbd>.
           </p>
           <p>
-            The velocity vectors have a couple of additional controls. To
+            The velocity-vectors have a couple of additional controls. To
             reverse the direction of the boost velocity, press <kbd>v</kbd> +{' '}
             <kbd>-</kbd>. To reverse the direction of the particle velocity,
             press <kbd>u</kbd> + <kbd>-</kbd>. To reset the direction of the
@@ -278,7 +281,11 @@ const TitleAndInstructions = () => (
             </li>
             <li>
               <kbd>h</kbd> toggles the boost-velocity and the boosted
-              quantities.
+              quantities;
+            </li>
+            <li>
+              <kbd>d</kbd> toggles the field-vectors and quantities derived from
+              them.
             </li>
           </ul>
           <p>

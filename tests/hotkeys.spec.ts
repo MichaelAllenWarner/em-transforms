@@ -239,6 +239,7 @@ optionsFieldsetTest.describe(`Fieldset '${optionsFieldsetName}'`, () => {
     { checkboxLabel: 'show the lorentz force', objectKey: 'toggleF' },
     { checkboxLabel: `show the particle's acceleration`, objectKey: 'toggleA' },
     { checkboxLabel: 'hide the boost-velocity', objectKey: 'toggleV' },
+    { checkboxLabel: 'hide the field-vectors', objectKey: 'toggleEandB' },
   ] as const) {
     const checkboxTest = optionsFieldsetTest.extend<Checkbox>({
       checkbox: ({ fieldset }, use) => use(fieldset.getByLabel(checkboxLabel)),

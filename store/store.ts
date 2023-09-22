@@ -28,6 +28,8 @@ export interface State {
   showParticleAcceleration: boolean;
   /** If `true`, will hide the boosted quantities (including the boost-vector). Helpful if interested in only single-frame relationships. */
   hideBoostedQuantities: boolean;
+  /** If `true`, will hide the E and B field vectors. Turns the app into a "velocity-boost visualizer". */
+  hideFieldVectors: boolean;
 
   setEField: (newEField: State['eField']) => void;
   setEFieldX: (newEFieldX: State['eField'][number]) => void;
@@ -80,6 +82,7 @@ export interface State {
   setHideBoostedQuantities: (
     newHideBoostedQuantities: State['hideBoostedQuantities']
   ) => void;
+  setHideFieldVectors: (newHideFieldVectors: State['hideFieldVectors']) => void;
 }
 
 const useStore = create<State>()((set) => {
@@ -96,6 +99,7 @@ const useStore = create<State>()((set) => {
     showLorentzForce: false,
     showParticleAcceleration: false,
     hideBoostedQuantities: false,
+    hideFieldVectors: false,
 
     setEField: (newEField) => set(() => ({ eField: newEField })),
     setEFieldX: (newEFieldX) =>
@@ -212,6 +216,8 @@ const useStore = create<State>()((set) => {
       set(() => ({ showParticleAcceleration: newParticleAcceleration })),
     setHideBoostedQuantities: (newHideBoostedQuantities) =>
       set(() => ({ hideBoostedQuantities: newHideBoostedQuantities })),
+    setHideFieldVectors: (newHideFieldVectors) =>
+      set(() => ({ hideFieldVectors: newHideFieldVectors })),
   };
 });
 
