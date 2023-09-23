@@ -12,6 +12,7 @@ import TitleAndInstructions from '../components/TitleAndInstructions';
 import { useRefsAndHotkeys } from '../hooks/useRefsAndHotkeys';
 import { getCalculatedQuantities } from '../helpers/getCalculatedQuantities';
 import CameraController from '../components/CameraController';
+import { useStateToAndFromQueryParams } from '../hooks/useStateToAndFromQueryParams';
 
 const titleAndInstructions = <TitleAndInstructions />;
 const axes = <Axes />;
@@ -130,6 +131,8 @@ const Page = () => {
     particleCharge,
     particleMass,
   });
+
+  useStateToAndFromQueryParams();
 
   return (
     <>

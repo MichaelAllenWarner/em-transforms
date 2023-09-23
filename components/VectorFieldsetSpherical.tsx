@@ -4,9 +4,9 @@ import { round } from '../helpers/round';
 import { SphericalComponents } from '../store/store';
 import VectorFieldset from './VectorFieldset';
 
+const trueMod = (a: number, b: number) => ((a % b) + b) % b;
 const radToDeg = (n: number) => (n * 180) / Math.PI;
 const degToRad = (n: number) => (n * Math.PI) / 180;
-const trueMod = (a: number, b: number) => ((a % b) + b) % b;
 
 const velocityMin = 0;
 const velocityMax = 0.9999;

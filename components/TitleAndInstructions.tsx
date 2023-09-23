@@ -189,7 +189,13 @@ const TitleAndInstructions = () => (
               boost-direction to <MathJaxInline content={'\\( +x \\).'} />
             </li>
           </ul>
-          <p>Here is how the "camera" works:</p>
+          <p>
+            You might notice that the URL changes as you use the app. This is
+            intentional, and it allows you to share or bookmark configurations
+            of interest. The only thing that isn't saved in the URL is the state
+            of the "camera."
+          </p>
+          <p>Speaking of the camera, here is how it works:</p>
           <ul>
             <li>
               To orbit, use the left mouse-button (or one-finger move for
