@@ -12,7 +12,8 @@ import TitleAndInstructions from '../components/TitleAndInstructions';
 import { useRefsAndHotkeys } from '../hooks/useRefsAndHotkeys';
 import { getCalculatedQuantities } from '../helpers/getCalculatedQuantities';
 import CameraController from '../components/CameraController';
-import { useStateToAndFromQueryParams } from '../hooks/useStateToAndFromQueryParams';
+import { useSetStateFromQueryParams } from '../hooks/useSetStateFromQueryParams';
+import { useSetQueryParams } from '../hooks/useSetQueryParams';
 
 const titleAndInstructions = <TitleAndInstructions />;
 const axes = <Axes />;
@@ -50,6 +51,9 @@ const storeSelector = (state: State) => ({
 });
 
 const Page = () => {
+  useSetStateFromQueryParams();
+  useSetQueryParams();
+
   const {
     cameraRef,
     showCompsRef,
@@ -131,8 +135,6 @@ const Page = () => {
     particleCharge,
     particleMass,
   });
-
-  useStateToAndFromQueryParams();
 
   return (
     <>
