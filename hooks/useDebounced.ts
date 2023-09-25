@@ -2,53 +2,69 @@ import debounce from 'lodash/debounce';
 import { useEffect, useMemo, useRef } from 'react';
 
 /**
- * This hook uses the lodash debounce-function under the hood. It will
- * work even if `callback` changes during the debounce wait-period
- * (which can happen if `callback` depends on props, say). When the
- * wait-period ends, only the most recently supplied `callback` will
- * be executed. I got the basic idea from the very bottom of this
- * article: https://www.developerway.com/posts/debouncing-in-react#part3
+ * This hook uses the Lodash debounce-function under the hood.
+ * The returned value will always be a stable reference to the
+ * debounced function. For information about the return-value
+ * and the second and third parameters (`wait` and `options`),
+ * you should consult the Lodash documentation:
+ * https://lodash.com/docs/#debounce.
  *
- * @param callback — The function you'd like to debounce. Can be updated during the wait-period.
- * @param wait — The number of milliseconds to delay.
- * @param options — The options object.
- * @param options.leading — Specify invoking on the leading edge of the timeout.
- * @param options.maxWait — The maximum time func is allowed to be delayed before it’s invoked.
- * @param options.trailing — Specify invoking on the trailing edge of the timeout.
- * @return — Returns the new debounced function.
+ * The first parameter (`callback`), however, is *not* passed directly
+ * to the Lodash debounce-function. Rather, an "in-between" function
+ * created by the hook is passed in, and this "in-between" function
+ * will always call the most recently supplied value of `callback` when
+ * it executes. This makes it easy to deal with situations where your
+ * callback-logic must depend on props or state that may change: instead
+ * of having to prepare a memoized function that accepts the relevant
+ * prop/state values as arguments, you can just pass in a non-memoized
+ * function that uses those values directly. Every time the hook is
+ * called, it will update the debounced callback-logic if `callback`
+ * has changed, but it will always return the same stable reference to
+ * the debounced function. This works even if `callback` changes during
+ * a debounce wait-period. Basic idea for this mechanism comes from the
+ * very bottom of this article:
+ * https://www.developerway.com/posts/debouncing-in-react#part3
+ *
+ * By default, the debounced-function will be "canceled" on unmount.
+ * This is usually a good idea, because otherwise the function may
+ * execute *after* unmount and try to access things in the owning
+ * component that no longer exist. However, if you know that that's
+ * not a concern in your use-case and would like to allow the function
+ * to run even after unmount (or if for some reason you'd like to handle
+ * the cancel-on-unmount mechanism yourself), then you can override this
+ * default behavior by passing `true` for `suppressUnmountCancel`
+ * (the 4th argument).
  */
 export const useDebounced = <
   T extends (...args: Parameters<T>) => ReturnType<T>
 >(
   callback: T,
   wait?: Parameters<typeof debounce>[1],
-  options?: Parameters<typeof debounce>[2]
+  options?: Parameters<typeof debounce>[2],
+  suppressUnmountCancel?: boolean
 ) => {
-  // put all the args in a ref so that the `useMemo()` can be dependency-free
-  const ref = useRef({ callback, wait, options });
+  // put all the args in a ref so that they can be excluded from dependency arrays
+  const ref = useRef({ callback, wait, options, suppressUnmountCancel });
 
   // update `callback` in the ref if it changes
   useEffect(() => {
     ref.current.callback = callback;
   }, [callback]);
 
-  // will only run on mount (b/c empty dependency-array)
+  // stable reference (b/c empty dependency array)
   const debouncedCallback = useMemo(() => {
     // will always use the latest `callback` when called
     const fn = (...args: Parameters<T>) => ref.current.callback(...args);
-
     return debounce(fn, ref.current.wait, ref.current.options);
   }, []);
 
-  /*
-    clean-up (cancel debounce, in case it's mid-wait);
-    will only run on unmount (b/c `debouncedCallback` never changes before then)
-  */
+  // cancel the debounce on unmount (unless the user has opted out)
   useEffect(() => {
+    if (ref.current.suppressUnmountCancel) return;
     return () => {
       debouncedCallback.cancel();
     };
-  }, [debouncedCallback]);
+  }, [debouncedCallback]); // stable reference, so clean-up will only run on unmount
 
   return debouncedCallback;
 };
