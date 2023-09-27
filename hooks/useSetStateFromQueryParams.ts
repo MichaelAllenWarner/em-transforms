@@ -123,7 +123,7 @@ export const useSetStateFromQueryParams = () => {
         continue;
       }
 
-      let n = Number(value);
+      const n = Number(value);
       if (!Number.isFinite(n)) {
         console.warn(
           `Value \`${value}\` for query parameter \`${key}\` isn't finite when coerced to a number. It is \`${n}\`. Skipping.`
