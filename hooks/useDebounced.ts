@@ -1,5 +1,13 @@
 import debounce from 'lodash/debounce';
-import { useEffect, useMemo, useRef } from 'react';
+import { useEffect, useLayoutEffect, useMemo, useRef } from 'react';
+
+/**
+ * Uses `useEffect` on server and `useLayoutEffect` on client,
+ * really just to silence the console warning about using
+ * `useLayoutEffect` on the server.
+ */
+const useIsomorphicEffect =
+  typeof window === 'undefined' ? useEffect : useLayoutEffect;
 
 /**
  * This hook uses the Lodash debounce-function under the hood.
@@ -21,9 +29,11 @@ import { useEffect, useMemo, useRef } from 'react';
  * called, it will update the debounced callback-logic if `callback`
  * has changed, but it will always return the same stable reference to
  * the debounced function. This works even if `callback` changes during
- * a debounce wait-period. Basic idea for this mechanism comes from the
- * very bottom of this article:
- * https://www.developerway.com/posts/debouncing-in-react#part3
+ * a debounce wait-period. The basic idea for this mechanism comes from
+ * these two articles:
+ *
+ * - https://epicreact.dev/the-latest-ref-pattern-in-react/
+ * - https://www.developerway.com/posts/debouncing-in-react#part3
  *
  * By default, the debounced-function will be "canceled" on unmount.
  * This is usually a good idea, because otherwise the function may
@@ -34,6 +44,13 @@ import { useEffect, useMemo, useRef } from 'react';
  * the cancel-on-unmount mechanism yourself), then you can override this
  * default behavior by passing `true` for `suppressUnmountCancel`
  * (the 4th argument).
+ *
+ * Unlike `callback`, the other arguments cannot be changed after the
+ * hook-instance is initialized. Passing in new values for `wait`,
+ * `options`, or `suppressUnmountCancel` will have no effect.
+ * The `wait` and `options` arguments in particular are prevented from
+ * being updated because allowing them to change is mutually exclusive
+ * with guaranteeing that the returned function is a stable reference.
  */
 export const useDebounced = <
   T extends (...args: Parameters<T>) => ReturnType<T>
@@ -47,7 +64,7 @@ export const useDebounced = <
   const ref = useRef({ callback, wait, options, suppressUnmountCancel });
 
   // update `callback` in the ref if it changes
-  useEffect(() => {
+  useIsomorphicEffect(() => {
     ref.current.callback = callback;
   }, [callback]);
 
