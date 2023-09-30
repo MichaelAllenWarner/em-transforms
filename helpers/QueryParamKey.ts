@@ -20,4 +20,12 @@ export enum QueryParameterKey {
   hideEandB = 'hideEandB',
   q = 'q',
   m = 'm',
+  azimuthal = 'azimuthal',
+  polar = 'polar',
+  x = 'x',
+  y = 'y',
+  z = 'z',
+  targetX = 'targetX',
+  targetY = 'targetY',
+  targetZ = 'targetZ',
 }

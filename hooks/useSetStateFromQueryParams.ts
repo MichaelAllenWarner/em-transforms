@@ -40,7 +40,11 @@ const storeSelector = (state: State) => ({
   setHideFieldVectors: state.setHideFieldVectors,
 });
 
-/** Sets state from query-parameters on mount. */
+/**
+ * Sets state from query-parameters on mount.
+ * The camera "state" is set from query-parameters on mount separately,
+ * in `CameraControls.tsx`.
+ */
 export const useSetStateFromQueryParams = () => {
   const isFirstRender = useRef(true);
 
