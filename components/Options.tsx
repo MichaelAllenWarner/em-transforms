@@ -210,6 +210,7 @@ const Options = memo(
                   onClick={() => {
                     if (cameraRef.current) {
                       cameraRef.current.reset();
+                      cameraRef.current.dispatchEvent({ type: 'end' });
                     }
                   }}
                 >
