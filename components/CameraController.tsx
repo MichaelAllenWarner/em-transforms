@@ -4,6 +4,11 @@ import { OrbitControls } from 'three-stdlib';
 import { QueryParameterKey } from '../helpers/QueryParamKey';
 import debounce from 'lodash/debounce';
 
+/**
+ * Sets up the camera/controller, stores the controller-object
+ * in the ref, and sets up camera-related query-parameters
+ * to set camera "state" on mount and to update on "state"-change.
+ */
 const CameraController = forwardRef<OrbitControls>((_, ref) => {
   const { camera, gl } = useThree();
 

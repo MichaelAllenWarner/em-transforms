@@ -77,7 +77,7 @@ const Options = memo(
     } = useStore(storeSelector, shallow);
 
     return (
-      <details className="w-full">
+      <details id="options" className="w-full">
         <summary className="mt-2">Options</summary>
         <fieldset className="ml-4">
           <legend className="sr-only">Options</legend>
