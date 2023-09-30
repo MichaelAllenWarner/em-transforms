@@ -44,7 +44,10 @@ export const useRefsAndHotkeys = () => {
   // set up camera ref and camera-reset hotkey
 
   const cameraRef = useRef<OrbitControls>(null);
-  const resetCamera = useCallback(() => cameraRef.current?.reset(), []);
+  const resetCamera = useCallback(() => {
+    cameraRef.current?.reset();
+    cameraRef.current?.dispatchEvent({ type: 'end' });
+  }, []);
   useHotkeys(hotkeys.oneKey.resetCamera, resetCamera);
 
   // set up show/hide refs and hotkeys

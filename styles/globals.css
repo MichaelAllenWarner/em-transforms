@@ -23,7 +23,7 @@
 
   button,
   [type='button'] {
-    @apply rounded bg-stone-600 py-2 px-3 leading-normal text-white transition-colors hover:bg-stone-600/[.85] focus-visible:bg-stone-600/[.85];
+    @apply rounded bg-stone-600 px-3 py-2 leading-normal text-white transition-colors hover:bg-stone-600/[.85] focus-visible:bg-stone-600/[.85];
   }
 
   ul,
@@ -56,6 +56,10 @@
     white-space: nowrap;
     margin-left: 1px;
     margin-right: 1px;
+  }
+
+  a {
+    @apply text-blue-600 underline transition-colors hover:text-blue-800 focus:text-blue-800;
   }
 }
 

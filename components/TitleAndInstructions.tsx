@@ -100,14 +100,14 @@ const TitleAndInstructions = () => (
           <p>
             I brought up the particle because this app also lets you visualize
             the velocity, force, and acceleration of a particle at the same
-            event as the displayed electric- and magnetic-field vectors (see the
-            Options below the visualization). You can specify the particle's
-            charge, mass, and ("unprimed") velocity, and you'll see the Lorentz
-            force that the field-vectors exert on the particle, as well as the
-            particle's resulting acceleration. You'll see all of these
-            quantities in both frames by default, but if you'd rather study the
-            particle's dynamics in a single frame then you can optionally hide
-            the "primed" vectors.
+            event as the displayed electric- and magnetic-field vectors (see the{' '}
+            <a href="#options">Options</a> below the visualization). You can
+            specify the particle's charge, mass, and ("unprimed") velocity, and
+            you'll see the Lorentz force that the field-vectors exert on the
+            particle, as well as the particle's resulting acceleration. You'll
+            see all of these quantities in both frames by default, but if you'd
+            rather study the particle's dynamics in a single frame then you can
+            optionally hide the "primed" vectors.
           </p>
           <p>
             Another available option lets you see the Poynting vector in both
@@ -128,31 +128,35 @@ const TitleAndInstructions = () => (
             boost.
           </p>
           <p>
-            Use the inputs below the visualization to set the Cartesian
-            components of the electric- and magnetic-field vectors in the
-            original "unprimed" inertial frame, as well as the spherical
-            components of the boost-velocity. The electric- and magnetic-field
-            vectors in the "primed" inertial frame are calculated and rendered
-            automatically.
+            Use the inputs below the visualization (or the corresponding{' '}
+            <a href="#hotkeys">hotkeys</a>) to set the Cartesian components of
+            the electric- and magnetic-field vectors in the original "unprimed"
+            inertial frame, as well as the spherical components of the
+            boost-velocity. The electric- and magnetic-field vectors in the
+            "primed" inertial frame are calculated and rendered automatically.
           </p>
           <p>
             The Poynting vector in each frame is calculated automatically, too,
-            though by default it isn't displayed. You can toggle its visibility
-            in the Options, where you'll also find some other settings that
-            might interest you. Some of them have corresponding inputs you can
-            control (the charge, mass, and velocity of a particle co-located
-            with the field-vectors). You can even suppress the field-vectors
-            altogether (and all quantities derived from them), effectively
-            turning the app into a "velocity-transformation visualizer," since
-            then only the velocity-vectors can be displayed.
+            though by default it isn't displayed in the visualization. You can
+            toggle its visibility in the <a href="#options">Options</a>, where
+            you'll also find some other settings that might interest you. Some
+            of them have corresponding inputs you can control, like the charge,
+            mass, and velocity of a particle co-located with the field-vectors.
+            You can even suppress the field-vectors altogether (and all vectors
+            derived from them), effectively turning the app into a
+            "velocity-transformation visualizer," since then only the
+            velocity-vectors can be displayed. Regardless of what's displayed in
+            the visualization, however, <em>all</em> derived values are always
+            calculated and shown in corresponding disabled inputs at the bottom
+            of the page.
           </p>
           <p>
-            The inputs can only accept number-values, even while you're typing
-            the number. Since a minus-sign by itself isn't interpreted as a
-            number, entering a negative number is a bit cumbersome: you have to
-            type at least one digit <em>before</em> inserting the minus sign at
-            the start. Same goes for periods—you'll have to type <kbd>0.</kbd>{' '}
-            instead of <kbd>.</kbd> for numbers between{' '}
+            The entry-inputs can only accept number-values, even while you're
+            typing the number. Since a minus-sign by itself isn't interpreted as
+            a number, entering a negative number is a bit cumbersome: you have
+            to type at least one digit <em>before</em> inserting the minus sign
+            at the start. Same goes for periods—you'll have to type{' '}
+            <kbd>0.</kbd> instead of <kbd>.</kbd> for numbers between{' '}
             <MathJaxInline content={'\\( 0 \\)'} /> and{' '}
             <MathJaxInline content={'\\( 1 \\).'} />
           </p>
@@ -190,10 +194,10 @@ const TitleAndInstructions = () => (
             </li>
           </ul>
           <p>
-            You might notice that the URL changes as you use the app. This is
-            intentional, and it allows you to share or bookmark configurations
-            of interest. The only thing that isn't saved in the URL is the state
-            of the "camera."
+            You might notice that the URL changes as you fiddle with the inputs
+            and Options. This is intentional, and it allows you to share or
+            bookmark configurations of interest. The state of the camera is
+            encoded in the URL, too.
           </p>
           <p>Speaking of the camera, here is how it works:</p>
           <ul>
@@ -213,7 +217,7 @@ const TitleAndInstructions = () => (
           </ul>
         </div>
       </details>
-      <details>
+      <details id="hotkeys">
         <summary>Hotkeys</summary>
         <div>
           <p>
@@ -424,7 +428,7 @@ const TitleAndInstructions = () => (
               setting both <MathJaxInline content={'\\( \\vec v \\)'} /> and{' '}
               <MathJaxInline content={'\\( \\vec u \\)'} /> to point along the{' '}
               <MathJaxInline content={'\\( x \\)-axis'} /> (by using the "Reset"
-              buttons in the Options, or simply by reloading the page);{' '}
+              buttons in the Options, say);{' '}
               <MathJaxInline content={'\\( F_x \\)'} /> and{' '}
               <MathJaxInline content={'\\( F ^ \\prime _x \\)'} /> should then
               have the same value.
