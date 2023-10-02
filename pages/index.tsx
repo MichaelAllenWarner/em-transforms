@@ -142,6 +142,10 @@ const Page = () => {
         <title>
           Lorentz Transformation of the Electric and Magnetic Fields, Visualized
         </title>
+        <meta
+          name="description"
+          content="Lorentz boost calculator and visualizer for electric and magnetic field-vectors and particle dynamics."
+        />
       </Head>
 
       {/*
