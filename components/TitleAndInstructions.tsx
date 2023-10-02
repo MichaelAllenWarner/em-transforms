@@ -217,8 +217,8 @@ const TitleAndInstructions = () => (
           </ul>
         </div>
       </details>
-      <details id="hotkeys">
-        <summary>Hotkeys</summary>
+      <details>
+        <summary id="hotkeys">Hotkeys</summary>
         <div>
           <p>
             You can use the keyboard to control the input-settings and many of
