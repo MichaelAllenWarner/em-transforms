@@ -15,7 +15,7 @@ import { MathJax } from 'better-react-mathjax';
  * time the user opens a `<details>` element. The `sr-only` class hides it
  * visually; the `inert` takes care of the rest on browsers that support it,
  * and for legacy browsers the combination of `aria-hidden` and nested `invisible`
- * should to the trick.
+ * should do the trick.
  */
 const HiddenMathJaxFontDownloadCatalyst = () => (
   <div
