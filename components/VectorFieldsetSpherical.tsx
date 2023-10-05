@@ -69,7 +69,7 @@ const VectorFieldsetSpherical = memo(
         if (n <= 0 || isNaN(n)) n = 0;
         rSetter(n);
       },
-      [rSetter, isVelocity]
+      [rSetter, isVelocity],
     );
 
     const onChangePhi = useCallback(
@@ -79,7 +79,7 @@ const VectorFieldsetSpherical = memo(
         if (isNaN(n)) n = 0;
         phiSetter(degToRad(n));
       },
-      [phiSetter]
+      [phiSetter],
     );
 
     const onChangeTheta = useCallback(
@@ -89,7 +89,7 @@ const VectorFieldsetSpherical = memo(
         if (isNaN(n)) n = 0;
         thetaSetter(degToRad(n));
       },
-      [thetaSetter]
+      [thetaSetter],
     );
 
     return (
@@ -154,7 +154,7 @@ const VectorFieldsetSpherical = memo(
           )}
       </fieldset>
     );
-  }
+  },
 );
 
 VectorFieldsetSpherical.displayName = 'VectorFieldsetSpherical';

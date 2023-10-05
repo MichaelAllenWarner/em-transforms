@@ -52,7 +52,7 @@ const VectorFieldset = memo(
         if (isNaN(n)) n = 0;
         xSetter(n);
       },
-      [xSetter]
+      [xSetter],
     );
 
     const onChangeY = useCallback(
@@ -62,7 +62,7 @@ const VectorFieldset = memo(
         if (isNaN(n)) n = 0;
         ySetter(n);
       },
-      [ySetter]
+      [ySetter],
     );
 
     const onChangeZ = useCallback(
@@ -72,7 +72,7 @@ const VectorFieldset = memo(
         if (isNaN(n)) n = 0;
         zSetter(n);
       },
-      [zSetter]
+      [zSetter],
     );
 
     const inputs = ['x', 'y', 'z'].map((e, i) => {
@@ -113,7 +113,7 @@ const VectorFieldset = memo(
     } else {
       return <>{inputs}</>;
     }
-  }
+  },
 );
 
 VectorFieldset.displayName = 'VectorFieldset';

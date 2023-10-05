@@ -1,7 +1,8 @@
-import { create } from 'zustand';
+import { shallow } from 'zustand/shallow';
+import { createWithEqualityFn } from 'zustand/traditional';
 
-export type CartesianComponents = [number, number, number];
-export type SphericalComponents = [number, number, number];
+export type CartesianComponents = [x: number, y: number, z: number];
+export type SphericalComponents = [r: number, phi: number, theta: number];
 
 export interface State {
   /** Cartesian components of the electric field vector in the original (unprimed) frame. */
@@ -43,25 +44,25 @@ export interface State {
 
   setBoostVelocity: (newBoostVelocity: State['boostVelocity']) => void;
   setBoostVelocityR: (
-    newBoostVelocityR: State['boostVelocity'][number]
+    newBoostVelocityR: State['boostVelocity'][number],
   ) => void;
   setBoostVelocityPhi: (
-    newBoostVelocityPhi: State['boostVelocity'][number]
+    newBoostVelocityPhi: State['boostVelocity'][number],
   ) => void;
   setBoostVelocityTheta: (
-    newBoostVelocityTheta: State['boostVelocity'][number]
+    newBoostVelocityTheta: State['boostVelocity'][number],
   ) => void;
   flipBoostVelocity: () => void;
 
   setParticleVelocity: (newParticleVelocity: State['particleVelocity']) => void;
   setParticleVelocityR: (
-    newParticleVelocityR: State['particleVelocity'][number]
+    newParticleVelocityR: State['particleVelocity'][number],
   ) => void;
   setParticleVelocityPhi: (
-    newParticleVelocityPhi: State['particleVelocity'][number]
+    newParticleVelocityPhi: State['particleVelocity'][number],
   ) => void;
   setParticleVelocityTheta: (
-    newParticleVelocityTheta: State['particleVelocity'][number]
+    newParticleVelocityTheta: State['particleVelocity'][number],
   ) => void;
   flipParticleVelocity: () => void;
 
@@ -69,23 +70,23 @@ export interface State {
   setParticleMass: (newParticleMass: State['particleMass']) => void;
 
   setShowComponentVectors: (
-    newShowComponentVectors: State['showComponentVectors']
+    newShowComponentVectors: State['showComponentVectors'],
   ) => void;
   setShowPoynting: (newShowPoynting: State['showPoynting']) => void;
   setShowParticleVelocity: (
-    newShowParticleVelocity: State['showParticleVelocity']
+    newShowParticleVelocity: State['showParticleVelocity'],
   ) => void;
   setShowLorentzForce: (newShowLorentzForce: State['showLorentzForce']) => void;
   setShowParticleAcceleration: (
-    newShowParticleAcceleration: State['showParticleAcceleration']
+    newShowParticleAcceleration: State['showParticleAcceleration'],
   ) => void;
   setHideBoostedQuantities: (
-    newHideBoostedQuantities: State['hideBoostedQuantities']
+    newHideBoostedQuantities: State['hideBoostedQuantities'],
   ) => void;
   setHideFieldVectors: (newHideFieldVectors: State['hideFieldVectors']) => void;
 }
 
-const useStore = create<State>()((set) => {
+const useStore = createWithEqualityFn<State>()((set) => {
   return {
     eField: [1, 1, 1],
     bField: [-1, -1, -1],
@@ -219,6 +220,6 @@ const useStore = create<State>()((set) => {
     setHideFieldVectors: (newHideFieldVectors) =>
       set(() => ({ hideFieldVectors: newHideFieldVectors })),
   };
-});
+}, shallow);
 
 export default useStore;

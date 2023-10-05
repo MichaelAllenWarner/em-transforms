@@ -47,10 +47,10 @@ const allKeys = Object.values(keys).flat();
 */
 if (new Set(allKeys).size !== allKeys.length) {
   const dupes = Array.from(
-    new Set(allKeys.filter((e, i) => i !== allKeys.lastIndexOf(e)))
+    new Set(allKeys.filter((e, i) => i !== allKeys.lastIndexOf(e))),
   );
   throw Error(
-    `All keys for hotkeys must be unique, but they are not. Duplicates in \`allKeys\`: ${dupes}`
+    `All keys for hotkeys must be unique, but they are not. Duplicates in \`allKeys\`: ${dupes}`,
   );
 }
 

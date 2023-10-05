@@ -53,12 +53,12 @@ const useIsomorphicEffect =
  * with guaranteeing that the returned function is a stable reference.
  */
 export const useDebounced = <
-  T extends (...args: Parameters<T>) => ReturnType<T>
+  T extends (...args: Parameters<T>) => ReturnType<T>,
 >(
   callback: T,
   wait?: Parameters<typeof debounce>[1],
   options?: Parameters<typeof debounce>[2],
-  suppressUnmountCancel?: boolean
+  suppressUnmountCancel?: boolean,
 ) => {
   // put all the args in a ref so that they can be excluded from dependency arrays
   const ref = useRef({ callback, wait, options, suppressUnmountCancel });

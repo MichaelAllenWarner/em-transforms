@@ -1,8 +1,8 @@
 import { RefObject, memo } from 'react';
 import { OrbitControls } from 'three-stdlib';
-import { shallow } from 'zustand/shallow';
 import useStore, { State } from '../store/store';
 import MathJaxInline from './MathJaxInline';
+import { type EventDispatcher } from 'three';
 
 interface Props {
   cameraRef: RefObject<OrbitControls>;
@@ -74,7 +74,7 @@ const Options = memo(
       setBoostVelocityTheta,
       setParticleVelocityPhi,
       setParticleVelocityTheta,
-    } = useStore(storeSelector, shallow);
+    } = useStore(storeSelector);
 
     return (
       <details className="w-full">
@@ -212,7 +212,9 @@ const Options = memo(
                   onClick={() => {
                     if (cameraRef.current) {
                       cameraRef.current.reset();
-                      cameraRef.current.dispatchEvent({ type: 'end' });
+                      (
+                        cameraRef.current as EventDispatcher<OrbitControls>
+                      ).dispatchEvent({ type: 'end' });
                     }
                   }}
                 >
@@ -347,7 +349,7 @@ const Options = memo(
         </fieldset>
       </details>
     );
-  }
+  },
 );
 
 Options.displayName = 'Options';

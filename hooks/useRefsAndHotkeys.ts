@@ -1,9 +1,9 @@
 import { RefObject, useCallback, useMemo, useRef } from 'react';
 import { useHotkeys } from 'react-hotkeys-hook';
 import { OrbitControls } from 'three-stdlib';
-import { shallow } from 'zustand/shallow';
 import useStore, { State } from '../store/store';
 import { hotkeys } from '../helpers/hotkeys';
+import { type EventDispatcher } from 'three';
 
 const storeSelector = (state: State) => ({
   flipBoostVelocity: state.flipBoostVelocity,
@@ -36,17 +36,17 @@ const stepDown =
   };
 
 export const useRefsAndHotkeys = () => {
-  const { flipBoostVelocity: vFlip, flipParticleVelocity: uFlip } = useStore(
-    storeSelector,
-    shallow
-  );
+  const { flipBoostVelocity: vFlip, flipParticleVelocity: uFlip } =
+    useStore(storeSelector);
 
   // set up camera ref and camera-reset hotkey
 
   const cameraRef = useRef<OrbitControls>(null);
   const resetCamera = useCallback(() => {
     cameraRef.current?.reset();
-    cameraRef.current?.dispatchEvent({ type: 'end' });
+    (cameraRef.current as EventDispatcher<OrbitControls> | null)?.dispatchEvent(
+      { type: 'end' },
+    );
   }, []);
   useHotkeys(hotkeys.oneKey.resetCamera, resetCamera);
 
