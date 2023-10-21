@@ -3,6 +3,7 @@ import { forwardRef, useEffect } from 'react';
 import { OrbitControls } from 'three-stdlib';
 import { QueryParameterKey } from '../helpers/QueryParamKey';
 import debounce from 'lodash/debounce';
+import { type EventDispatcher } from 'three';
 
 /**
  * Sets up the camera/controller, stores the controller-object
@@ -14,13 +15,28 @@ const CameraController = forwardRef<OrbitControls>((_, ref) => {
 
   // will only fire once, b/c dependency-array entries are all stable references
   useEffect(() => {
-    // first, create the `OrbitControls` instance and set the `ref` to it
-    const controls = new OrbitControls(camera, gl.domElement);
+    // first, create the `OrbitControls` instance...
+    const controls: EventDispatcher<OrbitControls> & OrbitControls =
+      new OrbitControls(camera, gl.domElement);
+
+    // ...and set `ref` to it, but w/ a Proxy that dispatches the `'end'` event on `.reset()` (see below).
     if (ref && typeof ref !== 'function') {
-      ref.current = controls;
+      ref.current = new Proxy(controls, {
+        get: (target, prop, receiver) => {
+          if (prop === 'reset') {
+            return () => {
+              controls.reset();
+              controls.dispatchEvent({
+                type: 'end',
+              });
+            };
+          }
+          return Reflect.get(target, prop, receiver);
+        },
+      });
     }
 
-    // next, set query-parameters to update when user changes camera "state"
+    // set query-parameters to update on `'end'` event (after user changes or resets camera "state")
     controls.addEventListener(
       'end',
       debounce(() => {

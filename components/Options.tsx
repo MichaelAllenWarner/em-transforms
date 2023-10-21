@@ -2,7 +2,6 @@ import { RefObject, memo } from 'react';
 import { OrbitControls } from 'three-stdlib';
 import useStore, { State } from '../store/store';
 import MathJaxInline from './MathJaxInline';
-import { type EventDispatcher } from 'three';
 
 interface Props {
   cameraRef: RefObject<OrbitControls>;
@@ -212,9 +211,6 @@ const Options = memo(
                   onClick={() => {
                     if (cameraRef.current) {
                       cameraRef.current.reset();
-                      (
-                        cameraRef.current as EventDispatcher<OrbitControls>
-                      ).dispatchEvent({ type: 'end' });
                     }
                   }}
                 >

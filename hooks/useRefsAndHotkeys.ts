@@ -3,7 +3,6 @@ import { useHotkeys } from 'react-hotkeys-hook';
 import { OrbitControls } from 'three-stdlib';
 import useStore, { State } from '../store/store';
 import { hotkeys } from '../helpers/hotkeys';
-import { type EventDispatcher } from 'three';
 
 const storeSelector = (state: State) => ({
   flipBoostVelocity: state.flipBoostVelocity,
@@ -44,9 +43,6 @@ export const useRefsAndHotkeys = () => {
   const cameraRef = useRef<OrbitControls>(null);
   const resetCamera = useCallback(() => {
     cameraRef.current?.reset();
-    (cameraRef.current as EventDispatcher<OrbitControls> | null)?.dispatchEvent(
-      { type: 'end' },
-    );
   }, []);
   useHotkeys(hotkeys.oneKey.resetCamera, resetCamera);
 
