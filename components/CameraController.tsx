@@ -27,11 +27,11 @@ const CameraController = forwardRef<OrbitControls>((_, ref) => {
         const params = new URLSearchParams(window.location.search);
         params.set(
           QueryParameterKey.azimuthal,
-          controls.getAzimuthalAngle().toString()
+          controls.getAzimuthalAngle().toString(),
         );
         params.set(
           QueryParameterKey.polar,
-          controls.getPolarAngle().toString()
+          controls.getPolarAngle().toString(),
         );
         params.set(QueryParameterKey.x, controls.object.position.x.toString());
         params.set(QueryParameterKey.y, controls.object.position.y.toString());
@@ -40,7 +40,7 @@ const CameraController = forwardRef<OrbitControls>((_, ref) => {
         params.set(QueryParameterKey.targetY, controls.target.y.toString());
         params.set(QueryParameterKey.targetZ, controls.target.z.toString());
         window.history.replaceState({}, '', `?${params.toString()}`);
-      }, 250)
+      }, 250),
     );
 
     // finally, set initial camera "state" from query-parameters
@@ -63,7 +63,7 @@ const CameraController = forwardRef<OrbitControls>((_, ref) => {
         controls.update();
       } else {
         console.error(
-          `The values \`${x}\`, \`${y}\`, and \`${z}\` of query parameters \`${QueryParameterKey.x}\`, \`${QueryParameterKey.y}\`, and \`${QueryParameterKey.z}\`,  were coerced to numbers \`${nx}\`, \`${ny}\`, and \`${nz}\`, at least one of which is not finite. Skipping.`
+          `The values \`${x}\`, \`${y}\`, and \`${z}\` of query parameters \`${QueryParameterKey.x}\`, \`${QueryParameterKey.y}\`, and \`${QueryParameterKey.z}\`,  were coerced to numbers \`${nx}\`, \`${ny}\`, and \`${nz}\`, at least one of which is not finite. Skipping.`,
         );
       }
     }
@@ -88,7 +88,7 @@ const CameraController = forwardRef<OrbitControls>((_, ref) => {
         controls.update();
       } else {
         console.error(
-          `The values \`${targetX}\`, \`${targetY}\`, and \`${targetZ}\` of query parameters \`${QueryParameterKey.targetX}\`, \`${QueryParameterKey.targetY}\`, and \`${QueryParameterKey.targetZ}\`,  were coerced to numbers \`${nTargetX}\`, \`${nTargetY}\`, and \`${nTargetZ}\`, at least one of which is not finite. Skipping.`
+          `The values \`${targetX}\`, \`${targetY}\`, and \`${targetZ}\` of query parameters \`${QueryParameterKey.targetX}\`, \`${QueryParameterKey.targetY}\`, and \`${QueryParameterKey.targetZ}\`,  were coerced to numbers \`${nTargetX}\`, \`${nTargetY}\`, and \`${nTargetZ}\`, at least one of which is not finite. Skipping.`,
         );
       }
     }
@@ -100,7 +100,7 @@ const CameraController = forwardRef<OrbitControls>((_, ref) => {
         controls.setAzimuthalAngle(n);
       } else {
         console.error(
-          `The value \`${azimuthal}\` of query parameter \`${QueryParameterKey.azimuthal}\` was coerced to \`${n}\`, which is not finite. Skipping.`
+          `The value \`${azimuthal}\` of query parameter \`${QueryParameterKey.azimuthal}\` was coerced to \`${n}\`, which is not finite. Skipping.`,
         );
       }
     }
@@ -112,7 +112,7 @@ const CameraController = forwardRef<OrbitControls>((_, ref) => {
         controls.setPolarAngle(n);
       } else {
         console.error(
-          `The value \`${polar}\` of query parameter \`${QueryParameterKey.polar}\` was coerced to \`${n}\`, which is not finite. Skipping.`
+          `The value \`${polar}\` of query parameter \`${QueryParameterKey.polar}\` was coerced to \`${n}\`, which is not finite. Skipping.`,
         );
       }
     }

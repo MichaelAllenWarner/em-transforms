@@ -3,7 +3,7 @@ import { CartesianComponents, State } from '../store/store';
 
 const cross = (
   [a_x, a_y, a_z]: CartesianComponents,
-  [b_x, b_y, b_z]: CartesianComponents
+  [b_x, b_y, b_z]: CartesianComponents,
 ): CartesianComponents => [
   a_y * b_z - b_y * a_z,
   a_z * b_x - b_z * a_x,
@@ -11,7 +11,7 @@ const cross = (
 ];
 const dot = (
   [a_x, a_y, a_z]: CartesianComponents,
-  [b_x, b_y, b_z]: CartesianComponents
+  [b_x, b_y, b_z]: CartesianComponents,
 ) => a_x * b_x + a_y * b_y + a_z * b_z;
 
 const boostVelocityVec = new THREE.Vector3();
@@ -55,10 +55,10 @@ export const getCalculatedQuantities = ({
   const dotB = dot(boostUnit, bField);
 
   const ePrime = eField.map(
-    (comp, i) => ch * comp + sh * crossB[i] - sh2 * dotE * boostUnit[i]
+    (comp, i) => ch * comp + sh * crossB[i] - sh2 * dotE * boostUnit[i],
   ) as CartesianComponents;
   const bPrime = bField.map(
-    (comp, i) => ch * comp - sh * crossE[i] - sh2 * dotB * boostUnit[i]
+    (comp, i) => ch * comp - sh * crossE[i] - sh2 * dotB * boostUnit[i],
   ) as CartesianComponents;
 
   const particleVelocityCartesian = particleVelocityVec
@@ -68,7 +68,7 @@ export const getCalculatedQuantities = ({
   const dotU = dot(boostUnit, particleVelocityCartesian);
 
   const particleVelocityPrime = particleVelocityCartesian.map(
-    (comp, i) => (comp + boostUnit[i] * (sh2 * dotU - sh)) / (ch - sh * dotU)
+    (comp, i) => (comp + boostUnit[i] * (sh2 * dotU - sh)) / (ch - sh * dotU),
   ) as CartesianComponents;
 
   particleVelocityPrimeVec.set(...particleVelocityPrime);
@@ -78,19 +78,19 @@ export const getCalculatedQuantities = ({
   const particleVelocityCrossBPrime = cross(particleVelocityPrime, bPrime);
 
   const lorentzForce = eField.map(
-    (comp, i) => particleCharge * (comp + particleVelocityCrossB[i])
+    (comp, i) => particleCharge * (comp + particleVelocityCrossB[i]),
   ) as CartesianComponents;
   const lorentzForcePrime = ePrime.map(
-    (comp, i) => particleCharge * (comp + particleVelocityCrossBPrime[i])
+    (comp, i) => particleCharge * (comp + particleVelocityCrossBPrime[i]),
   ) as CartesianComponents;
 
   const lorentzDotParticleVelocity = dot(
     lorentzForce,
-    particleVelocityCartesian
+    particleVelocityCartesian,
   );
   const lorentzDotParticleVelocityPrime = dot(
     lorentzForcePrime,
-    particleVelocityPrimeVec.toArray()
+    particleVelocityPrimeVec.toArray(),
   );
 
   const particleRapidity = Math.atanh(particleVelocityVec.length());
@@ -102,12 +102,12 @@ export const getCalculatedQuantities = ({
   const particleAcceleration = lorentzForce.map(
     (comp, i) =>
       (comp - lorentzDotParticleVelocity * particleVelocityCartesian[i]) /
-      particleEnergy
+      particleEnergy,
   );
   const particleAccelerationPrime = lorentzForcePrime.map(
     (comp, i) =>
       (comp - lorentzDotParticleVelocityPrime * particleVelocityPrime[i]) /
-      particleEnergyPrime
+      particleEnergyPrime,
   );
 
   const poynting = cross(eField, bField);

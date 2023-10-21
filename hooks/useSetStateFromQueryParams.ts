@@ -1,4 +1,3 @@
-import { shallow } from 'zustand/shallow';
 import useStore, { State } from '../store/store';
 import { useEffect, useRef } from 'react';
 import { QueryParameterKey } from '../helpers/QueryParamKey';
@@ -83,7 +82,7 @@ export const useSetStateFromQueryParams = () => {
     setShowParticleAcceleration,
     setHideBoostedQuantities,
     setHideFieldVectors,
-  } = useStore(storeSelector, shallow);
+  } = useStore(storeSelector);
 
   useEffect(() => {
     if (!isFirstRender.current) return;
@@ -130,7 +129,7 @@ export const useSetStateFromQueryParams = () => {
       const n = Number(value);
       if (!Number.isFinite(n)) {
         console.warn(
-          `Value \`${value}\` for query parameter \`${key}\` isn't finite when coerced to a number. It is \`${n}\`. Skipping.`
+          `Value \`${value}\` for query parameter \`${key}\` isn't finite when coerced to a number. It is \`${n}\`. Skipping.`,
         );
         continue;
       }
@@ -160,21 +159,21 @@ export const useSetStateFromQueryParams = () => {
       let n = Number(value);
       if (!Number.isFinite(n)) {
         console.warn(
-          `Value \`${value}\` for query parameter \`${key}\` isn't finite when coerced to a number. It is \`${n}\`. Skipping.`
+          `Value \`${value}\` for query parameter \`${key}\` isn't finite when coerced to a number. It is \`${n}\`. Skipping.`,
         );
         continue;
       }
 
       if (n >= 1) {
         console.warn(
-          `Value \`${value}\` for query parameter \`${key}\` is greater than or equal to 1. Setting to 0.9999.`
+          `Value \`${value}\` for query parameter \`${key}\` is greater than or equal to 1. Setting to 0.9999.`,
         );
         n = 0.9999;
       }
 
       if (n < 0) {
         console.warn(
-          `Value \`${value}\` for query parameter \`${key}\` is less than 0. Setting to 0.`
+          `Value \`${value}\` for query parameter \`${key}\` is less than 0. Setting to 0.`,
         );
         n = 0;
       }
@@ -212,7 +211,7 @@ export const useSetStateFromQueryParams = () => {
       const n = Number(value);
       if (!Number.isFinite(n)) {
         console.warn(
-          `Value \`${value}\` for query parameter \`${key}\` isn't finite when coerced to a number. It is \`${n}\`. Skipping.`
+          `Value \`${value}\` for query parameter \`${key}\` isn't finite when coerced to a number. It is \`${n}\`. Skipping.`,
         );
         continue;
       }
@@ -261,7 +260,7 @@ export const useSetStateFromQueryParams = () => {
 
       if (value !== 'true' && value !== 'false') {
         console.warn(
-          `Value \`${value}\` for query parameter \`${key}\` isn't \`true\` or \`false\`. Skipping.`
+          `Value \`${value}\` for query parameter \`${key}\` isn't \`true\` or \`false\`. Skipping.`,
         );
         continue;
       }
@@ -278,7 +277,7 @@ export const useSetStateFromQueryParams = () => {
         const n = Number(value);
         if (!Number.isFinite(n)) {
           console.warn(
-            `Value \`${value}\` for query parameter \`q\` isn't finite when coerced to a number. It is \`${n}\`. Skipping.`
+            `Value \`${value}\` for query parameter \`q\` isn't finite when coerced to a number. It is \`${n}\`. Skipping.`,
           );
         } else {
           setParticleCharge(n);
@@ -295,12 +294,12 @@ export const useSetStateFromQueryParams = () => {
         let n = Number(value);
         if (!Number.isFinite(n)) {
           console.warn(
-            `Value \`${value}\` for query parameter \`m\` isn't finite when coerced to a number. It is \`${n}\`. Skipping.`
+            `Value \`${value}\` for query parameter \`m\` isn't finite when coerced to a number. It is \`${n}\`. Skipping.`,
           );
         } else {
           if (n <= 0) {
             console.warn(
-              `Value \`${value}\` for query parameter \`m\` is less than or equal to 0. Setting to 0.1.`
+              `Value \`${value}\` for query parameter \`m\` is less than or equal to 0. Setting to 0.1.`,
             );
             n = 0.1;
           }

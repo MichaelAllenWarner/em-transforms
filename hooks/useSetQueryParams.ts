@@ -1,4 +1,3 @@
-import { shallow } from 'zustand/shallow';
 import useStore, { State } from '../store/store';
 import { useDebounced } from './useDebounced';
 import { QueryParameterKey } from '../helpers/QueryParamKey';
@@ -42,7 +41,7 @@ export const useSetQueryParams = () => {
     showParticleAcceleration,
     hideBoostedQuantities,
     hideFieldVectors,
-  } = useStore(storeSelector, shallow);
+  } = useStore(storeSelector);
 
   const setQueryParams = () => {
     const params = new URLSearchParams(window.location.search);

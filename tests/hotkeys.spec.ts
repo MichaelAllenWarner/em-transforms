@@ -102,7 +102,7 @@ for (const { fieldsetName, vectorObjectKey } of [
             await page.keyboard.press(flip);
             const newValue = Number(await input.inputValue());
             expect(newValue).not.toEqual(initialValue);
-          }
+          },
         );
 
         // improve (probably w/ all 3 inputs)
@@ -118,7 +118,7 @@ for (const { fieldsetName, vectorObjectKey } of [
             await page.keyboard.press(reset);
             newValue = Number(await input.inputValue());
             expect(newValue).toEqual(initialValue);
-          }
+          },
         );
       });
     }
@@ -264,7 +264,7 @@ optionsFieldsetTest.describe(`Fieldset '${optionsFieldsetName}'`, () => {
           await page.keyboard.press(toggle);
           const newChecked = await checkbox.isChecked();
           expect(newChecked).not.toEqual(initialChecked);
-        }
+        },
       );
     });
   }

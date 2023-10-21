@@ -98,7 +98,7 @@ const Vector = memo(
             vector.current.length(),
             color,
             0.2,
-            0.1
+            0.1,
           );
           if (opacity) {
             (arrowHelper.line.material as Material).transparent = true;
@@ -118,7 +118,7 @@ const Vector = memo(
             size: 0.4,
             height: 0,
           });
-          mesh.material = new THREE.MeshLambertMaterial({
+          mesh.material = new THREE.MeshBasicMaterial({
             color,
             ...(typeof opacity === 'number'
               ? { opacity, transparent: true }
@@ -130,8 +130,8 @@ const Vector = memo(
 
       labelMesh.current.position.set(
         ...([x, y, z].map((component) =>
-          component < 0 ? component - 0.05 : component + 0.05
-        ) as CartesianComponents)
+          component < 0 ? component - 0.05 : component + 0.05,
+        ) as CartesianComponents),
       );
       labelMesh.current.visible = !hide;
 
@@ -155,7 +155,7 @@ const Vector = memo(
           parCompProjectee.current = new THREE.Vector3(
             boostUnitX,
             boostUnitY,
-            boostUnitZ
+            boostUnitZ,
           );
         }
 
@@ -166,12 +166,12 @@ const Vector = memo(
         if (perpCompVec.current) {
           perpCompVec.current.subVectors(
             vector.current,
-            vectorClonePar.current
+            vectorClonePar.current,
           );
         } else {
           perpCompVec.current = new THREE.Vector3().subVectors(
             vector.current,
-            vectorClonePar.current
+            vectorClonePar.current,
           );
         }
 
@@ -180,7 +180,7 @@ const Vector = memo(
             .set(
               perpCompVec.current.x,
               perpCompVec.current.y,
-              perpCompVec.current.z
+              perpCompVec.current.z,
             )
             .normalize();
         } else {
@@ -192,7 +192,7 @@ const Vector = memo(
           perpCompArrow.current.setLength(
             perpCompVec.current.length(),
             0.2,
-            0.1
+            0.1,
           );
         } else {
           perpCompArrow.current = (() => {
@@ -202,7 +202,7 @@ const Vector = memo(
               perpCompVec.current.length(),
               color,
               0.2,
-              0.1
+              0.1,
             );
             (arrowHelper.line.material as Material).transparent = true;
             (arrowHelper.line.material as Material).opacity = 0.2;
@@ -218,11 +218,11 @@ const Vector = memo(
           parCompVec.current.set(
             vectorClonePar.current.x,
             vectorClonePar.current.y,
-            vectorClonePar.current.z
+            vectorClonePar.current.z,
           );
         } else {
           parCompVec.current = vectorClonePar.current.projectOnVector(
-            parCompProjectee.current
+            parCompProjectee.current,
           );
         }
 
@@ -231,7 +231,7 @@ const Vector = memo(
             .set(
               vectorClonePar.current.x,
               vectorClonePar.current.y,
-              vectorClonePar.current.z
+              vectorClonePar.current.z,
             )
             .normalize();
         } else {
@@ -244,7 +244,7 @@ const Vector = memo(
           parCompArrow.current.position.set(
             perpCompVec.current.x,
             perpCompVec.current.y,
-            perpCompVec.current.z
+            perpCompVec.current.z,
           );
         } else {
           parCompArrow.current = (() => {
@@ -254,7 +254,7 @@ const Vector = memo(
               parCompVec.current.length(),
               color,
               0.2,
-              0.1
+              0.1,
             );
             (arrowHelper.line.material as Material).transparent = true;
             (arrowHelper.line.material as Material).opacity = 0.2;
@@ -300,7 +300,7 @@ const Vector = memo(
     ) : (
       <></>
     );
-  }
+  },
 );
 
 Vector.displayName = 'Vector';
