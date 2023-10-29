@@ -1,9 +1,9 @@
 import { font } from '../helpers/font';
-import { extend, ReactThreeFiber } from '@react-three/fiber';
+import { extend, type ReactThreeFiber } from '@react-three/fiber';
 import React from 'react';
 import * as THREE from 'three';
-import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry';
-import { Material } from 'three';
+import { TextGeometry } from 'three-stdlib';
+import { type Material } from 'three';
 
 // see https://github.com/pmndrs/react-three-fiber/discussions/1742#discussioncomment-2567726
 extend({ TextGeometry });
