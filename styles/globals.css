@@ -2,7 +2,7 @@
 
 @layer base {
   body {
-    @apply leading-loose bg-white text-black dark:bg-slate-900 dark:text-slate-100;
+    @apply leading-loose bg-white text-black dark:bg-slate-950 dark:text-slate-100;
   }
 
   fieldset {
@@ -15,6 +15,10 @@
 
   input {
     @apply ml-3 border px-1 leading-normal [&[type=checkbox]]:ml-0 [&[type=checkbox]]:mr-3;
+  }
+
+  input[type='number'] {
+    @apply dark:bg-white dark:text-black dark:disabled:bg-slate-900 dark:disabled:text-white;
   }
 
   summary {

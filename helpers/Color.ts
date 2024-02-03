@@ -27,18 +27,19 @@ export enum Color {
   APrime = '#334155',
 }
 
-export const textColor: { [C in Color]: `text-[${C}]` } = /* tw */ {
-  black: 'text-[black]',
-  '#4f46e5': 'text-[#4f46e5]',
-  '#1e40af': 'text-[#1e40af]',
-  '#dc2626': 'text-[#dc2626]',
-  '#991b1b': 'text-[#991b1b]',
-  '#15803d': 'text-[#15803d]',
-  '#14532d': 'text-[#14532d]',
-  '#a16207': 'text-[#a16207]',
-  '#713f12': 'text-[#713f12]',
-  '#c026d3': 'text-[#c026d3]',
-  '#86198f': 'text-[#86198f]',
-  '#64748b': 'text-[#64748b]',
-  '#334155': 'text-[#334155]',
-};
+export const textColor: { [C in Color]: `text-[${C}] dark:text-white` } =
+  /* tw */ {
+    [Color.V]: 'text-[black] dark:text-white',
+    [Color.E]: 'text-[#4f46e5] dark:text-white',
+    [Color.EPrime]: 'text-[#1e40af] dark:text-white',
+    [Color.B]: 'text-[#dc2626] dark:text-white',
+    [Color.BPrime]: 'text-[#991b1b] dark:text-white',
+    [Color.S]: 'text-[#15803d] dark:text-white',
+    [Color.SPrime]: 'text-[#14532d] dark:text-white',
+    [Color.U]: 'text-[#a16207] dark:text-white',
+    [Color.UPrime]: 'text-[#713f12] dark:text-white',
+    [Color.F]: 'text-[#c026d3] dark:text-white',
+    [Color.FPrime]: 'text-[#86198f] dark:text-white',
+    [Color.A]: 'text-[#64748b] dark:text-white',
+    [Color.APrime]: 'text-[#334155] dark:text-white',
+  };
