@@ -1,9 +1,13 @@
 import { useState, useEffect } from 'react';
 import { useTheme } from 'next-themes';
 
-const labelText = 'Select a theme: ';
-const labelStyles = /* tw */ '';
-const selectStyles = /* tw */ 'inline-block';
+const LabelGuts = () => (
+  <>
+    Theme<span className="sr-only"> (selection takes effect immediately)</span>:
+  </>
+);
+const labelStyles = /* tw */ 'mr-2';
+const selectStyles = /* tw */ 'inline-block p-1 rounded-sm border';
 const themeSwitchId = 'theme-switch';
 
 const ThemeSwitch = () => {
@@ -20,9 +24,9 @@ const ThemeSwitch = () => {
       className="opacity-[--opacity] transition-opacity"
     >
       {isHydrated ? (
-        <div>
+        <form>
           <label htmlFor={themeSwitchId} className={labelStyles}>
-            {labelText}
+            <LabelGuts />
           </label>
           <select
             value={theme}
@@ -32,9 +36,9 @@ const ThemeSwitch = () => {
           >
             <option value="system">System</option>
             <option value="dark">Dark</option>
-            <option value="light">Light</option>
+            <option value="light">Light (recommended)</option>
           </select>
-        </div>
+        </form>
       ) : (
         /*
           Just an invisible "placeholder" so that the theme-switcher can fade in "smoothly"
@@ -47,9 +51,12 @@ const ThemeSwitch = () => {
           {...{ inert: '' }}
           className="block invisible pointer-events-none [&_*]:select-none"
         >
-          <label className={labelStyles}>{labelText}</label>
+          <label className={labelStyles}>
+            <LabelGuts />
+          </label>
           <select tabIndex={-1} className={selectStyles}>
-            <option value="">Foobar</option>
+            {/* use longest option for best size-match */}
+            <option value="">Light (recommended)</option>
           </select>
         </div>
       )}
