@@ -1,6 +1,11 @@
 import { useState, useEffect } from 'react';
 import { useTheme } from 'next-themes';
 
+const labelText = 'Select a theme: ';
+const labelStyles = /* tw */ '';
+const selectStyles = /* tw */ 'inline-block';
+const themeSwitchId = 'theme-switch';
+
 const ThemeSwitch = () => {
   const [isHydrated, setIsHydrated] = useState(false);
   const { theme, setTheme } = useTheme();
@@ -9,33 +14,44 @@ const ThemeSwitch = () => {
     setIsHydrated(true);
   }, []);
 
-  const selectStyles = /* tw */ 'inline-block';
-
   return (
     <div
       style={{ '--opacity': isHydrated ? '100%' : '0%' } as React.CSSProperties}
       className="opacity-[--opacity] transition-opacity"
     >
       {isHydrated ? (
-        <select
-          value={theme}
-          onChange={(e) => setTheme(e.target.value)}
-          className={selectStyles}
-        >
-          <option value="system">System</option>
-          <option value="dark">Dark</option>
-          <option value="light">Light</option>
-        </select>
+        <div>
+          <label htmlFor={themeSwitchId} className={labelStyles}>
+            {labelText}
+          </label>
+          <select
+            value={theme}
+            onChange={(e) => setTheme(e.target.value)}
+            className={selectStyles}
+            id={themeSwitchId}
+          >
+            <option value="system">System</option>
+            <option value="dark">Dark</option>
+            <option value="light">Light</option>
+          </select>
+        </div>
       ) : (
-        <select
+        /*
+          Just an invisible "placeholder" so that the theme-switcher can fade in "smoothly"
+          after hydration. (The idea is to take up the same amount of vertical space as the
+          real theme-switcher, so that there's no vertical layout-shift.)
+        */
+        <div
           aria-hidden
           hidden
-          tabIndex={-1}
           {...{ inert: '' }}
-          className={`${selectStyles} select-none pointer-events-none`}
+          className="block invisible pointer-events-none [&_*]:select-none"
         >
-          <option value=""></option>
-        </select>
+          <label className={labelStyles}>{labelText}</label>
+          <select tabIndex={-1} className={selectStyles}>
+            <option value="">Foobar</option>
+          </select>
+        </div>
       )}
     </div>
   );
