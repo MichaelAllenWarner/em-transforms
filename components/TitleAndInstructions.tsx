@@ -1,10 +1,12 @@
 import MathJaxInline from './MathJaxInline';
+import ThemeSwitch from './ThemeSwitch';
 
 const TitleAndInstructions = () => (
-  <div className="space-y-10">
+  <div className="space-y-6">
     <h1 className="text-2xl sm:text-3xl">
       Lorentz Transformation of the Electric and Magnetic Fields, Visualized
     </h1>
+    <ThemeSwitch />
     <div className="space-y-4 [&_summary+div]:max-w-prose [&_summary+div]:space-y-5 [&_summary+div]:p-4">
       <details>
         <summary>Background for those who need it</summary>
