@@ -33,6 +33,13 @@ module.exports = {
       },
     },
   },
+  darkMode: [
+    'variant',
+    [
+      '@media (prefers-color-scheme: dark) { &:not(:root[data-theme="light"] *) }',
+      '&:is(:root[data-theme="dark"] *)',
+    ],
+  ],
   variants: {
     extend: {},
   },

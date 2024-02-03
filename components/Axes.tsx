@@ -1,9 +1,10 @@
 import { font } from '../helpers/font';
 import { extend, type ReactThreeFiber } from '@react-three/fiber';
-import React from 'react';
+import React, { useEffect } from 'react';
 import * as THREE from 'three';
 import { TextGeometry } from 'three-stdlib';
 import { type Material } from 'three';
+import { useTheme } from 'next-themes';
 
 // see https://github.com/pmndrs/react-three-fiber/discussions/1742#discussioncomment-2567726
 extend({ TextGeometry });
@@ -28,9 +29,17 @@ const X = new THREE.Vector3(-1, 0, 0);
 const Y = new THREE.Vector3(0, -1, 0);
 const Z = new THREE.Vector3(0, 0, -1);
 const length = 4;
-const color = 0x00;
+const lightModeColor = 0x00;
+const darkModeColor = 0xffffff;
 const axes = [x, y, z, X, Y, Z].map((vector) => {
-  const axis = new THREE.ArrowHelper(vector, origin, length, color, 0.2, 0.1);
+  const axis = new THREE.ArrowHelper(
+    vector,
+    origin,
+    length,
+    lightModeColor,
+    0.2,
+    0.1,
+  );
   (axis.line.material as Material).transparent = true;
   (axis.line.material as Material).opacity = opacity;
   (axis.cone.material as Material).transparent = true;
@@ -39,6 +48,20 @@ const axes = [x, y, z, X, Y, Z].map((vector) => {
 });
 
 const Axes = () => {
+  const { resolvedTheme } = useTheme();
+
+  useEffect(() => {
+    if (resolvedTheme === 'dark') {
+      axes.forEach((axis) => {
+        axis.setColor(darkModeColor);
+      });
+    } else {
+      axes.forEach((axis) => {
+        axis.setColor(lightModeColor);
+      });
+    }
+  }, [resolvedTheme]);
+
   return (
     <>
       {axes.map((axis, i) => (
@@ -65,7 +88,9 @@ const Axes = () => {
                 ]}
               />
               <meshLambertMaterial
-                color={'black'}
+                color={
+                  resolvedTheme === 'dark' ? darkModeColor : lightModeColor
+                }
                 transparent
                 opacity={opacity}
               />
@@ -92,7 +117,9 @@ const Axes = () => {
                   ]}
                 />
                 <meshLambertMaterial
-                  color={'black'}
+                  color={
+                    resolvedTheme === 'dark' ? darkModeColor : lightModeColor
+                  }
                   transparent
                   opacity={opacity}
                 />
@@ -116,7 +143,9 @@ const Axes = () => {
                   ]}
                 />
                 <meshLambertMaterial
-                  color={'black'}
+                  color={
+                    resolvedTheme === 'dark' ? darkModeColor : lightModeColor
+                  }
                   transparent
                   opacity={opacity}
                 />
@@ -140,7 +169,9 @@ const Axes = () => {
                   ]}
                 />
                 <meshLambertMaterial
-                  color={'black'}
+                  color={
+                    resolvedTheme === 'dark' ? darkModeColor : lightModeColor
+                  }
                   transparent
                   opacity={opacity}
                 />
