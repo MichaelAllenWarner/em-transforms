@@ -1,10 +1,12 @@
 import MathJaxInline from './MathJaxInline';
+import ThemeSwitch from './ThemeSwitch';
 
 const TitleAndInstructions = () => (
-  <div className="space-y-10">
+  <div className="space-y-6">
     <h1 className="text-2xl sm:text-3xl">
       Lorentz Transformation of the Electric and Magnetic Fields, Visualized
     </h1>
+    <ThemeSwitch />
     <div className="space-y-4 [&_summary+div]:max-w-prose [&_summary+div]:space-y-5 [&_summary+div]:p-4">
       <details>
         <summary>Background for those who need it</summary>
@@ -125,7 +127,9 @@ const TitleAndInstructions = () => (
           <p>
             This visualization demonstrates how the electric- and magnetic-field
             vectors at an event (a point in spacetime) transform under a Lorentz
-            boost.
+            boost. I recommend viewing it with the Light theme enabled, since
+            the vectors aren't color-coded in the Dark theme (see the{' '}
+            <a href="#theme-switch">Theme dropdown</a> at the top of the page).
           </p>
           <p>
             Use the inputs below the visualization (or the corresponding{' '}

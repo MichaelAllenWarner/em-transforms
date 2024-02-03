@@ -5,6 +5,7 @@ import { Material } from 'three';
 import { memo, useEffect, useRef, useState } from 'react';
 import { TextGeometry } from 'three-stdlib';
 import { Color } from '../helpers/Color';
+import { useTheme } from 'next-themes';
 
 interface Props {
   x: number;
@@ -30,13 +31,16 @@ const Vector = memo(
     boostUnitX,
     boostUnitY,
     boostUnitZ,
-    color,
+    color: passedColor,
     label,
     opacity,
     showComponentVectors = false,
     hide = false,
   }: Props) => {
     const [ready, setReady] = useState(false);
+
+    const { resolvedTheme } = useTheme();
+    const color = resolvedTheme === 'dark' ? 'white' : passedColor;
 
     /*
       Use refs for the needed THREE.js objects, and mutate them in the `useEffect()`.
@@ -90,6 +94,7 @@ const Vector = memo(
       if (arrow.current) {
         arrow.current.setDirection(dir.current);
         arrow.current.setLength(vector.current.length(), 0.2, 0.1);
+        if (color) arrow.current.setColor(color);
       } else {
         arrow.current = (() => {
           const arrowHelper = new THREE.ArrowHelper(
@@ -110,7 +115,12 @@ const Vector = memo(
         })();
       }
 
-      if (!labelMesh.current) {
+      if (labelMesh.current) {
+        if (color)
+          (
+            labelMesh.current.material as THREE.MeshBasicMaterial
+          ).color.setStyle(color);
+      } else {
         labelMesh.current = (() => {
           const mesh = new THREE.Mesh();
           mesh.geometry = new TextGeometry(label || '', {
@@ -194,6 +204,7 @@ const Vector = memo(
             0.2,
             0.1,
           );
+          if (color) perpCompArrow.current.setColor(color);
         } else {
           perpCompArrow.current = (() => {
             const arrowHelper = new THREE.ArrowHelper(
@@ -246,6 +257,7 @@ const Vector = memo(
             perpCompVec.current.y,
             perpCompVec.current.z,
           );
+          if (color) parCompArrow.current.setColor(color);
         } else {
           parCompArrow.current = (() => {
             const arrowHelper = new THREE.ArrowHelper(

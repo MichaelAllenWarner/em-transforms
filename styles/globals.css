@@ -2,7 +2,7 @@
 
 @layer base {
   body {
-    @apply leading-loose;
+    @apply leading-loose bg-white text-black dark:bg-slate-950 dark:text-slate-100;
   }
 
   fieldset {
@@ -15,6 +15,10 @@
 
   input {
     @apply ml-3 border px-1 leading-normal [&[type=checkbox]]:ml-0 [&[type=checkbox]]:mr-3;
+  }
+
+  input[type='number'] {
+    @apply dark:bg-slate-600 dark:text-white dark:disabled:bg-slate-900 dark:disabled:text-white;
   }
 
   summary {
@@ -61,6 +65,7 @@
 
   a {
     @apply text-blue-600 underline transition-colors hover:text-blue-800 focus:text-blue-800;
+    @apply dark:text-rose-200 dark:hover:text-rose-300 dark:focus:text-rose-300;
   }
 }
 
@@ -96,3 +101,15 @@
 }
 
 @tailwind utilities;
+
+/* b/c otherwise dark-mode causes problems */
+.MJX_LiveRegion,
+.MJX_HoverRegion,
+.MJX_ToolTip,
+.MJX_LiveRegion *,
+.MJX_HoverRegion *,
+.MJX_ToolTip *,
+[sre-highlight] {
+  background-color: inherit !important;
+  color: inherit !important;
+}
