@@ -18,7 +18,7 @@
   }
 
   input[type='number'] {
-    @apply dark:bg-white dark:text-black dark:disabled:bg-slate-900 dark:disabled:text-white;
+    @apply dark:bg-slate-600 dark:text-white dark:disabled:bg-slate-900 dark:disabled:text-white;
   }
 
   summary {
