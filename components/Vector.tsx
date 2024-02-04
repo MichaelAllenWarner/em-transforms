@@ -4,7 +4,7 @@ import { font } from '../helpers/font';
 import { Material } from 'three';
 import { memo, useEffect, useRef, useState } from 'react';
 import { TextGeometry } from 'three-stdlib';
-import { Color } from '../helpers/Color';
+import { Color, ColorDark } from '../helpers/Color';
 import { useTheme } from 'next-themes';
 
 interface Props {
@@ -14,7 +14,8 @@ interface Props {
   boostUnitX?: number;
   boostUnitY?: number;
   boostUnitZ?: number;
-  color?: Color;
+  color: Color;
+  colorDark: ColorDark;
   label?: string;
   opacity?: number;
   showComponentVectors?: boolean;
@@ -31,7 +32,8 @@ const Vector = memo(
     boostUnitX,
     boostUnitY,
     boostUnitZ,
-    color: passedColor,
+    color: colorLight,
+    colorDark,
     label,
     opacity,
     showComponentVectors = false,
@@ -40,7 +42,7 @@ const Vector = memo(
     const [ready, setReady] = useState(false);
 
     const { resolvedTheme } = useTheme();
-    const color = resolvedTheme === 'dark' ? 'white' : passedColor;
+    const color = resolvedTheme === 'dark' ? colorDark : colorLight;
 
     /*
       Use refs for the needed THREE.js objects, and mutate them in the `useEffect()`.

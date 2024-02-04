@@ -1,5 +1,5 @@
 import { ChangeEvent, memo, RefObject, useCallback } from 'react';
-import { Color, textColor } from '../helpers/Color';
+import { Color, ColorDark, textColor, textColorDark } from '../helpers/Color';
 import { round } from '../helpers/round';
 import { SphericalComponents } from '../store/store';
 import VectorFieldset from './VectorFieldset';
@@ -14,6 +14,7 @@ const velocityStep = 0.01;
 
 interface Props {
   color: Color;
+  colorDark: ColorDark;
   legend: string;
   r: number;
   phi: number;
@@ -39,6 +40,7 @@ interface Props {
 const VectorFieldsetSpherical = memo(
   ({
     color,
+    colorDark,
     legend,
     r,
     phi,
@@ -93,7 +95,7 @@ const VectorFieldsetSpherical = memo(
     );
 
     return (
-      <fieldset className={`${textColor[color]}`}>
+      <fieldset className={`${textColor[color]} ${textColorDark[colorDark]}`}>
         <legend>{legend}</legend>
         {flipper && (
           <div>
@@ -150,6 +152,8 @@ const VectorFieldsetSpherical = memo(
               yDisabled
               zDisabled
               isPrime={isPrime}
+              color={color}
+              colorDark={colorDark}
             />
           )}
       </fieldset>

@@ -36,7 +36,7 @@ const ThemeSwitch = () => {
           >
             <option value="system">System</option>
             <option value="dark">Dark</option>
-            <option value="light">Light (recommended)</option>
+            <option value="light">Light</option>
           </select>
         </form>
       ) : (
@@ -56,7 +56,7 @@ const ThemeSwitch = () => {
           </label>
           <select tabIndex={-1} className={selectStyles}>
             {/* use longest option for best size-match */}
-            <option value="">Light (recommended)</option>
+            <option value="">System</option>
           </select>
         </div>
       )}
