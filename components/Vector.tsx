@@ -6,6 +6,10 @@ import { memo, useEffect, useRef, useState } from 'react';
 import { TextGeometry } from 'three-stdlib';
 import { Color, ColorDark } from '../helpers/Color';
 import { useTheme } from 'next-themes';
+import {
+  ArrowHelperWithNonArrayMaterials,
+  isArrowHelperWithNonArrayMaterials,
+} from '../helpers/ArrowHelperWithNonArrayMaterials';
 
 interface Props {
   x: number;
@@ -63,20 +67,21 @@ const Vector = memo(
     // define refs for main vector
     const vector = useRef<THREE.Vector3>();
     const dir = useRef<THREE.Vector3>();
-    const arrow = useRef<THREE.ArrowHelper>();
-    const labelMesh = useRef<THREE.Mesh>();
+    const arrow = useRef<ArrowHelperWithNonArrayMaterials>();
+    const labelMesh =
+      useRef<THREE.Mesh<TextGeometry, THREE.MeshBasicMaterial>>();
 
     // define refs for component-vector parallel to boost
     const vectorClonePar = useRef<THREE.Vector3>();
     const parCompProjectee = useRef<THREE.Vector3>();
     const parCompVec = useRef<THREE.Vector3>();
     const parCompDir = useRef<THREE.Vector3>();
-    const parCompArrow = useRef<THREE.ArrowHelper>();
+    const parCompArrow = useRef<ArrowHelperWithNonArrayMaterials>();
 
     // define refs for component-vector perpendicular to boost
     const perpCompVec = useRef<THREE.Vector3>();
     const perpCompDir = useRef<THREE.Vector3>();
-    const perpCompArrow = useRef<THREE.ArrowHelper>();
+    const perpCompArrow = useRef<ArrowHelperWithNonArrayMaterials>();
 
     useEffect(() => {
       // main vector
@@ -107,24 +112,26 @@ const Vector = memo(
             0.2,
             0.1,
           );
-          if (opacity) {
-            (arrowHelper.line.material as Material).transparent = true;
-            (arrowHelper.line.material as Material).opacity = opacity;
-            (arrowHelper.cone.material as Material).transparent = true;
-            (arrowHelper.cone.material as Material).opacity = opacity;
+          if (!isArrowHelperWithNonArrayMaterials(arrowHelper)) {
+            throw new Error(
+              'Expected `arrowHelper.line.material` and `arrowHelper.cone.material` not to be arrays (for `arrow.current`).',
+            );
+          }
+          if (typeof opacity === 'number') {
+            arrowHelper.line.material.transparent = true;
+            arrowHelper.line.material.opacity = opacity;
+            arrowHelper.cone.material.transparent = true;
+            arrowHelper.cone.material.opacity = opacity;
           }
           return arrowHelper;
         })();
       }
 
       if (labelMesh.current) {
-        if (color)
-          (
-            labelMesh.current.material as THREE.MeshBasicMaterial
-          ).color.setStyle(color);
+        if (color) labelMesh.current.material.color.setStyle(color);
       } else {
         labelMesh.current = (() => {
-          const mesh = new THREE.Mesh();
+          const mesh = new THREE.Mesh<TextGeometry, THREE.MeshBasicMaterial>();
           mesh.geometry = new TextGeometry(label || '', {
             font,
             size: 0.4,
@@ -217,10 +224,15 @@ const Vector = memo(
               0.2,
               0.1,
             );
-            (arrowHelper.line.material as Material).transparent = true;
-            (arrowHelper.line.material as Material).opacity = 0.2;
-            (arrowHelper.cone.material as Material).transparent = true;
-            (arrowHelper.cone.material as Material).opacity = 0.2;
+            if (!isArrowHelperWithNonArrayMaterials(arrowHelper)) {
+              throw new Error(
+                'Expected `arrowHelper.line.material` and `arrowHelper.cone.material` not to be arrays (for `perpCompArrow.current`).',
+              );
+            }
+            arrowHelper.line.material.transparent = true;
+            arrowHelper.line.material.opacity = 0.2;
+            arrowHelper.cone.material.transparent = true;
+            arrowHelper.cone.material.opacity = 0.2;
             return arrowHelper;
           })();
         }
@@ -270,10 +282,15 @@ const Vector = memo(
               0.2,
               0.1,
             );
-            (arrowHelper.line.material as Material).transparent = true;
-            (arrowHelper.line.material as Material).opacity = 0.2;
-            (arrowHelper.cone.material as Material).transparent = true;
-            (arrowHelper.cone.material as Material).opacity = 0.2;
+            if (!isArrowHelperWithNonArrayMaterials(arrowHelper)) {
+              throw new Error(
+                'Expected `arrowHelper.line.material` and `arrowHelper.cone.material` not to be arrays (for `parCompArrow.current`).',
+              );
+            }
+            arrowHelper.line.material.transparent = true;
+            arrowHelper.line.material.opacity = 0.2;
+            arrowHelper.cone.material.transparent = true;
+            arrowHelper.cone.material.opacity = 0.2;
             return arrowHelper;
           })();
         }
