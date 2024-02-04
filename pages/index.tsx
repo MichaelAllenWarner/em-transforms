@@ -5,7 +5,7 @@ import Axes from '../components/Axes';
 import Head from 'next/head';
 import Options from '../components/Options';
 import VectorFieldset from '../components/VectorFieldset';
-import { Color, textColor } from '../helpers/Color';
+import { Color, ColorDark, textColor, textColorDark } from '../helpers/Color';
 import VectorFieldsetSpherical from '../components/VectorFieldsetSpherical';
 import TitleAndInstructions from '../components/TitleAndInstructions';
 import { useRefsAndHotkeys } from '../hooks/useRefsAndHotkeys';
@@ -171,6 +171,7 @@ const Page = () => {
             boostUnitY={boostUnit[1]}
             boostUnitZ={boostUnit[2]}
             color={Color.E}
+            colorDark={ColorDark.E}
             label="E"
             showComponentVectors={
               showComponentVectors && !hideBoostedQuantities
@@ -186,6 +187,7 @@ const Page = () => {
             boostUnitY={boostUnit[1]}
             boostUnitZ={boostUnit[2]}
             color={Color.B}
+            colorDark={ColorDark.B}
             label="B"
             showComponentVectors={
               showComponentVectors && !hideBoostedQuantities
@@ -201,6 +203,7 @@ const Page = () => {
             boostUnitY={boostUnit[1]}
             boostUnitZ={boostUnit[2]}
             color={Color.U}
+            colorDark={ColorDark.U}
             label="u"
             showComponentVectors={
               showComponentVectors && !hideBoostedQuantities
@@ -220,6 +223,7 @@ const Page = () => {
             boostUnitY={boostUnit[1]}
             boostUnitZ={boostUnit[2]}
             color={Color.UPrime}
+            colorDark={ColorDark.UPrime}
             label="u′"
             showComponentVectors={
               showComponentVectors && !hideBoostedQuantities
@@ -240,6 +244,7 @@ const Page = () => {
             boostUnitY={boostUnit[1]}
             boostUnitZ={boostUnit[2]}
             color={Color.F}
+            colorDark={ColorDark.F}
             label="F"
             showComponentVectors={
               showComponentVectors && !hideBoostedQuantities
@@ -258,6 +263,7 @@ const Page = () => {
             boostUnitY={boostUnit[1]}
             boostUnitZ={boostUnit[2]}
             color={Color.FPrime}
+            colorDark={ColorDark.FPrime}
             label="F′"
             showComponentVectors={
               showComponentVectors && !hideBoostedQuantities
@@ -277,6 +283,7 @@ const Page = () => {
             boostUnitY={boostUnit[1]}
             boostUnitZ={boostUnit[2]}
             color={Color.A}
+            colorDark={ColorDark.A}
             label="a"
             showComponentVectors={
               showComponentVectors && !hideBoostedQuantities
@@ -292,6 +299,7 @@ const Page = () => {
             boostUnitY={boostUnit[1]}
             boostUnitZ={boostUnit[2]}
             color={Color.APrime}
+            colorDark={ColorDark.APrime}
             label="a′"
             showComponentVectors={
               showComponentVectors && !hideBoostedQuantities
@@ -308,6 +316,7 @@ const Page = () => {
             y={boostVelocityCartesian[1]}
             z={boostVelocityCartesian[2]}
             color={Color.V}
+            colorDark={ColorDark.V}
             label="v"
             hide={hideBoostedQuantities}
           />
@@ -320,6 +329,7 @@ const Page = () => {
             boostUnitY={boostUnit[1]}
             boostUnitZ={boostUnit[2]}
             color={Color.EPrime}
+            colorDark={ColorDark.EPrime}
             label="E′"
             showComponentVectors={
               showComponentVectors && !hideBoostedQuantities
@@ -335,6 +345,7 @@ const Page = () => {
             boostUnitY={boostUnit[1]}
             boostUnitZ={boostUnit[2]}
             color={Color.BPrime}
+            colorDark={ColorDark.BPrime}
             label="B′"
             showComponentVectors={
               showComponentVectors && !hideBoostedQuantities
@@ -350,6 +361,7 @@ const Page = () => {
             boostUnitY={boostUnit[1]}
             boostUnitZ={boostUnit[2]}
             color={Color.S}
+            colorDark={ColorDark.S}
             label="S"
             showComponentVectors={
               showComponentVectors && !hideBoostedQuantities
@@ -365,6 +377,7 @@ const Page = () => {
             boostUnitY={boostUnit[1]}
             boostUnitZ={boostUnit[2]}
             color={Color.SPrime}
+            colorDark={ColorDark.SPrime}
             label="S′"
             showComponentVectors={
               showComponentVectors && !hideBoostedQuantities
@@ -394,6 +407,7 @@ const Page = () => {
 
           <VectorFieldsetSpherical
             color={Color.V}
+            colorDark={ColorDark.V}
             legend="Boost velocity (v)"
             r={boostVelocity[0]}
             phi={boostVelocity[1]}
@@ -413,6 +427,7 @@ const Page = () => {
 
           <VectorFieldset
             color={Color.E}
+            colorDark={ColorDark.E}
             legend="Original electric field (E)"
             x={eField[0]}
             y={eField[1]}
@@ -428,6 +443,7 @@ const Page = () => {
 
           <VectorFieldset
             color={Color.B}
+            colorDark={ColorDark.B}
             legend="Original magnetic field (B)"
             x={bField[0]}
             y={bField[1]}
@@ -443,6 +459,7 @@ const Page = () => {
 
           <VectorFieldsetSpherical
             color={Color.U}
+            colorDark={ColorDark.U}
             legend="Original particle velocity (u)"
             r={particleVelocity[0]}
             phi={particleVelocity[1]}
@@ -460,7 +477,9 @@ const Page = () => {
             z={particleVelocityCartesian[2]}
           />
 
-          <fieldset className={textColor[Color.U]}>
+          <fieldset
+            className={`${textColor[Color.U]} ${textColorDark[ColorDark.U]}`}
+          >
             <legend>Particle charge and mass</legend>
             <div>
               <label>
@@ -499,6 +518,7 @@ const Page = () => {
 
           <VectorFieldset
             color={Color.S}
+            colorDark={ColorDark.S}
             legend="Original Poynting vector (S)"
             x={poynting[0]}
             y={poynting[1]}
@@ -510,6 +530,7 @@ const Page = () => {
 
           <VectorFieldset
             color={Color.F}
+            colorDark={ColorDark.F}
             legend="Original Lorentz force (F)"
             x={lorentzForce[0]}
             y={lorentzForce[1]}
@@ -521,6 +542,7 @@ const Page = () => {
 
           <VectorFieldset
             color={Color.A}
+            colorDark={ColorDark.A}
             legend="Original particle acceleration (a)"
             x={particleAcceleration[0]}
             y={particleAcceleration[1]}
@@ -532,6 +554,7 @@ const Page = () => {
 
           <VectorFieldset
             color={Color.EPrime}
+            colorDark={ColorDark.EPrime}
             legend="Boosted electric field (E′)"
             x={ePrime[0]}
             y={ePrime[1]}
@@ -544,6 +567,7 @@ const Page = () => {
 
           <VectorFieldset
             color={Color.BPrime}
+            colorDark={ColorDark.BPrime}
             legend="Boosted magnetic field (B′)"
             x={bPrime[0]}
             y={bPrime[1]}
@@ -556,6 +580,7 @@ const Page = () => {
 
           <VectorFieldsetSpherical
             color={Color.UPrime}
+            colorDark={ColorDark.UPrime}
             legend="Boosted particle velocity (u′)"
             r={particleVelocityPrimeSpherical.radius}
             phi={particleVelocityPrimeSpherical.phi}
@@ -572,6 +597,7 @@ const Page = () => {
 
           <VectorFieldset
             color={Color.SPrime}
+            colorDark={ColorDark.SPrime}
             legend="Boosted Poynting vector (S′)"
             x={poyntingPrime[0]}
             y={poyntingPrime[1]}
@@ -584,6 +610,7 @@ const Page = () => {
 
           <VectorFieldset
             color={Color.FPrime}
+            colorDark={ColorDark.FPrime}
             legend="Boosted Lorentz force (F′)"
             x={lorentzForcePrime[0]}
             y={lorentzForcePrime[1]}
@@ -596,6 +623,7 @@ const Page = () => {
 
           <VectorFieldset
             color={Color.APrime}
+            colorDark={ColorDark.APrime}
             legend="Boosted particle acceleration (a′)"
             x={particleAccelerationPrime[0]}
             y={particleAccelerationPrime[1]}

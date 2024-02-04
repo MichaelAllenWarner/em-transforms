@@ -1,10 +1,11 @@
 import { ChangeEvent, memo, RefObject, useCallback } from 'react';
-import { Color, textColor } from '../helpers/Color';
+import { Color, ColorDark, textColor, textColorDark } from '../helpers/Color';
 import { round } from '../helpers/round';
 import { CartesianComponents } from '../store/store';
 
 interface Props {
-  color?: Color;
+  color: Color;
+  colorDark: ColorDark;
   legend?: string;
   x: number;
   y: number;
@@ -27,6 +28,7 @@ interface Props {
 const VectorFieldset = memo(
   ({
     color,
+    colorDark,
     legend,
     x,
     y,
@@ -105,7 +107,7 @@ const VectorFieldset = memo(
 
     if (legend) {
       return (
-        <fieldset className={color ? `${textColor[color]}` : ''}>
+        <fieldset className={`${textColor[color]} ${textColorDark[colorDark]}`}>
           <legend>{legend}</legend>
           {inputs}
         </fieldset>

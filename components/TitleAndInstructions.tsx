@@ -127,9 +127,7 @@ const TitleAndInstructions = () => (
           <p>
             This visualization demonstrates how the electric- and magnetic-field
             vectors at an event (a point in spacetime) transform under a Lorentz
-            boost. I recommend viewing it with the Light theme enabled, since
-            the vectors aren't color-coded in the Dark theme (see the{' '}
-            <a href="#theme-switch">Theme dropdown</a> at the top of the page).
+            boost.
           </p>
           <p>
             Use the inputs below the visualization (or the corresponding{' '}
