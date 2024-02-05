@@ -6,6 +6,16 @@ const TitleAndInstructions = () => (
     <h1 className="text-2xl sm:text-3xl">
       Lorentz Transformation of the Electric and Magnetic Fields, Visualized
     </h1>
+    <noscript className="block">
+      <div className="border p-4 inline-block">
+        <p>
+          <strong>
+            JavaScript is currently disabled in your browser. To use this app,
+            you'll have to enable JavaScript and reload the page.
+          </strong>
+        </p>
+      </div>
+    </noscript>
     <ThemeSwitch />
     <div className="space-y-4 [&_summary+div]:max-w-prose [&_summary+div]:space-y-5 [&_summary+div]:p-4">
       <details>
