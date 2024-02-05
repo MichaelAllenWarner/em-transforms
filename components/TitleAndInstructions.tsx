@@ -6,7 +6,7 @@ const TitleAndInstructions = () => (
     <h1 className="text-2xl sm:text-3xl">
       Lorentz Transformation of the Electric and Magnetic Fields, Visualized
     </h1>
-    <noscript>
+    <noscript className="block">
       <div className="border p-4 inline-block">
         <p>
           <strong>
