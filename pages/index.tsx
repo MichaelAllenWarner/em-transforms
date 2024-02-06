@@ -147,244 +147,240 @@ const Page = () => {
         />
       </Head>
 
-      {/*
-        Needs explicit height (any height will do, apparently), or the canvas continually
-        grows vertically for some reason. Also therefore needs visible y-overflow, which
-        should be the case by default, but we set it explicitly just to be safe.
-      */}
-      <main className="container mt-10 flex !h-0 flex-col space-y-10 !overflow-y-visible">
+      <main className="container mt-10 flex flex-col space-y-10">
         {titleAndInstructions}
 
-        {/* Needs to be min-height. Not sure why, but it works. */}
-        <Canvas className="min-h-[600px] px-6 [&>*]:border">
-          <CameraController ref={cameraRef} />
+        <div className="h-[calc(600rem/16)]">
+          <Canvas className="px-6 [&>*]:border">
+            <CameraController ref={cameraRef} />
 
-          <ambientLight />
+            <ambientLight />
 
-          {axes}
+            {axes}
 
-          <Vector
-            x={eField[0]}
-            y={eField[1]}
-            z={eField[2]}
-            boostUnitX={boostUnit[0]}
-            boostUnitY={boostUnit[1]}
-            boostUnitZ={boostUnit[2]}
-            color={Color.E}
-            colorDark={ColorDark.E}
-            label="E"
-            showComponentVectors={
-              showComponentVectors && !hideBoostedQuantities
-            }
-            hide={hideFieldVectors}
-          />
+            <Vector
+              x={eField[0]}
+              y={eField[1]}
+              z={eField[2]}
+              boostUnitX={boostUnit[0]}
+              boostUnitY={boostUnit[1]}
+              boostUnitZ={boostUnit[2]}
+              color={Color.E}
+              colorDark={ColorDark.E}
+              label="E"
+              showComponentVectors={
+                showComponentVectors && !hideBoostedQuantities
+              }
+              hide={hideFieldVectors}
+            />
 
-          <Vector
-            x={bField[0]}
-            y={bField[1]}
-            z={bField[2]}
-            boostUnitX={boostUnit[0]}
-            boostUnitY={boostUnit[1]}
-            boostUnitZ={boostUnit[2]}
-            color={Color.B}
-            colorDark={ColorDark.B}
-            label="B"
-            showComponentVectors={
-              showComponentVectors && !hideBoostedQuantities
-            }
-            hide={hideFieldVectors}
-          />
+            <Vector
+              x={bField[0]}
+              y={bField[1]}
+              z={bField[2]}
+              boostUnitX={boostUnit[0]}
+              boostUnitY={boostUnit[1]}
+              boostUnitZ={boostUnit[2]}
+              color={Color.B}
+              colorDark={ColorDark.B}
+              label="B"
+              showComponentVectors={
+                showComponentVectors && !hideBoostedQuantities
+              }
+              hide={hideFieldVectors}
+            />
 
-          <Vector
-            x={particleVelocityCartesian[0]}
-            y={particleVelocityCartesian[1]}
-            z={particleVelocityCartesian[2]}
-            boostUnitX={boostUnit[0]}
-            boostUnitY={boostUnit[1]}
-            boostUnitZ={boostUnit[2]}
-            color={Color.U}
-            colorDark={ColorDark.U}
-            label="u"
-            showComponentVectors={
-              showComponentVectors && !hideBoostedQuantities
-            }
-            hide={
-              !showParticleVelocity &&
-              !showLorentzForce &&
-              !showParticleAcceleration
-            }
-          />
-
-          <Vector
-            x={particleVelocityPrime[0]}
-            y={particleVelocityPrime[1]}
-            z={particleVelocityPrime[2]}
-            boostUnitX={boostUnit[0]}
-            boostUnitY={boostUnit[1]}
-            boostUnitZ={boostUnit[2]}
-            color={Color.UPrime}
-            colorDark={ColorDark.UPrime}
-            label="u′"
-            showComponentVectors={
-              showComponentVectors && !hideBoostedQuantities
-            }
-            hide={
-              (!showParticleVelocity &&
+            <Vector
+              x={particleVelocityCartesian[0]}
+              y={particleVelocityCartesian[1]}
+              z={particleVelocityCartesian[2]}
+              boostUnitX={boostUnit[0]}
+              boostUnitY={boostUnit[1]}
+              boostUnitZ={boostUnit[2]}
+              color={Color.U}
+              colorDark={ColorDark.U}
+              label="u"
+              showComponentVectors={
+                showComponentVectors && !hideBoostedQuantities
+              }
+              hide={
+                !showParticleVelocity &&
                 !showLorentzForce &&
-                !showParticleAcceleration) ||
-              hideBoostedQuantities
-            }
-          />
+                !showParticleAcceleration
+              }
+            />
 
-          <Vector
-            x={lorentzForce[0]}
-            y={lorentzForce[1]}
-            z={lorentzForce[2]}
-            boostUnitX={boostUnit[0]}
-            boostUnitY={boostUnit[1]}
-            boostUnitZ={boostUnit[2]}
-            color={Color.F}
-            colorDark={ColorDark.F}
-            label="F"
-            showComponentVectors={
-              showComponentVectors && !hideBoostedQuantities
-            }
-            hide={
-              (!showLorentzForce && !showParticleAcceleration) ||
-              hideFieldVectors
-            }
-          />
+            <Vector
+              x={particleVelocityPrime[0]}
+              y={particleVelocityPrime[1]}
+              z={particleVelocityPrime[2]}
+              boostUnitX={boostUnit[0]}
+              boostUnitY={boostUnit[1]}
+              boostUnitZ={boostUnit[2]}
+              color={Color.UPrime}
+              colorDark={ColorDark.UPrime}
+              label="u′"
+              showComponentVectors={
+                showComponentVectors && !hideBoostedQuantities
+              }
+              hide={
+                (!showParticleVelocity &&
+                  !showLorentzForce &&
+                  !showParticleAcceleration) ||
+                hideBoostedQuantities
+              }
+            />
 
-          <Vector
-            x={lorentzForcePrime[0]}
-            y={lorentzForcePrime[1]}
-            z={lorentzForcePrime[2]}
-            boostUnitX={boostUnit[0]}
-            boostUnitY={boostUnit[1]}
-            boostUnitZ={boostUnit[2]}
-            color={Color.FPrime}
-            colorDark={ColorDark.FPrime}
-            label="F′"
-            showComponentVectors={
-              showComponentVectors && !hideBoostedQuantities
-            }
-            hide={
-              (!showLorentzForce && !showParticleAcceleration) ||
-              hideBoostedQuantities ||
-              hideFieldVectors
-            }
-          />
+            <Vector
+              x={lorentzForce[0]}
+              y={lorentzForce[1]}
+              z={lorentzForce[2]}
+              boostUnitX={boostUnit[0]}
+              boostUnitY={boostUnit[1]}
+              boostUnitZ={boostUnit[2]}
+              color={Color.F}
+              colorDark={ColorDark.F}
+              label="F"
+              showComponentVectors={
+                showComponentVectors && !hideBoostedQuantities
+              }
+              hide={
+                (!showLorentzForce && !showParticleAcceleration) ||
+                hideFieldVectors
+              }
+            />
 
-          <Vector
-            x={particleAcceleration[0]}
-            y={particleAcceleration[1]}
-            z={particleAcceleration[2]}
-            boostUnitX={boostUnit[0]}
-            boostUnitY={boostUnit[1]}
-            boostUnitZ={boostUnit[2]}
-            color={Color.A}
-            colorDark={ColorDark.A}
-            label="a"
-            showComponentVectors={
-              showComponentVectors && !hideBoostedQuantities
-            }
-            hide={!showParticleAcceleration || hideFieldVectors}
-          />
+            <Vector
+              x={lorentzForcePrime[0]}
+              y={lorentzForcePrime[1]}
+              z={lorentzForcePrime[2]}
+              boostUnitX={boostUnit[0]}
+              boostUnitY={boostUnit[1]}
+              boostUnitZ={boostUnit[2]}
+              color={Color.FPrime}
+              colorDark={ColorDark.FPrime}
+              label="F′"
+              showComponentVectors={
+                showComponentVectors && !hideBoostedQuantities
+              }
+              hide={
+                (!showLorentzForce && !showParticleAcceleration) ||
+                hideBoostedQuantities ||
+                hideFieldVectors
+              }
+            />
 
-          <Vector
-            x={particleAccelerationPrime[0]}
-            y={particleAccelerationPrime[1]}
-            z={particleAccelerationPrime[2]}
-            boostUnitX={boostUnit[0]}
-            boostUnitY={boostUnit[1]}
-            boostUnitZ={boostUnit[2]}
-            color={Color.APrime}
-            colorDark={ColorDark.APrime}
-            label="a′"
-            showComponentVectors={
-              showComponentVectors && !hideBoostedQuantities
-            }
-            hide={
-              !showParticleAcceleration ||
-              hideBoostedQuantities ||
-              hideFieldVectors
-            }
-          />
+            <Vector
+              x={particleAcceleration[0]}
+              y={particleAcceleration[1]}
+              z={particleAcceleration[2]}
+              boostUnitX={boostUnit[0]}
+              boostUnitY={boostUnit[1]}
+              boostUnitZ={boostUnit[2]}
+              color={Color.A}
+              colorDark={ColorDark.A}
+              label="a"
+              showComponentVectors={
+                showComponentVectors && !hideBoostedQuantities
+              }
+              hide={!showParticleAcceleration || hideFieldVectors}
+            />
 
-          <Vector
-            x={boostVelocityCartesian[0]}
-            y={boostVelocityCartesian[1]}
-            z={boostVelocityCartesian[2]}
-            color={Color.V}
-            colorDark={ColorDark.V}
-            label="v"
-            hide={hideBoostedQuantities}
-          />
+            <Vector
+              x={particleAccelerationPrime[0]}
+              y={particleAccelerationPrime[1]}
+              z={particleAccelerationPrime[2]}
+              boostUnitX={boostUnit[0]}
+              boostUnitY={boostUnit[1]}
+              boostUnitZ={boostUnit[2]}
+              color={Color.APrime}
+              colorDark={ColorDark.APrime}
+              label="a′"
+              showComponentVectors={
+                showComponentVectors && !hideBoostedQuantities
+              }
+              hide={
+                !showParticleAcceleration ||
+                hideBoostedQuantities ||
+                hideFieldVectors
+              }
+            />
 
-          <Vector
-            x={ePrime[0]}
-            y={ePrime[1]}
-            z={ePrime[2]}
-            boostUnitX={boostUnit[0]}
-            boostUnitY={boostUnit[1]}
-            boostUnitZ={boostUnit[2]}
-            color={Color.EPrime}
-            colorDark={ColorDark.EPrime}
-            label="E′"
-            showComponentVectors={
-              showComponentVectors && !hideBoostedQuantities
-            }
-            hide={hideBoostedQuantities || hideFieldVectors}
-          />
+            <Vector
+              x={boostVelocityCartesian[0]}
+              y={boostVelocityCartesian[1]}
+              z={boostVelocityCartesian[2]}
+              color={Color.V}
+              colorDark={ColorDark.V}
+              label="v"
+              hide={hideBoostedQuantities}
+            />
 
-          <Vector
-            x={bPrime[0]}
-            y={bPrime[1]}
-            z={bPrime[2]}
-            boostUnitX={boostUnit[0]}
-            boostUnitY={boostUnit[1]}
-            boostUnitZ={boostUnit[2]}
-            color={Color.BPrime}
-            colorDark={ColorDark.BPrime}
-            label="B′"
-            showComponentVectors={
-              showComponentVectors && !hideBoostedQuantities
-            }
-            hide={hideBoostedQuantities || hideFieldVectors}
-          />
+            <Vector
+              x={ePrime[0]}
+              y={ePrime[1]}
+              z={ePrime[2]}
+              boostUnitX={boostUnit[0]}
+              boostUnitY={boostUnit[1]}
+              boostUnitZ={boostUnit[2]}
+              color={Color.EPrime}
+              colorDark={ColorDark.EPrime}
+              label="E′"
+              showComponentVectors={
+                showComponentVectors && !hideBoostedQuantities
+              }
+              hide={hideBoostedQuantities || hideFieldVectors}
+            />
 
-          <Vector
-            x={poynting[0]}
-            y={poynting[1]}
-            z={poynting[2]}
-            boostUnitX={boostUnit[0]}
-            boostUnitY={boostUnit[1]}
-            boostUnitZ={boostUnit[2]}
-            color={Color.S}
-            colorDark={ColorDark.S}
-            label="S"
-            showComponentVectors={
-              showComponentVectors && !hideBoostedQuantities
-            }
-            hide={!showPoynting || hideFieldVectors}
-          />
+            <Vector
+              x={bPrime[0]}
+              y={bPrime[1]}
+              z={bPrime[2]}
+              boostUnitX={boostUnit[0]}
+              boostUnitY={boostUnit[1]}
+              boostUnitZ={boostUnit[2]}
+              color={Color.BPrime}
+              colorDark={ColorDark.BPrime}
+              label="B′"
+              showComponentVectors={
+                showComponentVectors && !hideBoostedQuantities
+              }
+              hide={hideBoostedQuantities || hideFieldVectors}
+            />
 
-          <Vector
-            x={poyntingPrime[0]}
-            y={poyntingPrime[1]}
-            z={poyntingPrime[2]}
-            boostUnitX={boostUnit[0]}
-            boostUnitY={boostUnit[1]}
-            boostUnitZ={boostUnit[2]}
-            color={Color.SPrime}
-            colorDark={ColorDark.SPrime}
-            label="S′"
-            showComponentVectors={
-              showComponentVectors && !hideBoostedQuantities
-            }
-            hide={!showPoynting || hideBoostedQuantities || hideFieldVectors}
-          />
-        </Canvas>
+            <Vector
+              x={poynting[0]}
+              y={poynting[1]}
+              z={poynting[2]}
+              boostUnitX={boostUnit[0]}
+              boostUnitY={boostUnit[1]}
+              boostUnitZ={boostUnit[2]}
+              color={Color.S}
+              colorDark={ColorDark.S}
+              label="S"
+              showComponentVectors={
+                showComponentVectors && !hideBoostedQuantities
+              }
+              hide={!showPoynting || hideFieldVectors}
+            />
+
+            <Vector
+              x={poyntingPrime[0]}
+              y={poyntingPrime[1]}
+              z={poyntingPrime[2]}
+              boostUnitX={boostUnit[0]}
+              boostUnitY={boostUnit[1]}
+              boostUnitZ={boostUnit[2]}
+              color={Color.SPrime}
+              colorDark={ColorDark.SPrime}
+              label="S′"
+              showComponentVectors={
+                showComponentVectors && !hideBoostedQuantities
+              }
+              hide={!showPoynting || hideBoostedQuantities || hideFieldVectors}
+            />
+          </Canvas>
+        </div>
 
         <form
           className="flex flex-wrap gap-8 pb-10"

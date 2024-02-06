@@ -1,60 +1,66 @@
-// All colors taken from the Tailwind color palette https://tailwindcss.com/docs/customizing-colors
+/*
+  All colors taken from the Tailwind color palette https://tailwindcss.com/docs/customizing-colors
+
+  We use their explicit values (rather than the TW class-names) because the Three.js canvas
+  components that need the colors don't work with classes, and instead need to be fed
+  actual color-values.
+*/
 
 export enum Color {
-  /** For boost-velocity */
+  /** black */
   V = 'black',
-  /** For unprimed electric field */
+  /** indigo-600 */
   E = '#4f46e5',
-  /** For primed electric field */
+  /** blue-800 */
   EPrime = '#1e40af',
-  /** For unprimed magnetic field */
+  /** red-600 */
   B = '#dc2626',
-  /** For primed magnetic field */
+  /** red-800 */
   BPrime = '#991b1b',
-  /** For unprimed Poynting vector */
+  /** green-700 */
   S = '#15803d',
-  /** For primed Poynting vector */
+  /** green-900 */
   SPrime = '#14532d',
-  /** For unprimed particle-velocity */
+  /** yellow-700 */
   U = '#a16207',
-  /** For primed particle-velocity */
+  /** yellow-900 */
   UPrime = '#713f12',
-  /** For unprimed Lorentz force */
+  /** fuchsia-600 */
   F = '#c026d3',
-  /** For primed Lorentz force */
+  /** fuchsia-800 */
   FPrime = '#86198f',
-  /** For unprimed particle-acceleration */
+  /** slate-500 */
   A = '#64748b',
-  /** For primed particle-acceleration */
+  /** slate-700 */
   APrime = '#334155',
 }
 
 export enum ColorDark {
-  /** For boost-velocity */
+  /** white */
   V = 'white',
-  /** For unprimed electric field */
+  /** indigo-400 */
   E = '#818cf8',
-  /** For primed electric field */
+  /** blue-500 */
   EPrime = '#3b82f6',
-  /** For unprimed magnetic field */
+  /** red-500 */
   B = '#ef4444',
-  /** For primed magnetic field */
+  /** red-400 */
   BPrime = '#f87171',
-  /** For unprimed Poynting vector */
+  /** green-600 */
   S = '#16a34a',
-  /** For primed Poynting vector */
+  /** green-500 */
   SPrime = '#22c55e',
-  /** For unprimed particle-velocity */
+  /** yellow-600 */
   U = '#ca8a04',
-  /** For primed particle-velocity */
+  /** yellow-500 */
   UPrime = '#eab308',
-  /** For unprimed Lorentz force */
+  /** fucshia-500 */
   F = '#d946ef',
-  /** For primed Lorentz force */
+  /** fucshia-300 */
   FPrime = '#f0abfc',
-  /** For unprimed particle-acceleration */
+  /** slate-400 */
   A = '#94a3b8',
-  /** For primed particle-acceleration */
+  /** slate-300 */
   APrime = '#cbd5e1',
 }
 
