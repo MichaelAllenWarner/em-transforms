@@ -68,6 +68,7 @@ const Axes = () => {
     axes.forEach((axis) => {
       axis.setColor(color);
       axis.cone.material.opacity = opacity;
+      axis.line.material.opacity = opacity;
     });
   }, [color, opacity]);
 
