@@ -7,7 +7,8 @@ const LabelGuts = () => (
   </>
 );
 const labelStyles = /* tw */ 'mr-2';
-const selectStyles = /* tw */ 'inline-block p-1 rounded-sm border';
+const selectStyles =
+  /* tw */ 'inline-block p-1 rounded-sm border border-current bg-white text-black dark:bg-slate-950 dark:text-slate-100';
 const themeSwitchId = 'theme-switch';
 
 const ThemeSwitch = () => {
