@@ -64,35 +64,51 @@ export enum ColorDark {
   APrime = '#cbd5e1',
 }
 
-export const textColor: { [C in Color]: `text-[${C}]` } = /* tw */ {
-  [Color.V]: 'text-[black]',
-  [Color.E]: 'text-[#4f46e5]',
-  [Color.EPrime]: 'text-[#1e40af]',
-  [Color.B]: 'text-[#dc2626]',
-  [Color.BPrime]: 'text-[#991b1b]',
-  [Color.S]: 'text-[#15803d]',
-  [Color.SPrime]: 'text-[#14532d]',
-  [Color.U]: 'text-[#a16207]',
-  [Color.UPrime]: 'text-[#713f12]',
-  [Color.F]: 'text-[#c026d3]',
-  [Color.FPrime]: 'text-[#86198f]',
-  [Color.A]: 'text-[#64748b]',
-  [Color.APrime]: 'text-[#334155]',
+export const textColor: {
+  [C in Color]: `text-[${C}] [&_input[type=number]]:text-fill-[${C}]`;
+} = /* tw */ {
+  [Color.V]: 'text-[black] [&_input[type=number]]:text-fill-[black]',
+  [Color.E]: 'text-[#4f46e5] [&_input[type=number]]:text-fill-[#4f46e5]',
+  [Color.EPrime]: 'text-[#1e40af] [&_input[type=number]]:text-fill-[#1e40af]',
+  [Color.B]: 'text-[#dc2626] [&_input[type=number]]:text-fill-[#dc2626]',
+  [Color.BPrime]: 'text-[#991b1b] [&_input[type=number]]:text-fill-[#991b1b]',
+  [Color.S]: 'text-[#15803d] [&_input[type=number]]:text-fill-[#15803d]',
+  [Color.SPrime]: 'text-[#14532d] [&_input[type=number]]:text-fill-[#14532d]',
+  [Color.U]: 'text-[#a16207] [&_input[type=number]]:text-fill-[#a16207]',
+  [Color.UPrime]: 'text-[#713f12] [&_input[type=number]]:text-fill-[#713f12]',
+  [Color.F]: 'text-[#c026d3] [&_input[type=number]]:text-fill-[#c026d3]',
+  [Color.FPrime]: 'text-[#86198f] [&_input[type=number]]:text-fill-[#86198f]',
+  [Color.A]: 'text-[#64748b] [&_input[type=number]]:text-fill-[#64748b]',
+  [Color.APrime]: 'text-[#334155] [&_input[type=number]]:text-fill-[#334155]',
 };
 
-export const textColorDark: { [C in ColorDark]: `dark:text-[${C}]` } =
-  /* tw */ {
-    [ColorDark.V]: 'dark:text-[white]',
-    [ColorDark.E]: 'dark:text-[#818cf8]',
-    [ColorDark.EPrime]: 'dark:text-[#3b82f6]',
-    [ColorDark.B]: 'dark:text-[#ef4444]',
-    [ColorDark.BPrime]: 'dark:text-[#f87171]',
-    [ColorDark.S]: 'dark:text-[#16a34a]',
-    [ColorDark.SPrime]: 'dark:text-[#22c55e]',
-    [ColorDark.U]: 'dark:text-[#ca8a04]',
-    [ColorDark.UPrime]: 'dark:text-[#eab308]',
-    [ColorDark.F]: 'dark:text-[#d946ef]',
-    [ColorDark.FPrime]: 'dark:text-[#f0abfc]',
-    [ColorDark.A]: 'dark:text-[#94a3b8]',
-    [ColorDark.APrime]: 'dark:text-[#cbd5e1]',
-  };
+export const textColorDark: {
+  [C in ColorDark]: `dark:text-[${C}] dark:[&_input[type=number]]:text-fill-white`;
+} = /* tw */ {
+  [ColorDark.V]:
+    'dark:text-[white] dark:[&_input[type=number]]:text-fill-white',
+  [ColorDark.E]:
+    'dark:text-[#818cf8] dark:[&_input[type=number]]:text-fill-white',
+  [ColorDark.EPrime]:
+    'dark:text-[#3b82f6] dark:[&_input[type=number]]:text-fill-white',
+  [ColorDark.B]:
+    'dark:text-[#ef4444] dark:[&_input[type=number]]:text-fill-white',
+  [ColorDark.BPrime]:
+    'dark:text-[#f87171] dark:[&_input[type=number]]:text-fill-white',
+  [ColorDark.S]:
+    'dark:text-[#16a34a] dark:[&_input[type=number]]:text-fill-white',
+  [ColorDark.SPrime]:
+    'dark:text-[#22c55e] dark:[&_input[type=number]]:text-fill-white',
+  [ColorDark.U]:
+    'dark:text-[#ca8a04] dark:[&_input[type=number]]:text-fill-white',
+  [ColorDark.UPrime]:
+    'dark:text-[#eab308] dark:[&_input[type=number]]:text-fill-white',
+  [ColorDark.F]:
+    'dark:text-[#d946ef] dark:[&_input[type=number]]:text-fill-white',
+  [ColorDark.FPrime]:
+    'dark:text-[#f0abfc] dark:[&_input[type=number]]:text-fill-white',
+  [ColorDark.A]:
+    'dark:text-[#94a3b8] dark:[&_input[type=number]]:text-fill-white',
+  [ColorDark.APrime]:
+    'dark:text-[#cbd5e1] dark:[&_input[type=number]]:text-fill-white',
+};

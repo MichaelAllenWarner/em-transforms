@@ -1,4 +1,9 @@
 // @ts-check
+const plugin = require('tailwindcss/plugin');
+const withAlphaVariable =
+  require('tailwindcss/lib/util/withAlphaVariable').default;
+const flattenColorPalette =
+  require('tailwindcss/lib/util/flattenColorPalette').default;
 
 /** @param {number} num */
 const round = (num) =>
@@ -43,7 +48,25 @@ module.exports = {
   variants: {
     extend: {},
   },
-  plugins: [],
+  plugins: [
+    plugin(({ matchUtilities, theme }) => {
+      matchUtilities(
+        {
+          'text-fill': (value) => {
+            return withAlphaVariable({
+              color: value,
+              property: '-webkit-text-fill-color',
+              variable: '--tw-text-opacity',
+            });
+          },
+        },
+        {
+          values: flattenColorPalette(theme('textColor')),
+          type: ['color', 'any'],
+        },
+      );
+    }),
+  ],
   future: {
     hoverOnlyWhenSupported: true,
   },
