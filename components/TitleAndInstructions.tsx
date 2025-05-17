@@ -2,7 +2,7 @@ import MathJaxInline from './MathJaxInline';
 import ThemeSwitch from './ThemeSwitch';
 
 const TitleAndInstructions = () => (
-  <div className="space-y-6 mx-auto">
+  <div className="space-y-6 mx-auto max-w-full">
     <h1 className="text-2xl sm:text-3xl">
       Lorentz Transformation of the Electric and Magnetic Fields, Visualized
     </h1>
