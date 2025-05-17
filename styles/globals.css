@@ -14,12 +14,12 @@
   }
 
   input {
-    @apply ml-3 border px-1 leading-normal [&[type=checkbox]]:ml-0 [&[type=checkbox]]:mr-3;
+    @apply ml-3 border [&[type=checkbox]]:ml-0 [&[type=checkbox]]:mr-3;
   }
 
   /* text-colors handled in `Color.ts` */
   input[type='number'] {
-    @apply disabled:bg-slate-50 dark:bg-slate-900 dark:disabled:bg-slate-700 opacity-100;
+    @apply px-1 py-0.5 disabled:bg-slate-50 dark:bg-slate-900 dark:disabled:bg-slate-700 opacity-100;
   }
 
   summary {

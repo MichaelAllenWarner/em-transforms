@@ -80,6 +80,7 @@ const VectorFieldset = memo(
     const inputs = ['x', 'y', 'z'].map((e, i) => {
       const value = round([x, y, z][i]);
       const disabled = [xDisabled, yDisabled, zDisabled][i];
+      const useSlider = !disabled;
       const setter = [xSetter, ySetter, zSetter][i];
       const useOnChange = setter && !disabled;
       const onChange = useOnChange && [onChangeX, onChangeY, onChangeZ][i];
@@ -87,19 +88,33 @@ const VectorFieldset = memo(
 
       return (
         <div key={i}>
-          <label>
-            {e}
-            {isPrime && '′'}
-            <input
-              value={value}
-              type="number"
-              {...(step ? { step } : {})}
-              {...(min ? { min } : {})}
-              {...(max ? { max } : {})}
-              {...(disabled ? { disabled } : {})}
-              {...(onChange ? { onChange } : {})}
-              {...(ref ? { ref } : {})}
-            />
+          <label className="flex">
+            <span className={`shrink-0 ${!useSlider ? 'leading-normal' : ''}`}>
+              {e} {isPrime && '′'}
+            </span>
+            <span className="flex flex-col gap-2">
+              {useSlider ? (
+                <input
+                  type="range"
+                  value={value}
+                  {...(step ? { step } : { step: 0.1 })}
+                  {...(min ? { min } : { min: -10 })}
+                  {...(max ? { max } : { max: 10 })}
+                  {...(onChange ? { onChange } : {})}
+                />
+              ) : null}
+              <input
+                value={value}
+                type="number"
+                {...(useSlider ? { 'aria-label': e } : {})}
+                {...(step ? { step } : {})}
+                {...(min ? { min } : {})}
+                {...(max ? { max } : {})}
+                {...(disabled ? { disabled } : {})}
+                {...(onChange ? { onChange } : {})}
+                {...(ref ? { ref } : {})}
+              />
+            </span>
           </label>
         </div>
       );
@@ -109,7 +124,7 @@ const VectorFieldset = memo(
       return (
         <fieldset className={`${textColor[color]} ${textColorDark[colorDark]}`}>
           <legend>{legend}</legend>
-          {inputs}
+          <div className="flex flex-col gap-3 leading-none">{inputs}</div>
         </fieldset>
       );
     } else {
