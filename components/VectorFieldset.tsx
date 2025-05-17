@@ -94,14 +94,16 @@ const VectorFieldset = memo(
             </span>
             <span className="flex flex-col gap-2">
               {useSlider ? (
-                <input
-                  type="range"
-                  value={value}
-                  {...(step ? { step } : { step: 0.1 })}
-                  {...(min ? { min } : { min: -10 })}
-                  {...(max ? { max } : { max: 10 })}
-                  {...(onChange ? { onChange } : {})}
-                />
+                <span className="safari-only-range-wrapper">
+                  <input
+                    type="range"
+                    value={value}
+                    {...(step ? { step } : { step: 0.1 })}
+                    {...(min ? { min } : { min: -10 })}
+                    {...(max ? { max } : { max: 10 })}
+                    {...(onChange ? { onChange } : {})}
+                  />
+                </span>
               ) : null}
               <input
                 value={value}

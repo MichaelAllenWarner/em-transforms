@@ -126,20 +126,22 @@ const VectorFieldsetSpherical = memo(
                   </span>
                   <span className="flex flex-col gap-2">
                     {useSlider ? (
-                      <input
-                        type="range"
-                        value={value}
-                        {...(isR && isVelocity
-                          ? {
-                              step: String(velocityStep),
-                              min: String(velocityMin),
-                              max: String(velocityMax),
-                            }
-                          : {
-                              ...{ step: String(1), min: '0', max: '359' },
-                            })}
-                        {...(onChange ? { onChange } : {})}
-                      />
+                      <span className="safari-only-range-wrapper">
+                        <input
+                          type="range"
+                          value={value}
+                          {...(isR && isVelocity
+                            ? {
+                                step: String(velocityStep),
+                                min: String(velocityMin),
+                                max: String(velocityMax),
+                              }
+                            : {
+                                ...{ step: String(1), min: '0', max: '359' },
+                              })}
+                          {...(onChange ? { onChange } : {})}
+                        />
+                      </span>
                     ) : null}
                     <input
                       value={value}

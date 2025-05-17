@@ -22,6 +22,20 @@
     @apply px-1 py-0.5 disabled:bg-slate-50 dark:bg-slate-900 dark:disabled:bg-slate-700 opacity-100;
   }
 
+  _::-webkit-full-page-media,
+  _:future,
+  :root .safari-only-range-wrapper {
+    @apply max-w-max rounded dark:ml-3 pr-4 dark:pr-2 dark:pl-2 py-0.5;
+    @apply dark:bg-orange-200;
+    input {
+      @apply dark:ml-0;
+    }
+  }
+
+  input[type='range'] {
+    @apply dark:accent-blue-700;
+  }
+
   summary {
     @apply max-w-max cursor-pointer;
   }
