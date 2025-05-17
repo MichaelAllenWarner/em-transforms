@@ -140,7 +140,8 @@ const TitleAndInstructions = () => (
             boost.
           </p>
           <p>
-            Use the inputs (or the corresponding <a href="#hotkeys">hotkeys</a>)
+            Use the sliders, input-boxes, or corresponding{' '}
+            <a href="#hotkeys">hotkeys</a>
             to set the Cartesian components of the electric- and magnetic-field
             vectors in the original "unprimed" inertial frame, as well as the
             direction and magnitude of the boost-velocity. The electric- and
@@ -152,22 +153,26 @@ const TitleAndInstructions = () => (
             though by default it isn't displayed in the visualization. You can
             toggle its visibility in the <a href="#options">Options</a>, where
             you'll also find some other settings that might interest you. Some
-            of them have corresponding inputs you can control, like the charge,
-            mass, and velocity of a particle co-located with the field-vectors.
-            You can even suppress the field-vectors altogether (and all vectors
-            derived from them), effectively turning the app into a
-            "velocity-transformation visualizer," since then only the
+            of them have corresponding sliders and inputs you can control, like
+            the charge, mass, and velocity of a particle co-located with the
+            field-vectors. You can even suppress the field-vectors altogether
+            (and all vectors derived from them), effectively turning the app
+            into a "velocity-transformation visualizer," since then only the
             velocity-vectors can be displayed. Regardless of what's displayed in
             the visualization, however, <em>all</em> derived values are always
-            calculated and shown in corresponding disabled inputs.
+            calculated and shown in corresponding disabled inputs at the bottom.
           </p>
           <p>
-            The entry-inputs can only accept number-values, even while you're
-            typing the number. Since a minus-sign by itself isn't interpreted as
-            a number, entering a negative number is a bit cumbersome: you have
-            to type at least one digit <em>before</em> inserting the minus sign
-            at the start. Same goes for periods—you'll have to type{' '}
-            <kbd>0.</kbd> instead of <kbd>.</kbd> for numbers between{' '}
+            The sliders are the most convenient way to control the parameters.
+            The hotkeys can be handy, too. But if you need to enter a value that
+            lies outside of a slider's range or in between the slider's "steps,"
+            then you can reach for the accompanying input box. Note that these
+            inputs can only accept number-values, even while you're typing the
+            number. Since a minus-sign by itself isn't interpreted as a number,
+            entering a negative number is a bit cumbersome: you have to type at
+            least one digit <em>before</em> inserting the minus sign at the
+            start. Same goes for periods—you'll have to type <kbd>0.</kbd>{' '}
+            instead of <kbd>.</kbd> for numbers between{' '}
             <MathJaxInline content={'\\( 0 \\)'} /> and{' '}
             <MathJaxInline content={'\\( 1 \\).'} />
           </p>
@@ -183,8 +188,8 @@ const TitleAndInstructions = () => (
               fields have the same dimension.
             </li>
             <li>
-              Each velocity (boost or particle) is specified using three inputs:{' '}
-              <MathJaxInline content={'\\( r \\),'} />{' '}
+              Each velocity (boost or particle) is specified with three
+              parameters: <MathJaxInline content={'\\( r \\),'} />{' '}
               <MathJaxInline content={'\\( \\phi \\),'} /> and{' '}
               <MathJaxInline content={'\\( \\theta \\).'} />
               <ul>
@@ -259,14 +264,14 @@ const TitleAndInstructions = () => (
         <summary id="hotkeys">Hotkeys</summary>
         <div>
           <p>
-            You can use the keyboard to control the input-settings and many of
+            You can use the keyboard to control the input-parameters and many of
             the Options. (Disclaimer: I can't guarantee that all hotkeys work in
             all browsers on all operating systems. On my Mac, they do work in
             every browser I've tested: Safari, Chrome, Firefox, and Edge.)
           </p>
           <p>
-            Note that hotkeys won't work when keyboard-focus is on a
-            form-control (like a checkbox or text-input).
+            Note that hotkeys won't work when keyboard-focus is on a form
+            control (like a slider, checkbox, or input box).
           </p>
           <p>
             To increase or decrease a vector-component (or, in the case of a
@@ -354,16 +359,16 @@ const TitleAndInstructions = () => (
         <div>
           <p>
             The most elegant way to express how quantities transform under
-            Lorentz boosts is with manifestly covariant math. In making this
-            app, however, I had no choice but to get my hands dirty with the
-            transformation formulas for non-covariant quantities. I've found
+            Lorentz boosts is with a manifestly covariant formulation. In making
+            this app, however, I had no choice but to get my hands dirty with
+            the transformation formulas for non-covariant quantities. I've found
             that using the boost <em>rapidity</em> (as opposed to the boost
             velocity <MathJaxInline content={'\\( \\vec v \\)'} /> and Lorentz
             factor{' '}
             <MathJaxInline
               content={'\\( \\gamma = \\frac{1}{ \\sqrt{ 1 - v ^2 } } \\))'}
             />{' '}
-            makes the formulas easier on the eyes and mind.
+            makes the formulas easier to digest.
           </p>
           <p>
             Below are the transformation formulas I used. The quantity{' '}
