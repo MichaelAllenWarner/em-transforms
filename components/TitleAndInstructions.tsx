@@ -265,6 +265,10 @@ const TitleAndInstructions = () => (
             every browser I've tested: Safari, Chrome, Firefox, and Edge.)
           </p>
           <p>
+            Note that hotkeys won't work when keyboard-focus is on a
+            form-control (like a checkbox or text-input).
+          </p>
+          <p>
             To increase or decrease a vector-component (or, in the case of a
             velocity, its magnitude or one of its direction-parameters):
           </p>
