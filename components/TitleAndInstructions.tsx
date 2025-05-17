@@ -17,7 +17,7 @@ const TitleAndInstructions = () => (
       </div>
     </noscript>
     <ThemeSwitch />
-    <div className="space-y-4 [&_summary+div]:max-w-prose [&_summary+div]:space-y-5 [&_summary+div]:p-4">
+    <div className="space-y-4 [&_summary+div]:max-w-prose [&_summary+div]:space-y-5 [&_ul+p]:mt-3 [&_li>ul]:mt-3 [&_li>p:last-child]:mb-4 [&_summary+div]:p-4">
       <details>
         <summary>Background for those who need it</summary>
         <div>
@@ -143,7 +143,7 @@ const TitleAndInstructions = () => (
             Use the inputs below the visualization (or the corresponding{' '}
             <a href="#hotkeys">hotkeys</a>) to set the Cartesian components of
             the electric- and magnetic-field vectors in the original "unprimed"
-            inertial frame, as well as the spherical components of the
+            inertial frame, as well as the direction and magnitude of the
             boost-velocity. The electric- and magnetic-field vectors in the
             "primed" inertial frame are calculated and rendered automatically.
           </p>
@@ -175,23 +175,45 @@ const TitleAndInstructions = () => (
           <p>A few notes:</p>
           <ul>
             <li>
-              We're using Lorentz–Heaviside units, so electric and magnetic
+              We're using Heaviside–Lorentz units, so electric and magnetic
               fields have the same dimension.
             </li>
             <li>
-              The speed of light is set to{' '}
-              <MathJaxInline content={'\\( 1 \\),'} /> and speed-inputs (the{' '}
-              <MathJaxInline content={'\\( r \\)-components'} /> for
-              velocity-vectors) must be strictly less than that.
-            </li>
-            <li>
-              Spherical components are of the "math" flavor, where{' '}
-              <MathJaxInline content={'\\( \\phi \\)'} /> is the polar angle
-              (with reference to the{' '}
-              <MathJaxInline content={'\\( y \\)-axis)'} /> and{' '}
-              <MathJaxInline content={'\\( \\theta \\)'} /> is the azimuthal
-              angle (with reference to the{' '}
-              <MathJaxInline content={'\\( z \\)-axis).'} />
+              Each velocity (boost or particle) is specified using three inputs:{' '}
+              <MathJaxInline content={'\\( r \\),'} />{' '}
+              <MathJaxInline content={'\\( \\phi \\),'} /> and{' '}
+              <MathJaxInline content={'\\( \\theta \\).'} />
+              <ul>
+                <li>
+                  The <MathJaxInline content={'\\( r \\)-parameter'} /> sets the
+                  speed, from <MathJaxInline content={'\\( 0 \\)'} /> to{' '}
+                  <MathJaxInline content={'\\( 1 \\)'} /> (with the speed of
+                  light defined as <MathJaxInline content={'\\( 1 \\)).'} />
+                </li>
+                <li>
+                  The <MathJaxInline content={'\\( \\phi \\)-'} /> and{' '}
+                  <MathJaxInline content={'\\( \\theta \\)-parameters'} /> set
+                  the direction. Note that these spherical coordinates are not
+                  the usual ones used in physics. Rather,{' '}
+                  <MathJaxInline content={'\\( \\phi \\)'} /> is the polar angle
+                  with reference to the{' '}
+                  <MathJaxInline content={'\\( y \\)-axis,'} /> and{' '}
+                  <MathJaxInline content={'\\( \\theta \\)'} /> is the azimuthal
+                  angle with reference to the{' '}
+                  <MathJaxInline content={'\\( z \\)-axis.'} /> (The software
+                  I'm using adopts this peculiar variant of the "math"
+                  convention, and it's easiest to just stick with it.)
+                </li>
+              </ul>
+              <p>
+                Aside: I avoid the word <em>components</em> here because,
+                mathematically speaking, we're constructing these velocities as{' '}
+                <em>position vectors</em>, and position vectors in spherical
+                coordinates only have a radial component. Technically the
+                input-parameters specify the <em>coordinates of a point</em>,
+                and then we "build" the velocity as a vector from the origin to
+                that location.
+              </p>
             </li>
             <li>
               The boost-velocity is directed along the{' '}
@@ -238,7 +260,10 @@ const TitleAndInstructions = () => (
             all browsers on all operating systems. On my Mac, they do work in
             every browser I've tested: Safari, Chrome, Firefox, and Edge.)
           </p>
-          <p>To increase or decrease the magnitude of a vector-component:</p>
+          <p>
+            To increase or decrease a vector-component (or, in the case of a
+            velocity, its magnitude or one of its direction-parameters):
+          </p>
           <ol>
             <li>
               hold the key for the vector's name (<kbd>e</kbd> for the electric
@@ -246,11 +271,11 @@ const TitleAndInstructions = () => (
               boost velocity, or <kbd>u</kbd> for the particle velocity);
             </li>
             <li>
-              hold the key for the component you're changing (<kbd>x</kbd>,{' '}
+              hold the key for the input you're changing (<kbd>x</kbd>,{' '}
               <kbd>y</kbd>, or <kbd>z</kbd> for a Cartesian component of the
               electric or magnetic field, and <kbd>r</kbd>, <kbd>p</kbd> [for
-              phi], or <kbd>t</kbd> [for theta] for a spherical component of a
-              velocity);
+              phi], or <kbd>t</kbd> [for theta] for the appropriate parameter of
+              a velocity);
             </li>
             <li>
               and press either the up- or down-arrow (<kbd>↑</kbd> or{' '}
@@ -261,8 +286,9 @@ const TitleAndInstructions = () => (
             For example, to decrease the{' '}
             <MathJaxInline content={'\\( E_x \\)'} /> component, press{' '}
             <kbd>e</kbd> + <kbd>x</kbd> + <kbd>↓</kbd>. And to increase the{' '}
-            <MathJaxInline content={'\\( u_{ \\phi } \\)'} /> component, press{' '}
-            <kbd>u</kbd> + <kbd>p</kbd> + <kbd>↑</kbd>.
+            <MathJaxInline content={'\\( \\phi \\)-parameter'} /> of{' '}
+            <MathJaxInline content={'\\( \\vec u \\),'} /> press <kbd>u</kbd> +{' '}
+            <kbd>p</kbd> + <kbd>↑</kbd>.
           </p>
           <p>
             The velocity-vectors have a couple of additional controls. To
