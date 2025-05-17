@@ -24,12 +24,13 @@ module.exports = {
   ],
   theme: {
     screens: {
-      /* Tailwind defaults, but in `em` (see https://danburzo.ro/media-query-units/) */
+      /* Tailwind defaults (plus a 3xl), but in `em` (see https://danburzo.ro/media-query-units/) */
       sm: em(640),
       md: em(768),
       lg: em(1024),
       xl: em(1280),
       '2xl': em(1536),
+      '3xl': em(1792),
     },
     extend: {
       container: {

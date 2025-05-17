@@ -15,6 +15,7 @@ const CameraController = forwardRef<OrbitControls>((_, ref) => {
 
   // will only fire once, b/c dependency-array entries are all stable references
   useEffect(() => {
+    camera.position.z = 6.5;
     // first, create the `OrbitControls` instance...
     const controls: EventDispatcher<OrbitControls> & OrbitControls =
       new OrbitControls(camera, gl.domElement);

@@ -77,7 +77,7 @@ const Options = memo(
 
     return (
       <details className="w-full">
-        <summary id="options" className="mt-2">
+        <summary id="options" className="mt-3 xl:mt-0">
           Options
         </summary>
         <fieldset className="ml-4">
