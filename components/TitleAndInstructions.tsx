@@ -294,7 +294,7 @@ const TitleAndInstructions = () => (
             For example, to decrease the{' '}
             <MathJaxInline content={'\\( E_x \\)'} /> component, press{' '}
             <kbd>e</kbd> + <kbd>x</kbd> + <kbd>↓</kbd>. And to increase the{' '}
-            <MathJaxInline content={'\\( \\phi \\)-parameter'} /> of{' '}
+            <MathJaxInline content={'\\( \\phi \\)-parameter'} /> for{' '}
             <MathJaxInline content={'\\( \\vec u \\),'} /> press <kbd>u</kbd> +{' '}
             <kbd>p</kbd> + <kbd>↑</kbd>.
           </p>
