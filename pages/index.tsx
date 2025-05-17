@@ -480,38 +480,75 @@ const Page = () => {
               className={`${textColor[Color.U]} ${textColorDark[ColorDark.U]}`}
             >
               <legend>Particle charge and mass</legend>
-              <div>
-                <label>
-                  Charge (q)
-                  <input
-                    ref={qRef}
-                    type="number"
-                    step="0.1"
-                    value={particleCharge}
-                    onChange={(e) => {
-                      let n = e.target.valueAsNumber;
-                      if (isNaN(n)) n = 1;
-                      setParticleCharge(n);
-                    }}
-                  />
-                </label>
-              </div>
-              <div>
-                <label>
-                  Mass (m)
-                  <input
-                    ref={mRef}
-                    type="number"
-                    step="0.1"
-                    value={particleMass}
-                    onChange={(e) => {
-                      let n = e.target.valueAsNumber;
-                      if (n <= 0) n = 0.1;
-                      if (isNaN(n)) n = 1;
-                      setParticleMass(n);
-                    }}
-                  />
-                </label>
+              <div className="flex flex-col gap-3 leading-none">
+                <div>
+                  <label className="flex">
+                    <span className="shrink-0">Charge (q)</span>
+                    <span className="flex flex-col gap-2">
+                      <span className="safari-only-range-wrapper">
+                        <input
+                          type="range"
+                          value={particleCharge}
+                          step="0.1"
+                          min="-10"
+                          max="10"
+                          onChange={(e) => {
+                            let n = e.target.valueAsNumber;
+                            if (isNaN(n)) n = 1;
+                            setParticleCharge(n);
+                          }}
+                        />
+                      </span>
+                      <input
+                        aria-label="Charge (q)"
+                        ref={qRef}
+                        type="number"
+                        step="0.1"
+                        value={particleCharge}
+                        onChange={(e) => {
+                          let n = e.target.valueAsNumber;
+                          if (isNaN(n)) n = 1;
+                          setParticleCharge(n);
+                        }}
+                      />
+                    </span>
+                  </label>
+                </div>
+                <div>
+                  <label className="flex">
+                    <span className="shrink-0">Mass (m)</span>
+                    <span className="flex flex-col gap-2">
+                      <span className="safari-only-range-wrapper">
+                        <input
+                          type="range"
+                          value={particleMass}
+                          step="0.1"
+                          min="0.1"
+                          max="10"
+                          onChange={(e) => {
+                            let n = e.target.valueAsNumber;
+                            if (n <= 0) n = 0.1;
+                            if (isNaN(n)) n = 1;
+                            setParticleMass(n);
+                          }}
+                        />
+                      </span>
+                      <input
+                        aria-label="Mass (m)"
+                        ref={mRef}
+                        type="number"
+                        step="0.1"
+                        value={particleMass}
+                        onChange={(e) => {
+                          let n = e.target.valueAsNumber;
+                          if (n <= 0) n = 0.1;
+                          if (isNaN(n)) n = 1;
+                          setParticleMass(n);
+                        }}
+                      />
+                    </span>
+                  </label>
+                </div>
               </div>
             </fieldset>
 

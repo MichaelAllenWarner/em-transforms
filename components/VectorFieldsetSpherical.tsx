@@ -104,58 +104,83 @@ const VectorFieldsetSpherical = memo(
             </button>
           </div>
         )}
-        {['r', 'φ', 'θ'].map((e, i) => {
-          const value =
-            i === 0
+        <div className="flex flex-col gap-3 leading-none">
+          {['r', 'φ', 'θ'].map((e, i) => {
+            const isR = i === 0;
+            const value = isR
               ? round(r)
               : round(trueMod(radToDeg([phi, theta][i - 1]), 360));
-          const disabled = [rDisabled, phiDisabled, thetaDisabled][i];
-          const setter = [rSetter, phiSetter, thetaSetter][i];
-          const useOnChange = setter && !disabled;
-          const onChange =
-            useOnChange && [onChangeR, onChangePhi, onChangeTheta][i];
-          const ref = !disabled && [rRef, phiRef, thetaRef][i];
+            const disabled = [rDisabled, phiDisabled, thetaDisabled][i];
+            const useSlider = !disabled;
+            const setter = [rSetter, phiSetter, thetaSetter][i];
+            const useOnChange = setter && !disabled;
+            const onChange =
+              useOnChange && [onChangeR, onChangePhi, onChangeTheta][i];
+            const ref = !disabled && [rRef, phiRef, thetaRef][i];
 
-          return (
-            <div key={i}>
-              <label>
-                {e}
-                {isPrime && '′'} {i > 0 ? ' (°)' : ''}
-                <input
-                  value={value}
-                  type="number"
-                  {...(i === 0 && isVelocity && !disabled
-                    ? {
-                        step: String(velocityStep),
-                        min: String(velocityMin),
-                        max: String(velocityMax),
-                      }
-                    : {
-                        ...(!disabled ? { step: String(5) } : {}),
-                      })}
-                  {...(disabled ? { disabled } : {})}
-                  {...(onChange ? { onChange } : {})}
-                  {...(ref ? { ref } : {})}
-                />
-              </label>
-            </div>
-          );
-        })}
-        {typeof x === 'number' &&
-          typeof y === 'number' &&
-          typeof z === 'number' && (
-            <VectorFieldset
-              x={x}
-              y={y}
-              z={z}
-              xDisabled
-              yDisabled
-              zDisabled
-              isPrime={isPrime}
-              color={color}
-              colorDark={colorDark}
-            />
-          )}
+            return (
+              <div key={i}>
+                <label className="flex">
+                  <span className="shrink-0">
+                    {e} {isPrime && '′'} {isR ? '' : ' (°)'}
+                  </span>
+                  <span className="flex flex-col gap-2">
+                    {useSlider ? (
+                      <span className="safari-only-range-wrapper">
+                        <input
+                          type="range"
+                          value={value}
+                          {...(isR && isVelocity
+                            ? {
+                                step: String(velocityStep),
+                                min: String(velocityMin),
+                                max: String(velocityMax),
+                              }
+                            : {
+                                ...{ step: String(1), min: '0', max: '359' },
+                              })}
+                          {...(onChange ? { onChange } : {})}
+                        />
+                      </span>
+                    ) : null}
+                    <input
+                      value={value}
+                      type="number"
+                      {...(useSlider ? { 'aria-label': e } : {})}
+                      {...(isR && isVelocity && !disabled
+                        ? {
+                            step: String(velocityStep),
+                            min: String(velocityMin),
+                            max: String(velocityMax),
+                          }
+                        : {
+                            ...(!disabled ? { step: String(1) } : {}),
+                          })}
+                      {...(disabled ? { disabled } : {})}
+                      {...(onChange ? { onChange } : {})}
+                      {...(ref ? { ref } : {})}
+                    />
+                  </span>
+                </label>
+              </div>
+            );
+          })}
+          {typeof x === 'number' &&
+            typeof y === 'number' &&
+            typeof z === 'number' && (
+              <VectorFieldset
+                x={x}
+                y={y}
+                z={z}
+                xDisabled
+                yDisabled
+                zDisabled
+                isPrime={isPrime}
+                color={color}
+                colorDark={colorDark}
+              />
+            )}
+        </div>
       </fieldset>
     );
   },
