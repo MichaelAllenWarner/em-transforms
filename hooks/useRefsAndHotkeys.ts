@@ -44,37 +44,43 @@ export const useRefsAndHotkeys = () => {
   const resetCamera = useCallback(() => {
     cameraRef.current?.reset();
   }, []);
-  useHotkeys(hotkeys.oneKey.resetCamera, resetCamera);
+  useHotkeys(hotkeys.oneKey.resetCamera, resetCamera, {
+    enableOnFormTags: true,
+  });
 
   // set up show/hide refs and hotkeys
 
   const showCompsRef = useRef<HTMLInputElement>(null);
   const toggleComps = useMemo(() => click(showCompsRef), []);
-  useHotkeys(hotkeys.oneKey.toggleComps, toggleComps);
+  useHotkeys(hotkeys.oneKey.toggleComps, toggleComps, {
+    enableOnFormTags: true,
+  });
 
   const showSRef = useRef<HTMLInputElement>(null);
   const toggleS = useMemo(() => click(showSRef), []);
-  useHotkeys(hotkeys.oneKey.toggleS, toggleS);
+  useHotkeys(hotkeys.oneKey.toggleS, toggleS, { enableOnFormTags: true });
 
   const showURef = useRef<HTMLInputElement>(null);
   const toggleU = useMemo(() => click(showURef), []);
-  useHotkeys(hotkeys.oneKey.toggleU, toggleU);
+  useHotkeys(hotkeys.oneKey.toggleU, toggleU, { enableOnFormTags: true });
 
   const showFRef = useRef<HTMLInputElement>(null);
   const toggleF = useMemo(() => click(showFRef), []);
-  useHotkeys(hotkeys.oneKey.toggleF, toggleF);
+  useHotkeys(hotkeys.oneKey.toggleF, toggleF, { enableOnFormTags: true });
 
   const showARef = useRef<HTMLInputElement>(null);
   const toggleA = useMemo(() => click(showARef), []);
-  useHotkeys(hotkeys.oneKey.toggleA, toggleA);
+  useHotkeys(hotkeys.oneKey.toggleA, toggleA, { enableOnFormTags: true });
 
   const hideVRef = useRef<HTMLInputElement>(null);
   const toggleV = useMemo(() => click(hideVRef), []);
-  useHotkeys(hotkeys.oneKey.toggleV, toggleV);
+  useHotkeys(hotkeys.oneKey.toggleV, toggleV, { enableOnFormTags: true });
 
   const hideEandBRef = useRef<HTMLInputElement>(null);
   const toggleEandB = useMemo(() => click(hideEandBRef), []);
-  useHotkeys(hotkeys.oneKey.toggleEandB, toggleEandB);
+  useHotkeys(hotkeys.oneKey.toggleEandB, toggleEandB, {
+    enableOnFormTags: true,
+  });
 
   // set up E refs and hotkeys
 
@@ -90,12 +96,18 @@ export const useRefsAndHotkeys = () => {
   const eZUp = useMemo(() => stepUp(eZRef), []);
   const eZDown = useMemo(() => stepDown(eZRef), []);
 
-  useHotkeys(hotkeys.vectorComp.e.x.ArrowUp, eXUp);
-  useHotkeys(hotkeys.vectorComp.e.x.ArrowDown, eXDown);
-  useHotkeys(hotkeys.vectorComp.e.y.ArrowUp, eYUp);
-  useHotkeys(hotkeys.vectorComp.e.y.ArrowDown, eYDown);
-  useHotkeys(hotkeys.vectorComp.e.z.ArrowUp, eZUp);
-  useHotkeys(hotkeys.vectorComp.e.z.ArrowDown, eZDown);
+  useHotkeys(hotkeys.vectorComp.e.x.ArrowUp, eXUp, { enableOnFormTags: true });
+  useHotkeys(hotkeys.vectorComp.e.x.ArrowDown, eXDown, {
+    enableOnFormTags: true,
+  });
+  useHotkeys(hotkeys.vectorComp.e.y.ArrowUp, eYUp, { enableOnFormTags: true });
+  useHotkeys(hotkeys.vectorComp.e.y.ArrowDown, eYDown, {
+    enableOnFormTags: true,
+  });
+  useHotkeys(hotkeys.vectorComp.e.z.ArrowUp, eZUp, { enableOnFormTags: true });
+  useHotkeys(hotkeys.vectorComp.e.z.ArrowDown, eZDown, {
+    enableOnFormTags: true,
+  });
 
   // set up B refs and hotkeys
 
@@ -111,12 +123,18 @@ export const useRefsAndHotkeys = () => {
   const bZUp = useMemo(() => stepUp(bZRef), []);
   const bZDown = useMemo(() => stepDown(bZRef), []);
 
-  useHotkeys(hotkeys.vectorComp.b.x.ArrowUp, bXUp);
-  useHotkeys(hotkeys.vectorComp.b.x.ArrowDown, bXDown);
-  useHotkeys(hotkeys.vectorComp.b.y.ArrowUp, bYUp);
-  useHotkeys(hotkeys.vectorComp.b.y.ArrowDown, bYDown);
-  useHotkeys(hotkeys.vectorComp.b.z.ArrowUp, bZUp);
-  useHotkeys(hotkeys.vectorComp.b.z.ArrowDown, bZDown);
+  useHotkeys(hotkeys.vectorComp.b.x.ArrowUp, bXUp, { enableOnFormTags: true });
+  useHotkeys(hotkeys.vectorComp.b.x.ArrowDown, bXDown, {
+    enableOnFormTags: true,
+  });
+  useHotkeys(hotkeys.vectorComp.b.y.ArrowUp, bYUp, { enableOnFormTags: true });
+  useHotkeys(hotkeys.vectorComp.b.y.ArrowDown, bYDown, {
+    enableOnFormTags: true,
+  });
+  useHotkeys(hotkeys.vectorComp.b.z.ArrowUp, bZUp, { enableOnFormTags: true });
+  useHotkeys(hotkeys.vectorComp.b.z.ArrowDown, bZDown, {
+    enableOnFormTags: true,
+  });
 
   // set up v refs and hotkeys (boost velocity)
 
@@ -135,14 +153,24 @@ export const useRefsAndHotkeys = () => {
   const vResetRef = useRef<HTMLButtonElement>(null);
   const vReset = useMemo(() => click(vResetRef), []);
 
-  useHotkeys(hotkeys.vectorComp.v.r.ArrowUp, vRUp);
-  useHotkeys(hotkeys.vectorComp.v.r.ArrowDown, vRDown);
-  useHotkeys(hotkeys.vectorComp.v.p.ArrowUp, vPhiUp);
-  useHotkeys(hotkeys.vectorComp.v.p.ArrowDown, vPhiDown);
-  useHotkeys(hotkeys.vectorComp.v.t.ArrowUp, vThetaUp);
-  useHotkeys(hotkeys.vectorComp.v.t.ArrowDown, vThetaDown);
-  useHotkeys(hotkeys.vectorReset.v, vReset);
-  useHotkeys(hotkeys.vectorFlip.v, vFlip);
+  useHotkeys(hotkeys.vectorComp.v.r.ArrowUp, vRUp, { enableOnFormTags: true });
+  useHotkeys(hotkeys.vectorComp.v.r.ArrowDown, vRDown, {
+    enableOnFormTags: true,
+  });
+  useHotkeys(hotkeys.vectorComp.v.p.ArrowUp, vPhiUp, {
+    enableOnFormTags: true,
+  });
+  useHotkeys(hotkeys.vectorComp.v.p.ArrowDown, vPhiDown, {
+    enableOnFormTags: true,
+  });
+  useHotkeys(hotkeys.vectorComp.v.t.ArrowUp, vThetaUp, {
+    enableOnFormTags: true,
+  });
+  useHotkeys(hotkeys.vectorComp.v.t.ArrowDown, vThetaDown, {
+    enableOnFormTags: true,
+  });
+  useHotkeys(hotkeys.vectorReset.v, vReset, { enableOnFormTags: true });
+  useHotkeys(hotkeys.vectorFlip.v, vFlip, { enableOnFormTags: true });
 
   // set up u refs and hotkeys (particle velocity)
 
@@ -161,14 +189,24 @@ export const useRefsAndHotkeys = () => {
   const uResetRef = useRef<HTMLButtonElement>(null);
   const uReset = useMemo(() => click(uResetRef), []);
 
-  useHotkeys(hotkeys.vectorComp.u.r.ArrowUp, uRUp);
-  useHotkeys(hotkeys.vectorComp.u.r.ArrowDown, uRDown);
-  useHotkeys(hotkeys.vectorComp.u.p.ArrowUp, uPhiUp);
-  useHotkeys(hotkeys.vectorComp.u.p.ArrowDown, uPhiDown);
-  useHotkeys(hotkeys.vectorComp.u.t.ArrowUp, uThetaUp);
-  useHotkeys(hotkeys.vectorComp.u.t.ArrowDown, uThetaDown);
-  useHotkeys(hotkeys.vectorReset.u, uReset);
-  useHotkeys(hotkeys.vectorFlip.u, uFlip);
+  useHotkeys(hotkeys.vectorComp.u.r.ArrowUp, uRUp, { enableOnFormTags: true });
+  useHotkeys(hotkeys.vectorComp.u.r.ArrowDown, uRDown, {
+    enableOnFormTags: true,
+  });
+  useHotkeys(hotkeys.vectorComp.u.p.ArrowUp, uPhiUp, {
+    enableOnFormTags: true,
+  });
+  useHotkeys(hotkeys.vectorComp.u.p.ArrowDown, uPhiDown, {
+    enableOnFormTags: true,
+  });
+  useHotkeys(hotkeys.vectorComp.u.t.ArrowUp, uThetaUp, {
+    enableOnFormTags: true,
+  });
+  useHotkeys(hotkeys.vectorComp.u.t.ArrowDown, uThetaDown, {
+    enableOnFormTags: true,
+  });
+  useHotkeys(hotkeys.vectorReset.u, uReset, { enableOnFormTags: true });
+  useHotkeys(hotkeys.vectorFlip.u, uFlip, { enableOnFormTags: true });
 
   // set up ref and hotkeys for particle charge
 
@@ -176,8 +214,8 @@ export const useRefsAndHotkeys = () => {
   const qUp = useMemo(() => stepUp(qRef), []);
   const qDown = useMemo(() => stepDown(qRef), []);
 
-  useHotkeys(hotkeys.particle.q.ArrowUp, qUp);
-  useHotkeys(hotkeys.particle.q.ArrowDown, qDown);
+  useHotkeys(hotkeys.particle.q.ArrowUp, qUp, { enableOnFormTags: true });
+  useHotkeys(hotkeys.particle.q.ArrowDown, qDown, { enableOnFormTags: true });
 
   // set up ref and hotkeys for particle mass
 
@@ -185,8 +223,8 @@ export const useRefsAndHotkeys = () => {
   const mUp = useMemo(() => stepUp(mRef), []);
   const mDown = useMemo(() => stepDown(mRef), []);
 
-  useHotkeys(hotkeys.particle.m.ArrowUp, mUp);
-  useHotkeys(hotkeys.particle.m.ArrowDown, mDown);
+  useHotkeys(hotkeys.particle.m.ArrowUp, mUp, { enableOnFormTags: true });
+  useHotkeys(hotkeys.particle.m.ArrowDown, mDown, { enableOnFormTags: true });
 
   return {
     cameraRef,

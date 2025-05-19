@@ -13,6 +13,7 @@ import { getCalculatedQuantities } from '../helpers/getCalculatedQuantities';
 import CameraController from '../components/CameraController';
 import { useSetStateFromQueryParams } from '../hooks/useSetStateFromQueryParams';
 import { useSetQueryParams } from '../hooks/useSetQueryParams';
+import { hotkeys } from '../helpers/hotkeys';
 
 const titleAndInstructions = <TitleAndInstructions />;
 const axes = <Axes />;
@@ -151,7 +152,7 @@ const Page = () => {
       <main className="container mt-10 flex flex-col space-y-10">
         {titleAndInstructions}
 
-        <div className="xl:grid grid-cols-2 gap-10">
+        <div className="lg:grid grid-cols-2 gap-10">
           <div className="h-[calc(600rem/16)] xl:h-[calc(800rem/16)]">
             <Canvas className="px-6 xl:px-0 [&>*]:border">
               <CameraController ref={cameraRef} />
@@ -423,6 +424,7 @@ const Page = () => {
               x={boostVelocityCartesian[0]}
               y={boostVelocityCartesian[1]}
               z={boostVelocityCartesian[2]}
+              reverseHotkey={hotkeys.vectorFlip.v}
             />
 
             <VectorFieldset
@@ -475,6 +477,7 @@ const Page = () => {
               x={particleVelocityCartesian[0]}
               y={particleVelocityCartesian[1]}
               z={particleVelocityCartesian[2]}
+              reverseHotkey={hotkeys.vectorFlip.u}
             />
 
             <fieldset

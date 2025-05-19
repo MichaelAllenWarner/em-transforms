@@ -1,4 +1,4 @@
-import { ChangeEvent, memo, RefObject, useCallback } from 'react';
+import { ChangeEvent, Fragment, memo, RefObject, useCallback } from 'react';
 import { Color, ColorDark, textColor, textColorDark } from '../helpers/Color';
 import { round } from '../helpers/round';
 import { SphericalComponents } from '../store/store';
@@ -35,6 +35,7 @@ interface Props {
   x?: number;
   y?: number;
   z?: number;
+  reverseHotkey?: string;
 }
 
 const VectorFieldsetSpherical = memo(
@@ -60,6 +61,7 @@ const VectorFieldsetSpherical = memo(
     x,
     y,
     z,
+    reverseHotkey,
   }: Props) => {
     const onChangeR = useCallback(
       (e: ChangeEvent<HTMLInputElement>) => {
@@ -101,6 +103,19 @@ const VectorFieldsetSpherical = memo(
           <div>
             <button type="button" onClick={flipper}>
               Reverse direction
+              {reverseHotkey ? (
+                <>
+                  . Hotkey:{' '}
+                  {reverseHotkey.split('+').map((s, i, a) => (
+                    <Fragment key={i}>
+                      <kbd>{s}</kbd>
+                      {i === a.length - 1 ? '' : ' + '}
+                    </Fragment>
+                  ))}
+                </>
+              ) : (
+                <></>
+              )}
             </button>
           </div>
         )}
@@ -154,7 +169,7 @@ const VectorFieldsetSpherical = memo(
                             max: String(velocityMax),
                           }
                         : {
-                            ...(!disabled ? { step: String(1) } : {}),
+                            ...(!disabled ? { step: String(5) } : {}),
                           })}
                       {...(disabled ? { disabled } : {})}
                       {...(onChange ? { onChange } : {})}

@@ -1,7 +1,8 @@
-import { RefObject, memo } from 'react';
+import { Fragment, RefObject, memo } from 'react';
 import { OrbitControls } from 'three-stdlib';
 import useStore, { State } from '../store/store';
 import MathJaxInline from './MathJaxInline';
+import { hotkeys } from '../helpers/hotkeys';
 
 interface Props {
   cameraRef: RefObject<OrbitControls>;
@@ -92,7 +93,8 @@ const Options = memo(
                 onChange={(e) => setShowComponentVectors(e.target.checked)}
               />
               Show component-vectors parallel and perpendicular to the
-              boost-velocity <MathJaxInline content={'\\( \\vec v \\).'} />
+              boost-velocity <MathJaxInline content={'\\( \\vec v \\).'} />{' '}
+              Hotkey: <kbd>{hotkeys.oneKey.toggleComps}</kbd>
             </label>
           </div>
           <div>
@@ -107,7 +109,8 @@ const Options = memo(
               Show the Poynting vector{' '}
               <MathJaxInline
                 content={'\\( \\vec S = \\vec E \\times \\vec B \\).'}
-              />
+              />{' '}
+              Hotkey: <kbd>{hotkeys.oneKey.toggleS}</kbd>
             </label>
           </div>
           <div>
@@ -124,7 +127,8 @@ const Options = memo(
                 onChange={(e) => setShowParticleVelocity(e.target.checked)}
               />
               Show the particle velocity{' '}
-              <MathJaxInline content={'\\( \\vec u \\).'} />
+              <MathJaxInline content={'\\( \\vec u \\).'} /> Hotkey:{' '}
+              <kbd>{hotkeys.oneKey.toggleU}</kbd>
             </label>
           </div>
           <div>
@@ -146,6 +150,7 @@ const Options = memo(
                 }
               />{' '}
               (Will show <MathJaxInline content={'\\( \\vec u \\),'} /> too.)
+              Hotkey: <kbd>{hotkeys.oneKey.toggleF}</kbd>
             </label>
           </div>
           <div>
@@ -170,7 +175,8 @@ const Options = memo(
                 content={'\\( \\gamma = \\frac{ 1 }{ \\sqrt{ 1 - u^2 } } \\).'}
               />{' '}
               (Will show <MathJaxInline content={'\\( \\vec u \\)'} /> and{' '}
-              <MathJaxInline content={'\\( \\vec F \\),'} /> too.)
+              <MathJaxInline content={'\\( \\vec F \\),'} /> too.) Hotkey:{' '}
+              <kbd>{hotkeys.oneKey.toggleA}</kbd>
             </label>
           </div>
           <div>
@@ -185,7 +191,8 @@ const Options = memo(
               <MathJaxInline content={'\\( \\vec v \\)'} /> and the boosted
               ("primed") quantities. (Will also hide the component-vectors
               parallel and perpendicular to{' '}
-              <MathJaxInline content={'\\( \\vec v \\).)'} />
+              <MathJaxInline content={'\\( \\vec v \\).)'} /> Hotkey:{' '}
+              <kbd>{hotkeys.oneKey.toggleV}</kbd>
             </label>
           </div>
           <div>
@@ -199,7 +206,8 @@ const Options = memo(
               Hide the field-vectors{' '}
               <MathJaxInline content={'\\( \\vec E \\)'} /> and{' '}
               <MathJaxInline content={'\\( \\vec B \\).'} /> (Will also hide any
-              quantities derived from them.)
+              quantities derived from them.) Hotkey:{' '}
+              <kbd>{hotkeys.oneKey.toggleEandB}</kbd>
             </label>
           </div>
 
@@ -214,7 +222,7 @@ const Options = memo(
                     }
                   }}
                 >
-                  Reset camera
+                  Reset camera. Hotkey: <kbd>{hotkeys.oneKey.resetCamera}</kbd>
                 </button>
               </div>
               <div>
@@ -227,7 +235,13 @@ const Options = memo(
                   }}
                 >
                   Reset boost-direction{' '}
-                  <MathJaxInline content={'(\\( +x \\))'} />
+                  <MathJaxInline content={'(\\( +x \\))'} />. Hotkey:{' '}
+                  {hotkeys.vectorReset.v.split('+').map((s, i, a) => (
+                    <Fragment key={i}>
+                      <kbd>{s}</kbd>
+                      {i === a.length - 1 ? '' : ' + '}
+                    </Fragment>
+                  ))}
                 </button>
               </div>
               <div>
@@ -240,7 +254,13 @@ const Options = memo(
                   }}
                 >
                   Reset particle's velocity-direction{' '}
-                  <MathJaxInline content={'(\\( -x \\))'} />
+                  <MathJaxInline content={'(\\( -x \\))'} />. Hotkey:{' '}
+                  {hotkeys.vectorReset.u.split('+').map((s, i, a) => (
+                    <Fragment key={i}>
+                      <kbd>{s}</kbd>
+                      {i === a.length - 1 ? '' : ' + '}
+                    </Fragment>
+                  ))}
                 </button>
               </div>
             </div>
