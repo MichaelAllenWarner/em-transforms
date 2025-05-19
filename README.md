@@ -1,4 +1,4 @@
-# [Lorentz Transformation of the Electric and Magnetic Fields, Visualized](https://em-transforms.vercel.app/)
+# [Lorentz Transformation of the Electric and Magnetic Fields, Visualized in 3D](https://em-transforms.vercel.app/)
 
 This little web app demonstrates how the electric and magnetic fields [transform](https://en.wikipedia.org/wiki/Classical_electromagnetism_and_special_relativity#The_E_and_B_fields) under a [Lorentz boost](https://en.wikipedia.org/wiki/Lorentz_transformation#Physical_formulation_of_Lorentz_boosts). It can also display the [Poynting vector](https://en.wikipedia.org/wiki/Poynting_vector) and some dynamical quantities associated with a charged particle co-located with the field-vectors.
 

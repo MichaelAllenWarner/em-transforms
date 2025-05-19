@@ -3,8 +3,9 @@ import ThemeSwitch from './ThemeSwitch';
 
 const TitleAndInstructions = () => (
   <div className="space-y-6 mx-auto max-w-full">
-    <h1 className="text-2xl sm:text-3xl">
-      Lorentz Transformation of the Electric and Magnetic Fields, Visualized
+    <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl max-w-5xl">
+      Lorentz Transformation of the Electric and Magnetic Fields, Visualized in
+      3D
     </h1>
     <noscript className="block">
       <div className="border p-4 inline-block">
@@ -242,7 +243,11 @@ const TitleAndInstructions = () => (
             bookmark configurations of interest. The state of the camera is
             encoded in the URL, too.
           </p>
-          <p>Speaking of the camera, here is how it works:</p>
+        </div>
+      </details>
+      <details>
+        <summary>Camera controls for 3D visualization</summary>
+        <div>
           <ul>
             <li>
               To orbit, use the left mouse-button (or one-finger move for

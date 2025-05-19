@@ -140,6 +140,7 @@ const Page = () => {
       <Head>
         <title>
           Lorentz Transformation of the Electric and Magnetic Fields, Visualized
+          in 3D
         </title>
         <meta
           name="description"
