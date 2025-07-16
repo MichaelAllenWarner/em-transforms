@@ -142,12 +142,11 @@ const TitleAndInstructions = () => (
           </p>
           <p>
             Use the sliders, input-boxes, or corresponding{' '}
-            <a href="#hotkeys">hotkeys</a>
-            to set the Cartesian components of the electric- and magnetic-field
-            vectors in the original "unprimed" inertial frame, as well as the
-            direction and magnitude of the boost-velocity. The electric- and
-            magnetic-field vectors in the "primed" inertial frame are calculated
-            and rendered automatically.
+            <a href="#hotkeys">hotkeys</a> to set the Cartesian components of
+            the electric- and magnetic-field vectors in the original "unprimed"
+            inertial frame, as well as the direction and magnitude of the
+            boost-velocity. The electric- and magnetic-field vectors in the
+            "primed" inertial frame are calculated and rendered automatically.
           </p>
           <p>
             The Poynting vector in each frame is calculated automatically, too,
