@@ -66,10 +66,11 @@ for (const { fieldsetName, vectorObjectKey } of [
       { inputLabel: 'θ', compObjectKey: 't' },
     ] as const) {
       const inputTest = fieldsetTest.extend<Input>({
-        input: ({ fieldset }, use) => use(fieldset.getByLabel(inputLabel)),
+        input: ({ fieldset }, use) =>
+          use(fieldset.getByRole('spinbutton', { name: inputLabel })),
         initialValue: async ({ fieldset }, use) => {
           const initialValue = await fieldset
-            .getByLabel(inputLabel)
+            .getByRole('spinbutton', { name: inputLabel })
             .inputValue();
           await use(Number(initialValue));
         },
@@ -147,10 +148,11 @@ for (const { fieldsetName, vectorObjectKey } of [
       { inputLabel: 'z', compObjectKey: 'z' },
     ] as const) {
       const inputTest = fieldsetTest.extend<Input>({
-        input: ({ fieldset }, use) => use(fieldset.getByLabel(inputLabel)),
+        input: ({ fieldset }, use) =>
+          use(fieldset.getByRole('spinbutton', { name: inputLabel })),
         initialValue: async ({ fieldset }, use) => {
           const initialValue = await fieldset
-            .getByLabel(inputLabel)
+            .getByRole('spinbutton', { name: inputLabel })
             .inputValue();
           await use(Number(initialValue));
         },
@@ -192,9 +194,12 @@ particleFieldsetTest.describe(`Fieldset '${particleFieldsetName}'`, () => {
     { inputLabel: 'm', objectKey: 'm' },
   ] as const) {
     const inputTest = particleFieldsetTest.extend<Input>({
-      input: ({ fieldset }, use) => use(fieldset.getByLabel(inputLabel)),
+      input: ({ fieldset }, use) =>
+        use(fieldset.getByRole('spinbutton', { name: inputLabel })),
       initialValue: async ({ fieldset }, use) => {
-        const initialValue = await fieldset.getByLabel(inputLabel).inputValue();
+        const initialValue = await fieldset
+          .getByRole('spinbutton', { name: inputLabel })
+          .inputValue();
         await use(Number(initialValue));
       },
     });
