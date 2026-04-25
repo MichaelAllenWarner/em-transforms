@@ -15,10 +15,12 @@ const CameraController = forwardRef<OrbitControls>((_, ref) => {
 
   // will only fire once, b/c dependency-array entries are all stable references
   useEffect(() => {
-    camera.position.z = 6.5;
+    camera.position.set(2.8, -6.3, 1.4);
+    camera.up.set(0, 0, 1);
     // first, create the `OrbitControls` instance...
     const controls: EventDispatcher<OrbitControls> & OrbitControls =
       new OrbitControls(camera, gl.domElement);
+    controls.update();
 
     // ...and set `ref` to it, but w/ a Proxy that dispatches the `'end'` event on `.reset()` (see below).
     if (ref && typeof ref !== 'function') {

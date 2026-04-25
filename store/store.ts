@@ -88,10 +88,10 @@ export interface State {
 
 const useStore = createWithEqualityFn<State>()((set) => {
   return {
-    eField: [1, 1, 1],
-    bField: [-1, -1, -1],
-    boostVelocity: [0.5, Math.PI / 2, Math.PI / 2],
-    particleVelocity: [0.25, -Math.PI / 2, Math.PI / 2],
+    eField: [1, -1, 1],
+    bField: [-1, 1, -1],
+    boostVelocity: [0.5, 0, Math.PI / 2],
+    particleVelocity: [0.25, Math.PI, Math.PI / 2],
     particleCharge: 1,
     particleMass: 1,
     showComponentVectors: false,
@@ -161,7 +161,7 @@ const useStore = createWithEqualityFn<State>()((set) => {
         boostVelocity: [
           state.boostVelocity[0],
           state.boostVelocity[1] + Math.PI,
-          state.boostVelocity[2],
+          Math.PI - state.boostVelocity[2],
         ],
       })),
 
@@ -196,7 +196,7 @@ const useStore = createWithEqualityFn<State>()((set) => {
         particleVelocity: [
           state.particleVelocity[0],
           state.particleVelocity[1] + Math.PI,
-          state.particleVelocity[2],
+          Math.PI - state.particleVelocity[2],
         ],
       })),
 

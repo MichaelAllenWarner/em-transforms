@@ -181,7 +181,12 @@ const TitleAndInstructions = () => (
             <li>
               This app works fine on mobile devices, but it's best viewed on a
               wider screen, so that the Options and inputs can fit side-by-side
-              with the visualization.
+              with the visualization. It's also best to make the browser window
+              tall enough to fit the whole visualization (for the
+              desktop/side-by-side layout); this way, the visualization will
+              remain in place on the page as you scroll, allowing you to bring
+              any of the Options and inputs into view without losing sight of
+              the visualization.
             </li>
             <li>
               We're using Heaviside–Lorentz units, so electric and magnetic
@@ -190,8 +195,8 @@ const TitleAndInstructions = () => (
             <li>
               Each velocity (boost or particle) is specified with three
               parameters: <MathJaxInline content={'\\( r \\),'} />{' '}
-              <MathJaxInline content={'\\( \\phi \\),'} /> and{' '}
-              <MathJaxInline content={'\\( \\theta \\).'} />
+              <MathJaxInline content={'\\( \\theta \\),'} /> and{' '}
+              <MathJaxInline content={'\\( \\phi \\).'} />
               <ul>
                 <li>
                   The <MathJaxInline content={'\\( r \\)-parameter'} /> sets the
@@ -200,18 +205,16 @@ const TitleAndInstructions = () => (
                   light defined as <MathJaxInline content={'\\( 1 \\)).'} />
                 </li>
                 <li>
-                  The <MathJaxInline content={'\\( \\phi \\)-'} /> and{' '}
-                  <MathJaxInline content={'\\( \\theta \\)-parameters'} /> set
-                  the direction. Note that these spherical coordinates are not
-                  the usual ones used in physics. Rather,{' '}
-                  <MathJaxInline content={'\\( \\phi \\)'} /> is the polar angle
-                  with reference to the{' '}
-                  <MathJaxInline content={'\\( y \\)-axis,'} /> and{' '}
-                  <MathJaxInline content={'\\( \\theta \\)'} /> is the azimuthal
+                  The <MathJaxInline content={'\\( \\theta \\)-'} /> and{' '}
+                  <MathJaxInline content={'\\( \\phi \\)-parameters'} /> set the
+                  direction using the standard physics convention:{' '}
+                  <MathJaxInline content={'\\( \\theta \\)'} /> is the polar
                   angle with reference to the{' '}
-                  <MathJaxInline content={'\\( z \\)-axis.'} /> (The software
-                  I'm using adopts this peculiar variant of the "math"
-                  convention, and it's easiest to just stick with it.)
+                  <MathJaxInline content={'\\( z \\)-axis,'} /> and{' '}
+                  <MathJaxInline content={'\\( \\phi \\)'} /> is the azimuthal
+                  angle with reference to the{' '}
+                  <MathJaxInline content={'\\( x \\)-axis'} /> (toward positive{' '}
+                  <MathJaxInline content={'\\( y \\)).'} />
                 </li>
               </ul>
               <p>
@@ -221,7 +224,13 @@ const TitleAndInstructions = () => (
                 coordinates only have a radial component. Technically the
                 input-parameters specify the <em>coordinates of a point</em>,
                 and then we "build" the velocity as a vector from the origin to
-                that location.
+                that location. That might sound pedantic, but this is something
+                that apparently stumps even most physics graduate students,
+                according to{' '}
+                <a href="https://www.per-central.org/items/perc/1901.pdf">
+                  this study (PDF)
+                </a>
+                .
               </p>
             </li>
             <li>
@@ -286,8 +295,8 @@ const TitleAndInstructions = () => (
             <li>
               hold the key for the input you're changing (<kbd>x</kbd>,{' '}
               <kbd>y</kbd>, or <kbd>z</kbd> for a Cartesian component of the
-              electric or magnetic field, and <kbd>r</kbd>, <kbd>p</kbd> [for
-              phi], or <kbd>t</kbd> [for theta] for the appropriate parameter of
+              electric or magnetic field, and <kbd>r</kbd>, <kbd>t</kbd> [for
+              theta], or <kbd>p</kbd> [for phi] for the appropriate parameter of
               a velocity);
             </li>
             <li>

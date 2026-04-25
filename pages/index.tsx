@@ -153,7 +153,7 @@ const Page = () => {
         {titleAndInstructions}
 
         <div className="lg:grid grid-cols-2 gap-10">
-          <div className="h-[calc(600rem/16)] xl:h-[calc(800rem/16)]">
+          <div className="h-[calc(600rem/16)] lg:600-h:sticky xl:h-[calc(800rem/16)] xl:!static xl:800-h:!sticky top-0">
             <Canvas className="px-6 xl:px-0 [&>*]:border">
               <CameraController ref={cameraRef} />
 
@@ -622,7 +622,7 @@ const Page = () => {
               color={Color.UPrime}
               colorDark={ColorDark.UPrime}
               legend="Boosted particle velocity (u′)"
-              r={particleVelocityPrimeSpherical.radius}
+              r={particleVelocityPrimeSpherical.r}
               phi={particleVelocityPrimeSpherical.phi}
               theta={particleVelocityPrimeSpherical.theta}
               isVelocity

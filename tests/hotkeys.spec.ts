@@ -87,42 +87,69 @@ for (const { fieldsetName, vectorObjectKey } of [
 
         const down =
           hotkeys.vectorComp[vectorObjectKey][compObjectKey].ArrowDown;
-        inputTest(`that decrements with hotkey '${down}'.`, testDown(down));
-
-        if (inputLabel !== 'φ') return;
-
-        // for 'φ' only:
-
-        const flip = hotkeys.vectorFlip[vectorObjectKey];
-        const reset = hotkeys.vectorReset[vectorObjectKey];
-
-        // improve (probably w/ all 3 inputs)
-        inputTest(
-          `that "flips" with hotkey '${flip}'.`,
-          async ({ page, input, initialValue }) => {
-            await page.keyboard.press(flip);
-            const newValue = Number(await input.inputValue());
-            expect(newValue).not.toEqual(initialValue);
-          },
-        );
-
-        // improve (probably w/ all 3 inputs)
-        inputTest(
-          `that resets with hotkey '${reset}'.`,
-          async ({ page, input, initialValue }) => {
-            // flip first to change value
-            await page.keyboard.press(flip);
-            let newValue = Number(await input.inputValue());
-            expect(newValue).not.toEqual(initialValue);
-
-            // now test reset
-            await page.keyboard.press(reset);
-            newValue = Number(await input.inputValue());
-            expect(newValue).toEqual(initialValue);
-          },
-        );
+        inputTest(`that decrements with hotkey '${down}'.`, testDown(down, up));
       });
     }
+
+    // flip and reset tests at fieldset level (need all three inputs)
+
+    const flip = hotkeys.vectorFlip[vectorObjectKey];
+    const reset = hotkeys.vectorReset[vectorObjectKey];
+    const phiUp = hotkeys.vectorComp[vectorObjectKey].p.ArrowUp;
+    const thetaUp = hotkeys.vectorComp[vectorObjectKey].t.ArrowUp;
+
+    fieldsetTest(
+      `"flips" direction with hotkey '${flip}'.`,
+      async ({ page, fieldset }) => {
+        const rInput = fieldset.getByRole('spinbutton', { name: 'r' });
+        const phiInput = fieldset.getByRole('spinbutton', { name: 'φ' });
+        const thetaInput = fieldset.getByRole('spinbutton', { name: 'θ' });
+
+        const initialR = Number(await rInput.inputValue());
+        const initialPhi = Number(await phiInput.inputValue());
+
+        // step theta away from 90° so its flip is non-trivial
+        await page.keyboard.press(thetaUp);
+        const thetaBeforeFlip = Number(await thetaInput.inputValue());
+
+        await page.keyboard.press(flip);
+
+        expect(Number(await rInput.inputValue())).toEqual(initialR);
+        expect(Number(await phiInput.inputValue())).toBeCloseTo(
+          (initialPhi + 180) % 360,
+          0,
+        );
+        expect(Number(await thetaInput.inputValue())).toBeCloseTo(
+          180 - thetaBeforeFlip,
+          0,
+        );
+      },
+    );
+
+    fieldsetTest(
+      `resets direction with hotkey '${reset}'.`,
+      async ({ page, fieldset }) => {
+        const rInput = fieldset.getByRole('spinbutton', { name: 'r' });
+        const phiInput = fieldset.getByRole('spinbutton', { name: 'φ' });
+        const thetaInput = fieldset.getByRole('spinbutton', { name: 'θ' });
+
+        const initialR = Number(await rInput.inputValue());
+        const initialPhi = Number(await phiInput.inputValue());
+        const initialTheta = Number(await thetaInput.inputValue());
+
+        // dirty phi and theta independently (no reliance on flip)
+        await page.keyboard.press(phiUp);
+        await page.keyboard.press(thetaUp);
+        expect(Number(await phiInput.inputValue())).not.toEqual(initialPhi);
+        expect(Number(await thetaInput.inputValue())).not.toEqual(initialTheta);
+
+        await page.keyboard.press(reset);
+
+        expect(Number(await rInput.inputValue())).toEqual(initialR);
+        expect(Number(await phiInput.inputValue())).toEqual(initialPhi);
+        expect(Number(await thetaInput.inputValue())).toEqual(initialTheta);
+      },
+    );
   });
 }
 
@@ -169,7 +196,7 @@ for (const { fieldsetName, vectorObjectKey } of [
 
         const down =
           hotkeys.vectorComp[vectorObjectKey][compObjectKey].ArrowDown;
-        inputTest(`that decrements with hotkey '${down}'.`, testDown(down));
+        inputTest(`that decrements with hotkey '${down}'.`, testDown(down, up));
       });
     }
   });
@@ -214,7 +241,7 @@ particleFieldsetTest.describe(`Fieldset '${particleFieldsetName}'`, () => {
       inputTest(`that increments with hotkey '${up}'.`, testUp(up));
 
       const down = hotkeys.particle[objectKey].ArrowDown;
-      inputTest(`that decrements with hotkey '${down}'.`, testDown(down));
+      inputTest(`that decrements with hotkey '${down}'.`, testDown(down, up));
     });
   }
 });

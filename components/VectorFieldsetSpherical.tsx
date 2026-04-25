@@ -120,18 +120,18 @@ const VectorFieldsetSpherical = memo(
           </div>
         )}
         <div className="flex flex-col gap-3 leading-none">
-          {['r', 'φ', 'θ'].map((e, i) => {
+          {['r', 'θ', 'φ'].map((e, i) => {
             const isR = i === 0;
             const value = isR
               ? round(r)
-              : round(trueMod(radToDeg([phi, theta][i - 1]), 360));
-            const disabled = [rDisabled, phiDisabled, thetaDisabled][i];
+              : round(trueMod(radToDeg([theta, phi][i - 1]), 360));
+            const disabled = [rDisabled, thetaDisabled, phiDisabled][i];
             const useSlider = !disabled;
-            const setter = [rSetter, phiSetter, thetaSetter][i];
+            const setter = [rSetter, thetaSetter, phiSetter][i];
             const useOnChange = setter && !disabled;
             const onChange =
-              useOnChange && [onChangeR, onChangePhi, onChangeTheta][i];
-            const ref = !disabled && [rRef, phiRef, thetaRef][i];
+              useOnChange && [onChangeR, onChangeTheta, onChangePhi][i];
+            const ref = !disabled && [rRef, thetaRef, phiRef][i];
 
             return (
               <div key={i}>

@@ -230,7 +230,7 @@ const Options = memo(
                   ref={vResetRef}
                   type="button"
                   onClick={() => {
-                    setBoostVelocityPhi(Math.PI / 2);
+                    setBoostVelocityPhi(0);
                     setBoostVelocityTheta(Math.PI / 2);
                   }}
                 >
@@ -249,7 +249,7 @@ const Options = memo(
                   ref={uResetRef}
                   type="button"
                   onClick={() => {
-                    setParticleVelocityPhi(-Math.PI / 2);
+                    setParticleVelocityPhi(Math.PI);
                     setParticleVelocityTheta(Math.PI / 2);
                   }}
                 >
@@ -331,8 +331,8 @@ const Options = memo(
                 <button
                   type="button"
                   onClick={() => {
-                    setEField([1, 1, 1]);
-                    setBField([-1, -1, -1]);
+                    setEField([1, -1, 1]);
+                    setBField([-1, 1, -1]);
                   }}
                 >
                   Anti-parallel fields, tilted

@@ -3,6 +3,7 @@ import { type CartesianComponents } from '../store/store';
 import { font } from '../helpers/font';
 import { Material } from 'three';
 import { memo, useEffect, useRef, useState } from 'react';
+import { useFrame, useThree } from '@react-three/fiber';
 import { TextGeometry } from 'three-stdlib';
 import { Color, ColorDark } from '../helpers/Color';
 import { useTheme } from 'next-themes';
@@ -309,6 +310,12 @@ const Vector = memo(
       boostUnitY,
       boostUnitZ,
     ]);
+
+    useFrame(({ camera }) => {
+      if (labelMesh.current) {
+        labelMesh.current.quaternion.copy(camera.quaternion);
+      }
+    });
 
     return ready ? (
       <>

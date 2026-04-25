@@ -17,7 +17,7 @@ export const testUp =
   };
 
 export const testDown =
-  (down: string) =>
+  (down: string, preUp?: string) =>
   async ({
     page,
     input,
@@ -27,9 +27,11 @@ export const testDown =
     input: Locator;
     initialValue: number;
   }) => {
+    if (preUp !== undefined) await page.keyboard.press(preUp);
+    const baseline = preUp !== undefined ? Number(await input.inputValue()) : initialValue;
     await page.keyboard.press(down);
     const newValue = Number(await input.inputValue());
-    expect(newValue).toBeLessThan(initialValue);
+    expect(newValue).toBeLessThan(baseline);
   };
 
 /** Returns `true` if `candidate` is a JS object (including functions, arrays, etc.). */

@@ -31,6 +31,9 @@ module.exports = {
       xl: em(1280),
       '2xl': em(1536),
       '3xl': em(1792),
+      // verticals
+      '600-h': { raw: `(min-height: ${em(600)})` },
+      '800-h': { raw: `(min-height: ${em(800)})` },
     },
     extend: {
       container: {
