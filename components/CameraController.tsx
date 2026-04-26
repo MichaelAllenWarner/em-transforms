@@ -2,6 +2,7 @@ import { useThree } from '@react-three/fiber';
 import { forwardRef, useEffect } from 'react';
 import { OrbitControls } from 'three-stdlib';
 import { QueryParameterKey } from '../helpers/QueryParamKey';
+import { isLegacyUrl, replaceUrlParams } from '../helpers/urlParams';
 import debounce from 'lodash/debounce';
 import { type EventDispatcher } from 'three';
 
@@ -58,13 +59,15 @@ const CameraController = forwardRef<OrbitControls>((_, ref) => {
         params.set(QueryParameterKey.targetX, controls.target.x.toString());
         params.set(QueryParameterKey.targetY, controls.target.y.toString());
         params.set(QueryParameterKey.targetZ, controls.target.z.toString());
-        window.history.replaceState({}, '', `?${params.toString()}`);
+        replaceUrlParams(params);
       }, 250),
     );
 
     // finally, set initial camera "state" from query-parameters
 
     const queryParams = new URLSearchParams(window.location.search);
+
+    if (isLegacyUrl(queryParams)) return () => controls.dispose();
 
     if (
       queryParams.has(QueryParameterKey.x) &&

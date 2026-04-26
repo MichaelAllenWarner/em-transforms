@@ -1,6 +1,7 @@
 import useStore, { State } from '../store/store';
 import { useDebounced } from './useDebounced';
 import { QueryParameterKey } from '../helpers/QueryParamKey';
+import { replaceUrlParams } from '../helpers/urlParams';
 import { useEffect, useRef } from 'react';
 
 const storeSelector = (state: State) => ({
@@ -66,7 +67,7 @@ export const useSetQueryParams = () => {
     params.set(QueryParameterKey.showA, showParticleAcceleration.toString());
     params.set(QueryParameterKey.hideV, hideBoostedQuantities.toString());
     params.set(QueryParameterKey.hideEandB, hideFieldVectors.toString());
-    window.history.replaceState({}, '', `?${params.toString()}`);
+    replaceUrlParams(params);
   };
 
   const debouncedSetQueryParams = useDebounced(setQueryParams, 500);
@@ -75,6 +76,13 @@ export const useSetQueryParams = () => {
     if (isFirstRender.current) {
       isFirstRender.current = false;
     } else {
+      /*
+        Note: in development, w/ StrictMode enabled, the query params will populate on load
+        even if the URL was "clean" (no query params). Just b/c this hook will run twice
+        on mount, and the function-call below will execute the second time. In production,
+        with a "clean" URL, query params should only populate in response to user actions.
+        (Can test this in dev by temporarily disabling StrictMode.)
+      */
       debouncedSetQueryParams();
     }
   });

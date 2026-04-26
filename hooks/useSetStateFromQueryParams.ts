@@ -1,6 +1,7 @@
 import useStore, { State } from '../store/store';
 import { useEffect, useRef } from 'react';
 import { QueryParameterKey } from '../helpers/QueryParamKey';
+import { isLegacyUrl } from '../helpers/urlParams';
 
 const storeSelector = (state: State) => ({
   eField: state.eField,
@@ -182,41 +183,76 @@ export const useSetStateFromQueryParams = () => {
     }
 
     // phi- and theta-components (spherical)
-    for (const { key, setter } of [
+    // Legacy URLs (has params but no v) used Three.js convention:
+    //   phi = polar from y-axis, theta = azimuthal from z toward x
+    // New URLs (v=2, or no params at all) use physics convention:
+    //   phi = azimuthal from x toward y, theta = polar from z
+    const legacyUrl = isLegacyUrl(queryParams);
+
+    const convertLegacySpherical = (
+      r: number,
+      phi_three: number,
+      theta_three: number,
+    ) => {
+      // Three.js: x=r sin(φ)sin(θ), y=r cos(φ), z=r sin(φ)cos(θ)
+      const x = r * Math.sin(phi_three) * Math.sin(theta_three);
+      const y = r * Math.cos(phi_three);
+      const z = r * Math.sin(phi_three) * Math.cos(theta_three);
+      return {
+        phi: Math.atan2(y, x),
+        theta: r === 0 ? 0 : Math.acos(Math.max(-1, Math.min(1, z / r))),
+      };
+    };
+
+    for (const { rKey, phiKey, thetaKey, phiSetter, thetaSetter, rGetter } of [
       {
-        key: QueryParameterKey.vPhi,
-        setter: setBoostVelocityPhi,
+        rKey: QueryParameterKey.vR,
+        phiKey: QueryParameterKey.vPhi,
+        thetaKey: QueryParameterKey.vTheta,
+        phiSetter: setBoostVelocityPhi,
+        thetaSetter: setBoostVelocityTheta,
+        rGetter: () => boostVelocity[0],
       },
       {
-        key: QueryParameterKey.vTheta,
-        setter: setBoostVelocityTheta,
-      },
-      {
-        key: QueryParameterKey.uPhi,
-        setter: setParticleVelocityPhi,
-      },
-      {
-        key: QueryParameterKey.uTheta,
-        setter: setParticleVelocityTheta,
+        rKey: QueryParameterKey.uR,
+        phiKey: QueryParameterKey.uPhi,
+        thetaKey: QueryParameterKey.uTheta,
+        phiSetter: setParticleVelocityPhi,
+        thetaSetter: setParticleVelocityTheta,
+        rGetter: () => particleVelocity[0],
       },
     ]) {
-      if (!queryParams.has(key)) continue;
+      const rawPhi = queryParams.has(phiKey)
+        ? Number(queryParams.get(phiKey))
+        : null;
+      const rawTheta = queryParams.has(thetaKey)
+        ? Number(queryParams.get(thetaKey))
+        : null;
+      if (rawPhi === null && rawTheta === null) continue;
 
-      const value = queryParams.get(key);
-      if (!value) {
-        console.warn(`No value for query parameter \`${key}\`.`);
-        continue;
+      if (legacyUrl) {
+        const r = queryParams.has(rKey)
+          ? Number(queryParams.get(rKey))
+          : rGetter();
+        const converted = convertLegacySpherical(r, rawPhi ?? 0, rawTheta ?? 0);
+        if (rawPhi !== null) {
+          if (Number.isFinite(converted.phi)) phiSetter(converted.phi);
+          else console.warn(`Query parameter \`${phiKey}\` produced a non-finite converted value. Skipping.`);
+        }
+        if (rawTheta !== null) {
+          if (Number.isFinite(converted.theta)) thetaSetter(converted.theta);
+          else console.warn(`Query parameter \`${thetaKey}\` produced a non-finite converted value. Skipping.`);
+        }
+      } else {
+        if (rawPhi !== null) {
+          if (Number.isFinite(rawPhi)) phiSetter(rawPhi);
+          else console.warn(`Value for query parameter \`${phiKey}\` isn't finite when coerced to a number. It is \`${rawPhi}\`. Skipping.`);
+        }
+        if (rawTheta !== null) {
+          if (Number.isFinite(rawTheta)) thetaSetter(rawTheta);
+          else console.warn(`Value for query parameter \`${thetaKey}\` isn't finite when coerced to a number. It is \`${rawTheta}\`. Skipping.`);
+        }
       }
-
-      const n = Number(value);
-      if (!Number.isFinite(n)) {
-        console.warn(
-          `Value \`${value}\` for query parameter \`${key}\` isn't finite when coerced to a number. It is \`${n}\`. Skipping.`,
-        );
-        continue;
-      }
-
-      setter(n);
     }
 
     // booleans

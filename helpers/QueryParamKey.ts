@@ -28,4 +28,5 @@ export enum QueryParameterKey {
   targetX = 'targetX',
   targetY = 'targetY',
   targetZ = 'targetZ',
+  version = 'v',
 }
