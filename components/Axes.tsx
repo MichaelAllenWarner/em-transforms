@@ -85,7 +85,9 @@ const Axes = () => {
         if (
           child instanceof THREE.Mesh &&
           child.geometry instanceof TextGeometry &&
-          !axisLabelGroupRefs.current.includes(child.parent as THREE.Group | null)
+          !axisLabelGroupRefs.current.includes(
+            child.parent as THREE.Group | null,
+          )
         ) {
           child.quaternion.copy(camera.quaternion);
         }
@@ -111,7 +113,6 @@ const Axes = () => {
                 args={[
                   `${i < 3 ? j + 1 : -(j + 1)}`,
                   {
-                    // @ts-ignore
                     font,
                     size: 0.1,
                     height: 0,
@@ -127,7 +128,9 @@ const Axes = () => {
           ))}
           {i < 3 && (
             <group
-              ref={(el) => { axisLabelGroupRefs.current[i] = el; }}
+              ref={(el) => {
+                axisLabelGroupRefs.current[i] = el;
+              }}
               position={[
                 i === 0 ? length + 0.1 : 0,
                 i === 1 ? length + 0.1 : 0,
@@ -139,7 +142,6 @@ const Axes = () => {
                   args={[
                     ['x', 'y', 'z'][i],
                     {
-                      // @ts-ignore
                       font,
                       size: 0.3,
                       height: 0,
@@ -157,7 +159,6 @@ const Axes = () => {
                   args={[
                     '′',
                     {
-                      // @ts-ignore
                       font,
                       size: 0.3,
                       height: 0,
@@ -175,7 +176,6 @@ const Axes = () => {
                   args={[
                     '[ ]',
                     {
-                      // @ts-ignore
                       font,
                       size: 0.15,
                       height: 0,
