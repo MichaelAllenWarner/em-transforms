@@ -28,7 +28,8 @@ export const testDown =
     initialValue: number;
   }) => {
     if (preUp !== undefined) await page.keyboard.press(preUp);
-    const baseline = preUp !== undefined ? Number(await input.inputValue()) : initialValue;
+    const baseline =
+      preUp !== undefined ? Number(await input.inputValue()) : initialValue;
     await page.keyboard.press(down);
     const newValue = Number(await input.inputValue());
     expect(newValue).toBeLessThan(baseline);

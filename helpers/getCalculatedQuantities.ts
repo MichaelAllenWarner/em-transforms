@@ -80,7 +80,9 @@ export const getCalculatedQuantities = ({
     (comp, i) => ch * comp - sh * crossE[i] - sh2 * dotB * boostUnit[i],
   ) as CartesianComponents;
 
-  const particleVelocityCartesian = physicsSphericalToCartesian(...particleVelocity);
+  const particleVelocityCartesian = physicsSphericalToCartesian(
+    ...particleVelocity,
+  );
   particleVelocityVec.set(...particleVelocityCartesian);
 
   const dotU = dot(boostUnit, particleVelocityCartesian);
@@ -90,7 +92,9 @@ export const getCalculatedQuantities = ({
   ) as CartesianComponents;
 
   particleVelocityPrimeVec.set(...particleVelocityPrime);
-  const particleVelocityPrimeSpherical = cartesianToPhysicsSpherical(...particleVelocityPrime);
+  const particleVelocityPrimeSpherical = cartesianToPhysicsSpherical(
+    ...particleVelocityPrime,
+  );
 
   const particleVelocityCrossB = cross(particleVelocityCartesian, bField);
   const particleVelocityCrossBPrime = cross(particleVelocityPrime, bPrime);

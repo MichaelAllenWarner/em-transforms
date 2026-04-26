@@ -237,20 +237,32 @@ export const useSetStateFromQueryParams = () => {
         const converted = convertLegacySpherical(r, rawPhi ?? 0, rawTheta ?? 0);
         if (rawPhi !== null) {
           if (Number.isFinite(converted.phi)) phiSetter(converted.phi);
-          else console.warn(`Query parameter \`${phiKey}\` produced a non-finite converted value. Skipping.`);
+          else
+            console.warn(
+              `Query parameter \`${phiKey}\` produced a non-finite converted value. Skipping.`,
+            );
         }
         if (rawTheta !== null) {
           if (Number.isFinite(converted.theta)) thetaSetter(converted.theta);
-          else console.warn(`Query parameter \`${thetaKey}\` produced a non-finite converted value. Skipping.`);
+          else
+            console.warn(
+              `Query parameter \`${thetaKey}\` produced a non-finite converted value. Skipping.`,
+            );
         }
       } else {
         if (rawPhi !== null) {
           if (Number.isFinite(rawPhi)) phiSetter(rawPhi);
-          else console.warn(`Value for query parameter \`${phiKey}\` isn't finite when coerced to a number. It is \`${rawPhi}\`. Skipping.`);
+          else
+            console.warn(
+              `Value for query parameter \`${phiKey}\` isn't finite when coerced to a number. It is \`${rawPhi}\`. Skipping.`,
+            );
         }
         if (rawTheta !== null) {
           if (Number.isFinite(rawTheta)) thetaSetter(rawTheta);
-          else console.warn(`Value for query parameter \`${thetaKey}\` isn't finite when coerced to a number. It is \`${rawTheta}\`. Skipping.`);
+          else
+            console.warn(
+              `Value for query parameter \`${thetaKey}\` isn't finite when coerced to a number. It is \`${rawTheta}\`. Skipping.`,
+            );
         }
       }
     }
