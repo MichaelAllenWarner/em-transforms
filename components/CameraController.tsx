@@ -11,17 +11,21 @@ import { type EventDispatcher } from 'three';
  * in the ref, and sets up camera-related query-parameters
  * to set camera "state" on mount and to update on "state"-change.
  */
+export const defaultCameraPosition = [2.8, -6.3, 1.4] as const;
+export const defaultCameraTarget = [0, 0, 0] as const;
+
 const CameraController = forwardRef<OrbitControls>((_, ref) => {
   const { camera, gl } = useThree();
 
   // will only fire once, b/c dependency-array entries are all stable references
   useEffect(() => {
-    camera.position.set(2.8, -6.3, 1.4);
+    camera.position.set(...defaultCameraPosition);
     camera.up.set(0, 0, 1);
     // first, create the `OrbitControls` instance...
     const controls: EventDispatcher<OrbitControls> & OrbitControls =
       new OrbitControls(camera, gl.domElement);
     controls.update();
+    document.body.dataset.cameraReady = 'true';
 
     // ...and set `ref` to it, but w/ a Proxy that dispatches the `'end'` event on `.reset()` (see below).
     if (ref && typeof ref !== 'function') {
@@ -141,6 +145,7 @@ const CameraController = forwardRef<OrbitControls>((_, ref) => {
 
     return () => {
       controls.dispose();
+      delete document.body.dataset.cameraReady;
     };
   }, [camera, gl, ref]);
 

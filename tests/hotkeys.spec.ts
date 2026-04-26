@@ -2,13 +2,10 @@ import { test, expect, Locator } from '@playwright/test';
 import { isProxy } from 'util/types';
 import { hotkeys as _hotkeys } from '../helpers/hotkeys';
 import { testUp, testDown, deepStringValsOf, isObject } from './helpers';
-
-/*
-  TODO (if feasible): test camera-reset hotkey (`hotkeys.oneKey.resetCamera`)
-    - I think would require snapshot-comparison and some canvas-click/dragging?
-  TODO: improve flip/reset tests
-  TODO: can (and should) we combine spherical and cartesian sets?
-*/
+import {
+  defaultCameraPosition,
+  defaultCameraTarget,
+} from '../components/CameraController';
 
 type Fieldset = { fieldset: Locator };
 type Input = { input: Locator; initialValue: number };
@@ -300,6 +297,34 @@ optionsFieldsetTest.describe(`Fieldset '${optionsFieldsetName}'`, () => {
       );
     });
   }
+});
+
+// Camera reset — navigate to a URL with non-default camera position,
+// press the reset hotkey, and verify the URL params return to the default position.
+const resetCamera = hotkeys.oneKey.resetCamera;
+test(`Camera resets with hotkey '${resetCamera}'.`, async ({ page }) => {
+  const [dx, dy, dz] = defaultCameraPosition;
+  const [tx, ty, tz] = defaultCameraTarget;
+  const offset = 3;
+  await page.goto(
+    `/?v=2&x=${dx + offset}&y=${dy + offset}&z=${dz + offset}&targetX=${tx + offset}&targetY=${ty + offset}&targetZ=${tz + offset}`,
+  );
+  await page.locator('[data-camera-ready]').waitFor({ state: 'attached' });
+
+  const paramsOnLoad = new URLSearchParams(new URL(page.url()).search);
+  expect(Number(paramsOnLoad.get('x'))).toBeCloseTo(dx + offset, 1);
+
+  // Press reset — fires 'end' event which writes default camera params to URL
+  await page.keyboard.press(resetCamera);
+  await page.waitForTimeout(400); // 250ms debounce + margin
+
+  const paramsAfterReset = new URLSearchParams(new URL(page.url()).search);
+  expect(Number(paramsAfterReset.get('x'))).toBeCloseTo(dx, 0);
+  expect(Number(paramsAfterReset.get('y'))).toBeCloseTo(dy, 0);
+  expect(Number(paramsAfterReset.get('z'))).toBeCloseTo(dz, 0);
+  expect(Number(paramsAfterReset.get('targetX'))).toBeCloseTo(tx, 0);
+  expect(Number(paramsAfterReset.get('targetY'))).toBeCloseTo(ty, 0);
+  expect(Number(paramsAfterReset.get('targetZ'))).toBeCloseTo(tz, 0);
 });
 
 test('All hotkeys were tested. (This test is allowed to fail; see logs for results.)', async () => {
