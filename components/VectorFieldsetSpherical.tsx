@@ -152,7 +152,7 @@ const VectorFieldsetSpherical = memo(
                                 max: String(velocityMax),
                               }
                             : {
-                                ...{ step: String(1), min: '0', max: '359' },
+                                step: String(1), min: '0', max: i === 1 ? '180' : '359',
                               })}
                           {...(onChange ? { onChange } : {})}
                         />
@@ -170,6 +170,7 @@ const VectorFieldsetSpherical = memo(
                           }
                         : {
                             ...(!disabled ? { step: String(5) } : {}),
+                            ...(i === 1 ? { min: '0', max: '180' } : {}),
                           })}
                       {...(disabled ? { disabled } : {})}
                       {...(onChange ? { onChange } : {})}

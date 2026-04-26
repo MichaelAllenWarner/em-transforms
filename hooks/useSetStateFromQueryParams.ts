@@ -250,19 +250,28 @@ export const useSetStateFromQueryParams = () => {
             );
         }
       } else {
-        if (rawPhi !== null) {
-          if (Number.isFinite(rawPhi)) phiSetter(rawPhi);
-          else
-            console.warn(
-              `Value for query parameter \`${phiKey}\` isn't finite when coerced to a number. It is \`${rawPhi}\`. Skipping.`,
-            );
+        if (rawPhi !== null && !Number.isFinite(rawPhi)) {
+          console.warn(
+            `Value for query parameter \`${phiKey}\` isn't finite. It is \`${rawPhi}\`. Skipping.`,
+          );
         }
-        if (rawTheta !== null) {
-          if (Number.isFinite(rawTheta)) thetaSetter(rawTheta);
-          else
-            console.warn(
-              `Value for query parameter \`${thetaKey}\` isn't finite when coerced to a number. It is \`${rawTheta}\`. Skipping.`,
-            );
+        if (rawTheta !== null && !Number.isFinite(rawTheta)) {
+          console.warn(
+            `Value for query parameter \`${thetaKey}\` isn't finite. It is \`${rawTheta}\`. Skipping.`,
+          );
+        }
+        if (
+          (rawPhi === null || Number.isFinite(rawPhi)) &&
+          (rawTheta === null || Number.isFinite(rawTheta))
+        ) {
+          // Normalize theta to [0, π]; if out of range, adjust phi by π too
+          const phiAdjust =
+            rawTheta !== null && Math.sin(rawTheta) < 0 ? Math.PI : 0;
+          const normalizedTheta =
+            rawTheta !== null ? Math.acos(Math.cos(rawTheta)) : null;
+          const normalizedPhi = rawPhi !== null ? rawPhi + phiAdjust : null;
+          if (normalizedPhi !== null) phiSetter(normalizedPhi);
+          if (normalizedTheta !== null) thetaSetter(normalizedTheta);
         }
       }
     }

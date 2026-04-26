@@ -56,6 +56,19 @@ test('converts legacy (v1) spherical phi/theta to physics convention', async ({ 
   await expect(vGroup.getByRole('spinbutton', { name: 'θ' })).toHaveValue('90');
 });
 
+test('normalizes out-of-range theta in v2 URL', async ({ page }) => {
+  // theta = 7π/4 ≈ 5.497 rad (> π), phi = π/4
+  // sin(7π/4) < 0, so canonical: theta' = acos(cos(7π/4)) = π/4 = 45°, phi' = π/4 + π = 225°
+  const theta = 7 * Math.PI / 4;
+  const phi = Math.PI / 4;
+
+  await page.goto(`/?v=2&vR=0.5&vPhi=${phi}&vTheta=${theta}`);
+
+  const vGroup = page.getByRole('group', { name: 'boost velocity' });
+  await expect(vGroup.getByRole('spinbutton', { name: 'θ' })).toHaveValue('45');
+  await expect(vGroup.getByRole('spinbutton', { name: 'φ' })).toHaveValue('225');
+});
+
 test('upgrades legacy URL to v2 on load', async ({ page }) => {
   await page.goto('/?eX=1&eY=0&eZ=0');
 
