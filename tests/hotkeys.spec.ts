@@ -262,13 +262,13 @@ optionsFieldsetTest.describe(`Fieldset '${optionsFieldsetName}'`, () => {
   });
 
   for (const { checkboxLabel, objectKey } of [
-    { checkboxLabel: 'show component-vectors', objectKey: 'toggleComps' },
-    { checkboxLabel: 'show the poynting vector', objectKey: 'toggleS' },
-    { checkboxLabel: 'show the particle velocity', objectKey: 'toggleU' },
-    { checkboxLabel: 'show the lorentz force', objectKey: 'toggleF' },
-    { checkboxLabel: `show the particle's acceleration`, objectKey: 'toggleA' },
-    { checkboxLabel: 'hide the boost-velocity', objectKey: 'toggleV' },
-    { checkboxLabel: 'hide the field-vectors', objectKey: 'toggleEandB' },
+    { checkboxLabel: 'show particle velocity', objectKey: 'toggleU' },
+    { checkboxLabel: 'show lorentz force', objectKey: 'toggleF' },
+    { checkboxLabel: `show particle acceleration`, objectKey: 'toggleA' },
+    { checkboxLabel: 'show poynting vector', objectKey: 'toggleS' },
+    { checkboxLabel: 'hide fields', objectKey: 'toggleEandB' },
+    { checkboxLabel: 'show components', objectKey: 'toggleComps' },
+    { checkboxLabel: 'hide boost velocity', objectKey: 'toggleV' },
   ] as const) {
     const checkboxTest = optionsFieldsetTest.extend<Checkbox>({
       checkbox: ({ fieldset }, use) => use(fieldset.getByLabel(checkboxLabel)),

@@ -53,6 +53,7 @@ export interface State {
     newBoostVelocityTheta: State['boostVelocity'][number],
   ) => void;
   flipBoostVelocity: () => void;
+  resetBoostVelocity: () => void;
 
   setParticleVelocity: (newParticleVelocity: State['particleVelocity']) => void;
   setParticleVelocityR: (
@@ -65,6 +66,7 @@ export interface State {
     newParticleVelocityTheta: State['particleVelocity'][number],
   ) => void;
   flipParticleVelocity: () => void;
+  resetParticleVelocity: () => void;
 
   setParticleCharge: (newParticleCharge: State['particleCharge']) => void;
   setParticleMass: (newParticleMass: State['particleMass']) => void;
@@ -164,6 +166,11 @@ const useStore = createWithEqualityFn<State>()((set) => {
           Math.PI - state.boostVelocity[2],
         ],
       })),
+    resetBoostVelocity: () => {
+      set(() => ({
+        boostVelocity: [0.5, 0, Math.PI / 2],
+      }));
+    },
 
     setParticleVelocity: (newParticleVelocity) =>
       set(() => ({ particleVelocity: newParticleVelocity })),
@@ -199,6 +206,11 @@ const useStore = createWithEqualityFn<State>()((set) => {
           Math.PI - state.particleVelocity[2],
         ],
       })),
+    resetParticleVelocity: () => {
+      set(() => ({
+        particleVelocity: [0.25, Math.PI, Math.PI / 2],
+      }));
+    },
 
     setParticleCharge: (newParticleCharge) =>
       set(() => ({ particleCharge: newParticleCharge })),

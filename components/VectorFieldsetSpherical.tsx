@@ -29,6 +29,7 @@ interface Props {
   phiSetter?: (newComponent: SphericalComponents[number]) => void;
   thetaSetter?: (newComponent: SphericalComponents[number]) => void;
   flipper?: () => void;
+  resetter?: () => void;
   /** If `true`, will keep the `r` component less than 1. */
   isVelocity?: boolean;
   isPrime?: boolean;
@@ -36,6 +37,7 @@ interface Props {
   y?: number;
   z?: number;
   reverseHotkey?: string;
+  resetHotkey?: string;
 }
 
 const VectorFieldsetSpherical = memo(
@@ -57,11 +59,13 @@ const VectorFieldsetSpherical = memo(
     thetaDisabled,
     isVelocity,
     flipper,
+    resetter,
     isPrime,
     x,
     y,
     z,
     reverseHotkey,
+    resetHotkey,
   }: Props) => {
     const onChangeR = useCallback(
       (e: ChangeEvent<HTMLInputElement>) => {
@@ -102,7 +106,7 @@ const VectorFieldsetSpherical = memo(
         {flipper && (
           <div>
             <button type="button" onClick={flipper}>
-              Reverse direction
+              Flip
               {reverseHotkey ? (
                 <>
                   . Hotkey:{' '}
@@ -117,6 +121,28 @@ const VectorFieldsetSpherical = memo(
                 <></>
               )}
             </button>
+          </div>
+        )}
+        {resetter && (
+          <div>
+            <div>
+              <button type="button" onClick={resetter}>
+                Reset
+                {resetHotkey ? (
+                  <>
+                    . Hotkey:{' '}
+                    {resetHotkey.split('+').map((s, i, a) => (
+                      <Fragment key={i}>
+                        <kbd>{s}</kbd>
+                        {i === a.length - 1 ? '' : ' + '}
+                      </Fragment>
+                    ))}
+                  </>
+                ) : (
+                  <></>
+                )}
+              </button>
+            </div>
           </div>
         )}
         <div className="flex flex-col gap-3 leading-none">
@@ -152,7 +178,9 @@ const VectorFieldsetSpherical = memo(
                                 max: String(velocityMax),
                               }
                             : {
-                                step: String(1), min: '0', max: i === 1 ? '180' : '359',
+                                step: String(1),
+                                min: '0',
+                                max: i === 1 ? '180' : '359',
                               })}
                           {...(onChange ? { onChange } : {})}
                         />

@@ -3,10 +3,19 @@ import { useHotkeys } from 'react-hotkeys-hook';
 import { OrbitControls } from 'three-stdlib';
 import useStore, { State } from '../store/store';
 import { hotkeys } from '../helpers/hotkeys';
+import {
+  announceUFlip,
+  announceUReset,
+  announceVFlip,
+  announceVReset,
+  announceCameraReset,
+} from '../helpers/announce';
 
 const storeSelector = (state: State) => ({
   flipBoostVelocity: state.flipBoostVelocity,
   flipParticleVelocity: state.flipParticleVelocity,
+  resetBoostVelocity: state.resetBoostVelocity,
+  resetParticleVelocity: state.resetParticleVelocity,
 });
 
 const inputEvent = new Event('input', { bubbles: true });
@@ -35,14 +44,40 @@ const stepDown =
   };
 
 export const useRefsAndHotkeys = () => {
-  const { flipBoostVelocity: vFlip, flipParticleVelocity: uFlip } =
-    useStore(storeSelector);
+  const {
+    flipBoostVelocity: rawVFlip,
+    flipParticleVelocity: rawUFlip,
+    resetBoostVelocity: rawVReset,
+    resetParticleVelocity: rawUReset,
+  } = useStore(storeSelector);
 
+  const vFlip = useCallback(() => {
+    rawVFlip();
+    announceVFlip();
+  }, [rawVFlip]);
+
+  const uFlip = useCallback(() => {
+    rawUFlip();
+    announceUFlip();
+  }, [rawUFlip]);
+
+  const vReset = useCallback(() => {
+    rawVReset();
+    announceVReset();
+  }, [rawVReset]);
+
+  const uReset = useCallback(() => {
+    rawUReset();
+    announceUReset();
+  }, [rawUReset]);
   // set up camera ref and camera-reset hotkey
 
   const cameraRef = useRef<OrbitControls>(null);
   const resetCamera = useCallback(() => {
-    cameraRef.current?.reset();
+    if (cameraRef.current) {
+      cameraRef.current.reset();
+      announceCameraReset();
+    }
   }, []);
   useHotkeys(hotkeys.oneKey.resetCamera, resetCamera, {
     enableOnFormTags: true,
@@ -150,9 +185,6 @@ export const useRefsAndHotkeys = () => {
   const vThetaUp = useMemo(() => stepUp(vThetaRef), []);
   const vThetaDown = useMemo(() => stepDown(vThetaRef), []);
 
-  const vResetRef = useRef<HTMLButtonElement>(null);
-  const vReset = useMemo(() => click(vResetRef), []);
-
   useHotkeys(hotkeys.vectorComp.v.r.ArrowUp, vRUp, { enableOnFormTags: true });
   useHotkeys(hotkeys.vectorComp.v.r.ArrowDown, vRDown, {
     enableOnFormTags: true,
@@ -185,9 +217,6 @@ export const useRefsAndHotkeys = () => {
   const uThetaRef = useRef<HTMLInputElement>(null);
   const uThetaUp = useMemo(() => stepUp(uThetaRef), []);
   const uThetaDown = useMemo(() => stepDown(uThetaRef), []);
-
-  const uResetRef = useRef<HTMLButtonElement>(null);
-  const uReset = useMemo(() => click(uResetRef), []);
 
   useHotkeys(hotkeys.vectorComp.u.r.ArrowUp, uRUp, { enableOnFormTags: true });
   useHotkeys(hotkeys.vectorComp.u.r.ArrowDown, uRDown, {
@@ -244,12 +273,14 @@ export const useRefsAndHotkeys = () => {
     vRRef,
     vPhiRef,
     vThetaRef,
-    vResetRef,
     uRRef,
     uPhiRef,
     uThetaRef,
-    uResetRef,
     qRef,
     mRef,
+    vFlip,
+    uFlip,
+    vReset,
+    uReset,
   };
 };

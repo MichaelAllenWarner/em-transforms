@@ -1,26 +1,95 @@
 import MathJaxInline from './MathJaxInline';
-import ThemeSwitch from './ThemeSwitch';
+import { useSyncExternalStore } from 'react';
+import type React from 'react';
 
-const TitleAndInstructions = () => (
-  <div className="space-y-6 mx-auto max-w-full">
-    <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl max-w-5xl">
-      Lorentz Transformation of the Electric and Magnetic Fields, Visualized in
-      3D
-    </h1>
-    <noscript className="block">
-      <div className="border p-4 inline-block">
-        <p>
-          <strong>
-            JavaScript is currently disabled in your browser. To use this app,
-            you'll have to enable JavaScript and reload the page.
-          </strong>
-        </p>
-      </div>
-    </noscript>
-    <ThemeSwitch />
-    <div className="space-y-4 [&_summary+div]:max-w-prose [&_summary+div]:space-y-5 [&_ul+p]:mt-3 [&_li>ul]:mt-3 [&_li>p:last-child]:mb-4 [&_summary+div]:p-4">
-      <details>
-        <summary>Background for those who need it</summary>
+/*
+  Mechanism for keeping open-states of `details` elements in sync across
+  component-instances (because it gets used in two spots in the DOM, with one
+  always hidden depending on viewport size). This way, when breakpoint
+  is crossed, the open-state of each `details` element is preserved.
+*/
+
+type Listener = () => void;
+
+const detailsIds = [
+  'background',
+  'instructions',
+  'camera-controls',
+  'hotkeys',
+  'formulas',
+  'observations',
+] as const;
+
+type DetailsId = (typeof detailsIds)[number];
+
+const listenersById = new Map<DetailsId, Set<Listener>>(
+  detailsIds.map((id) => [id, new Set<Listener>()]),
+);
+
+let openStates: Record<DetailsId, boolean> = {
+  background: false,
+  instructions: false,
+  'camera-controls': false,
+  hotkeys: false,
+  formulas: false,
+  observations: false,
+};
+
+const subscribeId = (id: DetailsId, listener: Listener) => {
+  listenersById.get(id)?.add(listener);
+  return () => listenersById.get(id)?.delete(listener);
+};
+
+const getSnapshotId = (id: DetailsId) => {
+  return openStates[id];
+};
+
+const setOpen = (id: DetailsId, isOpen: boolean) => {
+  if (openStates[id] === isOpen) return;
+  openStates = { ...openStates, [id]: isOpen };
+  listenersById.get(id)?.forEach((l) => l());
+};
+
+const useDetailsOpen = (id: DetailsId) => {
+  return useSyncExternalStore(
+    (listener) => subscribeId(id, listener),
+    () => getSnapshotId(id),
+    () => getSnapshotId(id),
+  );
+};
+
+const SyncedDetails = ({
+  id,
+  summary,
+  children,
+}: {
+  id: DetailsId;
+  summary: React.ReactElement;
+  children: React.ReactNode;
+}) => {
+  const open = useDetailsOpen(id);
+
+  return (
+    <details
+      open={open}
+      onToggle={(e) => {
+        setOpen(id, e.currentTarget.open);
+      }}
+      className="[&_summary+div]:max-w-prose [&_summary+div]:flex [&_summary+div]:flex-col [&_summary+div]:gap-5 [&_ul+p]:mt-3 [&_li>ul]:mt-3 [&_li>p:last-child]:mb-4 [&_summary+div]:p-4"
+    >
+      {summary}
+      {children}
+    </details>
+  );
+};
+
+const Instructions = ({ stickyVersion }: { stickyVersion?: boolean }) => {
+  return (
+    <div className="flex flex-col gap-4">
+      <SyncedDetails
+        id="background"
+        summary={<summary>Background for those who need it</summary>}
+      >
         <div>
           <p>
             (The reader is assumed to have some familiarity with vectors,
@@ -131,9 +200,11 @@ const TitleAndInstructions = () => (
             />
           </p>
         </div>
-      </details>
-      <details>
-        <summary>Instructions</summary>
+      </SyncedDetails>
+      <SyncedDetails
+        id="instructions"
+        summary={<summary>Instructions</summary>}
+      >
         <div>
           <p>
             This visualization demonstrates how the electric- and magnetic-field
@@ -142,11 +213,12 @@ const TitleAndInstructions = () => (
           </p>
           <p>
             Use the sliders, input-boxes, or corresponding{' '}
-            <a href="#hotkeys">hotkeys</a> to set the Cartesian components of
-            the electric- and magnetic-field vectors in the original "unprimed"
-            inertial frame, as well as the direction and magnitude of the
-            boost-velocity. The electric- and magnetic-field vectors in the
-            "primed" inertial frame are calculated and rendered automatically.
+            <a href={stickyVersion ? '#hotkeys-sticky' : '#hotkeys'}>hotkeys</a>{' '}
+            to set the Cartesian components of the electric- and magnetic-field
+            vectors in the original "unprimed" inertial frame, as well as the
+            direction and magnitude of the boost-velocity. The electric- and
+            magnetic-field vectors in the "primed" inertial frame are calculated
+            and rendered automatically.
           </p>
           <p>
             The Poynting vector in each frame is calculated automatically, too,
@@ -252,9 +324,11 @@ const TitleAndInstructions = () => (
             encoded in the URL, too.
           </p>
         </div>
-      </details>
-      <details>
-        <summary>Camera controls for 3D visualization</summary>
+      </SyncedDetails>
+      <SyncedDetails
+        id="camera-controls"
+        summary={<summary>Camera controls for 3D visualization</summary>}
+      >
         <div>
           <ul>
             <li>
@@ -272,9 +346,15 @@ const TitleAndInstructions = () => (
             </li>
           </ul>
         </div>
-      </details>
-      <details>
-        <summary id="hotkeys">Hotkeys</summary>
+      </SyncedDetails>
+      <SyncedDetails
+        id="hotkeys"
+        summary={
+          <summary id={stickyVersion ? 'hotkeys-sticky' : 'hotkeys'}>
+            Hotkeys
+          </summary>
+        }
+      >
         <div>
           <p>
             You can use the keyboard to control the input-parameters and many of
@@ -301,7 +381,8 @@ const TitleAndInstructions = () => (
             </li>
             <li>
               and press either the up- or down-arrow (<kbd>↑</kbd> or{' '}
-              <kbd>↓</kbd>).
+              <kbd>↓</kbd>
+              ).
             </li>
           </ol>
           <p>
@@ -362,9 +443,8 @@ const TitleAndInstructions = () => (
             Use <kbd>k</kbd> to reset the camera.
           </p>
         </div>
-      </details>
-      <details>
-        <summary>Formulas used</summary>
+      </SyncedDetails>
+      <SyncedDetails id="formulas" summary={<summary>Formulas used</summary>}>
         <div>
           <p>
             The most elegant way to express how quantities transform under
@@ -436,9 +516,11 @@ const TitleAndInstructions = () => (
             I'd already obtained.
           </p>
         </div>
-      </details>
-      <details>
-        <summary>Observations</summary>
+      </SyncedDetails>
+      <SyncedDetails
+        id="observations"
+        summary={<summary>Observations</summary>}
+      >
         <div>
           <p>Here are some interesting things to note:</p>
           <ul>
@@ -488,16 +570,15 @@ const TitleAndInstructions = () => (
               setting both <MathJaxInline content={'\\( \\vec v \\)'} /> and{' '}
               <MathJaxInline content={'\\( \\vec u \\)'} /> to point along the{' '}
               <MathJaxInline content={'\\( x \\)-axis'} /> (by using the "Reset"
-              buttons in the Options, say);{' '}
-              <MathJaxInline content={'\\( F_x \\)'} /> and{' '}
+              buttons, say); <MathJaxInline content={'\\( F_x \\)'} /> and{' '}
               <MathJaxInline content={'\\( F ^ \\prime _x \\)'} /> should then
               have the same value.
             </li>
           </ul>
         </div>
-      </details>
+      </SyncedDetails>
     </div>
-  </div>
-);
+  );
+};
 
-export default TitleAndInstructions;
+export default Instructions;

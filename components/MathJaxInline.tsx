@@ -1,5 +1,5 @@
 import { MathJax } from 'better-react-mathjax';
-import { ComponentProps } from 'react';
+import { ComponentProps, type HTMLAttributes } from 'react';
 
 interface Props
   extends Omit<ComponentProps<typeof MathJax>, 'inline' | 'children'> {
@@ -10,31 +10,42 @@ interface Props
    * (typically punctuation).
    */
   content: `${string}\\(${string}\\)${string}`;
+  /**
+   * If supplied, makes the MathJax expression decorative (inert/non-interactive)
+   * and renders the supplied text in a visually-hidden span.
+   */
+  srOnlyText?: string;
 }
 
-const MathJaxInline = ({ content, ...rest }: Props) => {
+const MathJaxInline = ({ content, srOnlyText, ...rest }: Props) => {
   const [expression] = content.match(/\\\(.*\\\)/) || [];
   if (!expression) {
     throw Error(`No MathJax expression found in ${content}`);
   }
 
   const math = (
-    <MathJax {...rest} inline>
-      {expression}
-    </MathJax>
+    <>
+      <MathJax
+        {...rest}
+        inline
+        className={srOnlyText ? 'pointer-events-none' : ''}
+        {...(srOnlyText ? { inert: '' } : {})}
+      >
+        {expression}
+      </MathJax>
+    </>
   );
 
   const [prefix] = content.split('\\(');
   const [, suffix] = content.split('\\)');
 
-  return prefix || suffix ? (
+  return (
     <span className="whitespace-nowrap">
       {prefix}
       {math}
+      {srOnlyText && <span className="sr-only">{srOnlyText}</span>}
       {suffix}
     </span>
-  ) : (
-    <>{math}</>
   );
 };
 

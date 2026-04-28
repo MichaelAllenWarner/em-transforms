@@ -7,7 +7,8 @@ import Options from '../components/Options';
 import VectorFieldset from '../components/VectorFieldset';
 import { Color, ColorDark, textColor, textColorDark } from '../helpers/Color';
 import VectorFieldsetSpherical from '../components/VectorFieldsetSpherical';
-import TitleAndInstructions from '../components/TitleAndInstructions';
+import ThemeSwitch from '../components/ThemeSwitch';
+import Instructions from '../components/Instructions';
 import { useRefsAndHotkeys } from '../hooks/useRefsAndHotkeys';
 import { getCalculatedQuantities } from '../helpers/getCalculatedQuantities';
 import CameraController from '../components/CameraController';
@@ -15,7 +16,6 @@ import { useSetStateFromQueryParams } from '../hooks/useSetStateFromQueryParams'
 import { useSetQueryParams } from '../hooks/useSetQueryParams';
 import { hotkeys } from '../helpers/hotkeys';
 
-const titleAndInstructions = <TitleAndInstructions />;
 const axes = <Axes />;
 
 const storeSelector = (state: State) => ({
@@ -35,10 +35,12 @@ const storeSelector = (state: State) => ({
   setBoostVelocityPhi: state.setBoostVelocityPhi,
   setBoostVelocityTheta: state.setBoostVelocityTheta,
   flipBoostVelocity: state.flipBoostVelocity,
+  resetBoostVelocity: state.resetBoostVelocity,
   setParticleVelocityR: state.setParticleVelocityR,
   setParticleVelocityPhi: state.setParticleVelocityPhi,
   setParticleVelocityTheta: state.setParticleVelocityTheta,
   flipParticleVelocity: state.flipParticleVelocity,
+  resetParticleVelocity: state.resetParticleVelocity,
   setParticleCharge: state.setParticleCharge,
   setParticleMass: state.setParticleMass,
   showComponentVectors: state.showComponentVectors,
@@ -72,13 +74,15 @@ const Page = () => {
     vRRef,
     vPhiRef,
     vThetaRef,
-    vResetRef,
     uRRef,
     uPhiRef,
     uThetaRef,
-    uResetRef,
     qRef,
     mRef,
+    vFlip,
+    uFlip,
+    vReset,
+    uReset,
   } = useRefsAndHotkeys();
 
   const {
@@ -97,11 +101,9 @@ const Page = () => {
     setBoostVelocityR,
     setBoostVelocityPhi,
     setBoostVelocityTheta,
-    flipBoostVelocity,
     setParticleVelocityR,
     setParticleVelocityPhi,
     setParticleVelocityTheta,
-    flipParticleVelocity,
     setParticleCharge,
     setParticleMass,
     showComponentVectors,
@@ -138,6 +140,13 @@ const Page = () => {
 
   return (
     <>
+      <div
+        id="aria-announcer"
+        aria-live="polite"
+        aria-atomic="true"
+        className="sr-only"
+      />
+
       <Head>
         <title>
           Lorentz Transformation of the Electric and Magnetic Fields, Visualized
@@ -149,10 +158,32 @@ const Page = () => {
         />
       </Head>
 
-      <main className="container mt-10 flex flex-col space-y-10">
-        {titleAndInstructions}
+      <main className="container mt-10 flex flex-col gap-10">
+        <div className="flex flex-col gap-6 mx-auto max-w-full">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl max-w-5xl">
+            Lorentz Transformation of the Electric and Magnetic Fields,
+            Visualized in 3D
+          </h1>
 
-        <div className="lg:grid grid-cols-2 gap-10">
+          <noscript className="block">
+            <div className="border p-4 inline-block">
+              <p>
+                <strong>
+                  JavaScript is currently disabled in your browser. To use this
+                  app, you'll have to enable JavaScript and reload the page.
+                </strong>
+              </p>
+            </div>
+          </noscript>
+
+          <ThemeSwitch />
+
+          <div className="lg:600-h:hidden xl:!block xl:800-h:!hidden">
+            <Instructions />
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
           <div className="h-[calc(600rem/16)] lg:600-h:sticky xl:h-[calc(800rem/16)] xl:!static xl:800-h:!sticky top-0">
             <Canvas className="px-6 xl:px-0 [&>*]:border">
               <CameraController ref={cameraRef} />
@@ -208,8 +239,8 @@ const Page = () => {
                 }
                 hide={
                   !showParticleVelocity &&
-                  !showLorentzForce &&
-                  !showParticleAcceleration
+                  ((!showLorentzForce && !showParticleAcceleration) ||
+                    hideFieldVectors)
                 }
               />
 
@@ -228,8 +259,8 @@ const Page = () => {
                 }
                 hide={
                   (!showParticleVelocity &&
-                    !showLorentzForce &&
-                    !showParticleAcceleration) ||
+                    ((!showLorentzForce && !showParticleAcceleration) ||
+                      hideFieldVectors)) ||
                   hideBoostedQuantities
                 }
               />
@@ -387,115 +418,134 @@ const Page = () => {
             </Canvas>
           </div>
 
-          <form
-            className="flex flex-wrap gap-8 pb-10"
-            onSubmit={(e) => {
-              e.preventDefault();
-            }}
-          >
-            <Options
-              cameraRef={cameraRef}
-              vResetRef={vResetRef}
-              uResetRef={uResetRef}
-              showCompsRef={showCompsRef}
-              showSRef={showSRef}
-              showURef={showURef}
-              showFRef={showFRef}
-              showARef={showARef}
-              hideVRef={hideVRef}
-              hideEandBRef={hideEandBRef}
-            />
-
-            <VectorFieldsetSpherical
-              color={Color.V}
-              colorDark={ColorDark.V}
-              legend="Boost velocity (v)"
-              r={boostVelocity[0]}
-              phi={boostVelocity[1]}
-              theta={boostVelocity[2]}
-              rSetter={setBoostVelocityR}
-              phiSetter={setBoostVelocityPhi}
-              thetaSetter={setBoostVelocityTheta}
-              rRef={vRRef}
-              phiRef={vPhiRef}
-              thetaRef={vThetaRef}
-              isVelocity
-              flipper={flipBoostVelocity}
-              x={boostVelocityCartesian[0]}
-              y={boostVelocityCartesian[1]}
-              z={boostVelocityCartesian[2]}
-              reverseHotkey={hotkeys.vectorFlip.v}
-            />
-
-            <VectorFieldset
-              color={Color.E}
-              colorDark={ColorDark.E}
-              legend="Original electric field (E)"
-              x={eField[0]}
-              y={eField[1]}
-              z={eField[2]}
-              step="0.1"
-              xSetter={setEFieldX}
-              ySetter={setEFieldY}
-              zSetter={setEFieldZ}
-              xRef={eXRef}
-              yRef={eYRef}
-              zRef={eZRef}
-            />
-
-            <VectorFieldset
-              color={Color.B}
-              colorDark={ColorDark.B}
-              legend="Original magnetic field (B)"
-              x={bField[0]}
-              y={bField[1]}
-              z={bField[2]}
-              step="0.1"
-              xSetter={setBFieldX}
-              ySetter={setBFieldY}
-              zSetter={setBFieldZ}
-              xRef={bXRef}
-              yRef={bYRef}
-              zRef={bZRef}
-            />
-
-            <VectorFieldsetSpherical
-              color={Color.U}
-              colorDark={ColorDark.U}
-              legend="Original particle velocity (u)"
-              r={particleVelocity[0]}
-              phi={particleVelocity[1]}
-              theta={particleVelocity[2]}
-              rRef={uRRef}
-              phiRef={uPhiRef}
-              thetaRef={uThetaRef}
-              isVelocity
-              rSetter={setParticleVelocityR}
-              phiSetter={setParticleVelocityPhi}
-              thetaSetter={setParticleVelocityTheta}
-              flipper={flipParticleVelocity}
-              x={particleVelocityCartesian[0]}
-              y={particleVelocityCartesian[1]}
-              z={particleVelocityCartesian[2]}
-              reverseHotkey={hotkeys.vectorFlip.u}
-            />
-
-            <fieldset
-              className={`${textColor[Color.U]} ${textColorDark[ColorDark.U]}`}
+          <div className="flex flex-col gap-4">
+            <div className="hidden lg:600-h:block xl:!hidden xl:800-h:!block">
+              <Instructions stickyVersion />
+            </div>
+            <form
+              className="flex flex-wrap gap-8 pb-10"
+              onSubmit={(e) => {
+                e.preventDefault();
+              }}
             >
-              <legend>Particle charge and mass</legend>
-              <div className="flex flex-col gap-3 leading-none">
-                <div>
-                  <label className="flex">
-                    <span className="shrink-0">Charge (q)</span>
-                    <span className="flex flex-col gap-2">
-                      <span className="safari-only-range-wrapper">
+              <Options
+                cameraRef={cameraRef}
+                showCompsRef={showCompsRef}
+                showSRef={showSRef}
+                showURef={showURef}
+                showFRef={showFRef}
+                showARef={showARef}
+                hideVRef={hideVRef}
+                hideEandBRef={hideEandBRef}
+              />
+
+              <VectorFieldsetSpherical
+                color={Color.V}
+                colorDark={ColorDark.V}
+                legend="Boost velocity (v)"
+                r={boostVelocity[0]}
+                phi={boostVelocity[1]}
+                theta={boostVelocity[2]}
+                rSetter={setBoostVelocityR}
+                phiSetter={setBoostVelocityPhi}
+                thetaSetter={setBoostVelocityTheta}
+                rRef={vRRef}
+                phiRef={vPhiRef}
+                thetaRef={vThetaRef}
+                isVelocity
+                flipper={vFlip}
+                resetter={vReset}
+                x={boostVelocityCartesian[0]}
+                y={boostVelocityCartesian[1]}
+                z={boostVelocityCartesian[2]}
+                reverseHotkey={hotkeys.vectorFlip.v}
+                resetHotkey={hotkeys.vectorReset.v}
+              />
+
+              <VectorFieldset
+                color={Color.E}
+                colorDark={ColorDark.E}
+                legend="Original electric field (E)"
+                x={eField[0]}
+                y={eField[1]}
+                z={eField[2]}
+                step="0.1"
+                xSetter={setEFieldX}
+                ySetter={setEFieldY}
+                zSetter={setEFieldZ}
+                xRef={eXRef}
+                yRef={eYRef}
+                zRef={eZRef}
+              />
+
+              <VectorFieldset
+                color={Color.B}
+                colorDark={ColorDark.B}
+                legend="Original magnetic field (B)"
+                x={bField[0]}
+                y={bField[1]}
+                z={bField[2]}
+                step="0.1"
+                xSetter={setBFieldX}
+                ySetter={setBFieldY}
+                zSetter={setBFieldZ}
+                xRef={bXRef}
+                yRef={bYRef}
+                zRef={bZRef}
+              />
+
+              <VectorFieldsetSpherical
+                color={Color.U}
+                colorDark={ColorDark.U}
+                legend="Original particle velocity (u)"
+                r={particleVelocity[0]}
+                phi={particleVelocity[1]}
+                theta={particleVelocity[2]}
+                rRef={uRRef}
+                phiRef={uPhiRef}
+                thetaRef={uThetaRef}
+                isVelocity
+                rSetter={setParticleVelocityR}
+                phiSetter={setParticleVelocityPhi}
+                thetaSetter={setParticleVelocityTheta}
+                flipper={uFlip}
+                resetter={uReset}
+                x={particleVelocityCartesian[0]}
+                y={particleVelocityCartesian[1]}
+                z={particleVelocityCartesian[2]}
+                reverseHotkey={hotkeys.vectorFlip.u}
+                resetHotkey={hotkeys.vectorReset.u}
+              />
+
+              <fieldset
+                className={`${textColor[Color.U]} ${textColorDark[ColorDark.U]}`}
+              >
+                <legend>Particle charge and mass</legend>
+                <div className="flex flex-col gap-3 leading-none">
+                  <div>
+                    <label className="flex">
+                      <span className="shrink-0">Charge (q)</span>
+                      <span className="flex flex-col gap-2">
+                        <span className="safari-only-range-wrapper">
+                          <input
+                            type="range"
+                            value={particleCharge}
+                            step="0.1"
+                            min="-10"
+                            max="10"
+                            onChange={(e) => {
+                              let n = e.target.valueAsNumber;
+                              if (isNaN(n)) n = 1;
+                              setParticleCharge(n);
+                            }}
+                          />
+                        </span>
                         <input
-                          type="range"
-                          value={particleCharge}
+                          aria-label="Charge (q)"
+                          ref={qRef}
+                          type="number"
                           step="0.1"
-                          min="-10"
-                          max="10"
+                          value={particleCharge}
                           onChange={(e) => {
                             let n = e.target.valueAsNumber;
                             if (isNaN(n)) n = 1;
@@ -503,32 +553,33 @@ const Page = () => {
                           }}
                         />
                       </span>
-                      <input
-                        aria-label="Charge (q)"
-                        ref={qRef}
-                        type="number"
-                        step="0.1"
-                        value={particleCharge}
-                        onChange={(e) => {
-                          let n = e.target.valueAsNumber;
-                          if (isNaN(n)) n = 1;
-                          setParticleCharge(n);
-                        }}
-                      />
-                    </span>
-                  </label>
-                </div>
-                <div>
-                  <label className="flex">
-                    <span className="shrink-0">Mass (m)</span>
-                    <span className="flex flex-col gap-2">
-                      <span className="safari-only-range-wrapper">
+                    </label>
+                  </div>
+                  <div>
+                    <label className="flex">
+                      <span className="shrink-0">Mass (m)</span>
+                      <span className="flex flex-col gap-2">
+                        <span className="safari-only-range-wrapper">
+                          <input
+                            type="range"
+                            value={particleMass}
+                            step="0.1"
+                            min="0.1"
+                            max="10"
+                            onChange={(e) => {
+                              let n = e.target.valueAsNumber;
+                              if (n <= 0) n = 0.1;
+                              if (isNaN(n)) n = 1;
+                              setParticleMass(n);
+                            }}
+                          />
+                        </span>
                         <input
-                          type="range"
-                          value={particleMass}
+                          aria-label="Mass (m)"
+                          ref={mRef}
+                          type="number"
                           step="0.1"
-                          min="0.1"
-                          max="10"
+                          value={particleMass}
                           onChange={(e) => {
                             let n = e.target.valueAsNumber;
                             if (n <= 0) n = 0.1;
@@ -537,143 +588,130 @@ const Page = () => {
                           }}
                         />
                       </span>
-                      <input
-                        aria-label="Mass (m)"
-                        ref={mRef}
-                        type="number"
-                        step="0.1"
-                        value={particleMass}
-                        onChange={(e) => {
-                          let n = e.target.valueAsNumber;
-                          if (n <= 0) n = 0.1;
-                          if (isNaN(n)) n = 1;
-                          setParticleMass(n);
-                        }}
-                      />
-                    </span>
-                  </label>
+                    </label>
+                  </div>
                 </div>
-              </div>
-            </fieldset>
+              </fieldset>
 
-            <VectorFieldset
-              color={Color.S}
-              colorDark={ColorDark.S}
-              legend="Original Poynting vector (S)"
-              x={poynting[0]}
-              y={poynting[1]}
-              z={poynting[2]}
-              xDisabled
-              yDisabled
-              zDisabled
-            />
+              <VectorFieldset
+                color={Color.S}
+                colorDark={ColorDark.S}
+                legend="Original Poynting vector (S)"
+                x={poynting[0]}
+                y={poynting[1]}
+                z={poynting[2]}
+                xDisabled
+                yDisabled
+                zDisabled
+              />
 
-            <VectorFieldset
-              color={Color.F}
-              colorDark={ColorDark.F}
-              legend="Original Lorentz force (F)"
-              x={lorentzForce[0]}
-              y={lorentzForce[1]}
-              z={lorentzForce[2]}
-              xDisabled
-              yDisabled
-              zDisabled
-            />
+              <VectorFieldset
+                color={Color.F}
+                colorDark={ColorDark.F}
+                legend="Original Lorentz force (F)"
+                x={lorentzForce[0]}
+                y={lorentzForce[1]}
+                z={lorentzForce[2]}
+                xDisabled
+                yDisabled
+                zDisabled
+              />
 
-            <VectorFieldset
-              color={Color.A}
-              colorDark={ColorDark.A}
-              legend="Original particle acceleration (a)"
-              x={particleAcceleration[0]}
-              y={particleAcceleration[1]}
-              z={particleAcceleration[2]}
-              xDisabled
-              yDisabled
-              zDisabled
-            />
+              <VectorFieldset
+                color={Color.A}
+                colorDark={ColorDark.A}
+                legend="Original particle acceleration (a)"
+                x={particleAcceleration[0]}
+                y={particleAcceleration[1]}
+                z={particleAcceleration[2]}
+                xDisabled
+                yDisabled
+                zDisabled
+              />
 
-            <VectorFieldset
-              color={Color.EPrime}
-              colorDark={ColorDark.EPrime}
-              legend="Boosted electric field (E′)"
-              x={ePrime[0]}
-              y={ePrime[1]}
-              z={ePrime[2]}
-              xDisabled
-              yDisabled
-              zDisabled
-              isPrime
-            />
+              <VectorFieldset
+                color={Color.EPrime}
+                colorDark={ColorDark.EPrime}
+                legend="Boosted electric field (E′)"
+                x={ePrime[0]}
+                y={ePrime[1]}
+                z={ePrime[2]}
+                xDisabled
+                yDisabled
+                zDisabled
+                isPrime
+              />
 
-            <VectorFieldset
-              color={Color.BPrime}
-              colorDark={ColorDark.BPrime}
-              legend="Boosted magnetic field (B′)"
-              x={bPrime[0]}
-              y={bPrime[1]}
-              z={bPrime[2]}
-              xDisabled
-              yDisabled
-              zDisabled
-              isPrime
-            />
+              <VectorFieldset
+                color={Color.BPrime}
+                colorDark={ColorDark.BPrime}
+                legend="Boosted magnetic field (B′)"
+                x={bPrime[0]}
+                y={bPrime[1]}
+                z={bPrime[2]}
+                xDisabled
+                yDisabled
+                zDisabled
+                isPrime
+              />
 
-            <VectorFieldsetSpherical
-              color={Color.UPrime}
-              colorDark={ColorDark.UPrime}
-              legend="Boosted particle velocity (u′)"
-              r={particleVelocityPrimeSpherical.r}
-              phi={particleVelocityPrimeSpherical.phi}
-              theta={particleVelocityPrimeSpherical.theta}
-              isVelocity
-              rDisabled
-              phiDisabled
-              thetaDisabled
-              isPrime
-              x={particleVelocityPrime[0]}
-              y={particleVelocityPrime[1]}
-              z={particleVelocityPrime[2]}
-            />
+              <VectorFieldsetSpherical
+                color={Color.UPrime}
+                colorDark={ColorDark.UPrime}
+                legend="Boosted particle velocity (u′)"
+                r={particleVelocityPrimeSpherical.r}
+                phi={particleVelocityPrimeSpherical.phi}
+                theta={particleVelocityPrimeSpherical.theta}
+                isVelocity
+                rDisabled
+                phiDisabled
+                thetaDisabled
+                isPrime
+                x={particleVelocityPrime[0]}
+                y={particleVelocityPrime[1]}
+                z={particleVelocityPrime[2]}
+              />
 
-            <VectorFieldset
-              color={Color.SPrime}
-              colorDark={ColorDark.SPrime}
-              legend="Boosted Poynting vector (S′)"
-              x={poyntingPrime[0]}
-              y={poyntingPrime[1]}
-              z={poyntingPrime[2]}
-              xDisabled
-              yDisabled
-              zDisabled
-              isPrime
-            />
+              <VectorFieldset
+                color={Color.SPrime}
+                colorDark={ColorDark.SPrime}
+                legend="Boosted Poynting vector (S′)"
+                x={poyntingPrime[0]}
+                y={poyntingPrime[1]}
+                z={poyntingPrime[2]}
+                xDisabled
+                yDisabled
+                zDisabled
+                isPrime
+              />
 
-            <VectorFieldset
-              color={Color.FPrime}
-              colorDark={ColorDark.FPrime}
-              legend="Boosted Lorentz force (F′)"
-              x={lorentzForcePrime[0]}
-              y={lorentzForcePrime[1]}
-              z={lorentzForcePrime[2]}
-              xDisabled
-              yDisabled
-              zDisabled
-              isPrime
-            />
+              <VectorFieldset
+                color={Color.FPrime}
+                colorDark={ColorDark.FPrime}
+                legend="Boosted Lorentz force (F′)"
+                x={lorentzForcePrime[0]}
+                y={lorentzForcePrime[1]}
+                z={lorentzForcePrime[2]}
+                xDisabled
+                yDisabled
+                zDisabled
+                isPrime
+              />
 
-            <VectorFieldset
-              color={Color.APrime}
-              colorDark={ColorDark.APrime}
-              legend="Boosted particle acceleration (a′)"
-              x={particleAccelerationPrime[0]}
-              y={particleAccelerationPrime[1]}
-              z={particleAccelerationPrime[2]}
-              xDisabled
-              yDisabled
-              zDisabled
-              isPrime
-            />
-          </form>
+              <VectorFieldset
+                color={Color.APrime}
+                colorDark={ColorDark.APrime}
+                legend="Boosted particle acceleration (a′)"
+                x={particleAccelerationPrime[0]}
+                y={particleAccelerationPrime[1]}
+                z={particleAccelerationPrime[2]}
+                xDisabled
+                yDisabled
+                zDisabled
+                isPrime
+              />
+            </form>
+          </div>
         </div>
       </main>
     </>
