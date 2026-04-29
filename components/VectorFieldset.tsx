@@ -126,7 +126,7 @@ const VectorFieldset = memo(
       return (
         <fieldset className={`${textColor[color]} ${textColorDark[colorDark]}`}>
           <legend>{legend}</legend>
-          <div className="flex flex-col gap-3 leading-none">{inputs}</div>
+          <div className="mt-2 flex flex-col gap-3 leading-none">{inputs}</div>
         </fieldset>
       );
     } else {

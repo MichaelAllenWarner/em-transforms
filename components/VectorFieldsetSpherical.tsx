@@ -103,127 +103,127 @@ const VectorFieldsetSpherical = memo(
     return (
       <fieldset className={`${textColor[color]} ${textColorDark[colorDark]}`}>
         <legend>{legend}</legend>
-        {flipper && (
-          <div>
-            <button type="button" onClick={flipper}>
-              Flip
-              {reverseHotkey ? (
-                <>
-                  . Hotkey:{' '}
+        <div className="mt-2 flex flex-col gap-3 leading-none">
+          {flipper && reverseHotkey && (
+            <div>
+              <button
+                type="button"
+                onClick={flipper}
+                aria-label={`Flip. Hot-key: ${reverseHotkey.replace('-', ' minus')}`}
+              >
+                <span aria-hidden="true">
+                  Flip. Hotkey:{' '}
                   {reverseHotkey.split('+').map((s, i, a) => (
                     <Fragment key={i}>
                       <kbd>{s}</kbd>
                       {i === a.length - 1 ? '' : ' + '}
                     </Fragment>
                   ))}
-                </>
-              ) : (
-                <></>
-              )}
-            </button>
-          </div>
-        )}
-        {resetter && (
-          <div>
+                </span>
+              </button>
+            </div>
+          )}
+          {resetter && resetHotkey && (
             <div>
-              <button type="button" onClick={resetter}>
-                Reset
-                {resetHotkey ? (
-                  <>
-                    . Hotkey:{' '}
+              <div>
+                <button
+                  type="button"
+                  onClick={resetter}
+                  aria-label={`Reset. Hot-key: ${resetHotkey}`}
+                >
+                  <span aria-hidden="true">
+                    Reset. Hotkey:{' '}
                     {resetHotkey.split('+').map((s, i, a) => (
                       <Fragment key={i}>
                         <kbd>{s}</kbd>
                         {i === a.length - 1 ? '' : ' + '}
                       </Fragment>
                     ))}
-                  </>
-                ) : (
-                  <></>
-                )}
-              </button>
-            </div>
-          </div>
-        )}
-        <div className="flex flex-col gap-3 leading-none">
-          {['r', 'θ', 'φ'].map((e, i) => {
-            const isR = i === 0;
-            const value = isR
-              ? round(r)
-              : round(trueMod(radToDeg([theta, phi][i - 1]), 360));
-            const disabled = [rDisabled, thetaDisabled, phiDisabled][i];
-            const useSlider = !disabled;
-            const setter = [rSetter, thetaSetter, phiSetter][i];
-            const useOnChange = setter && !disabled;
-            const onChange =
-              useOnChange && [onChangeR, onChangeTheta, onChangePhi][i];
-            const ref = !disabled && [rRef, thetaRef, phiRef][i];
-
-            return (
-              <div key={i}>
-                <label className="flex">
-                  <span className="shrink-0">
-                    {e} {isPrime && '′'} {isR ? '' : ' (°)'}
                   </span>
-                  <span className="flex flex-col gap-2">
-                    {useSlider ? (
-                      <span className="safari-only-range-wrapper">
-                        <input
-                          type="range"
-                          value={value}
-                          {...(isR && isVelocity
-                            ? {
-                                step: String(velocityStep),
-                                min: String(velocityMin),
-                                max: String(velocityMax),
-                              }
-                            : {
-                                step: String(1),
-                                min: '0',
-                                max: i === 1 ? '180' : '359',
-                              })}
-                          {...(onChange ? { onChange } : {})}
-                        />
-                      </span>
-                    ) : null}
-                    <input
-                      value={value}
-                      type="number"
-                      {...(useSlider ? { 'aria-label': e } : {})}
-                      {...(isR && isVelocity && !disabled
-                        ? {
-                            step: String(velocityStep),
-                            min: String(velocityMin),
-                            max: String(velocityMax),
-                          }
-                        : {
-                            ...(!disabled ? { step: String(5) } : {}),
-                            ...(i === 1 ? { min: '0', max: '180' } : {}),
-                          })}
-                      {...(disabled ? { disabled } : {})}
-                      {...(onChange ? { onChange } : {})}
-                      {...(ref ? { ref } : {})}
-                    />
-                  </span>
-                </label>
+                </button>
               </div>
-            );
-          })}
-          {typeof x === 'number' &&
-            typeof y === 'number' &&
-            typeof z === 'number' && (
-              <VectorFieldset
-                x={x}
-                y={y}
-                z={z}
-                xDisabled
-                yDisabled
-                zDisabled
-                isPrime={isPrime}
-                color={color}
-                colorDark={colorDark}
-              />
-            )}
+            </div>
+          )}
+          <div className="flex flex-col gap-3 leading-none">
+            {['r', 'θ', 'φ'].map((e, i) => {
+              const isR = i === 0;
+              const value = isR
+                ? round(r)
+                : round(trueMod(radToDeg([theta, phi][i - 1]), 360));
+              const disabled = [rDisabled, thetaDisabled, phiDisabled][i];
+              const useSlider = !disabled;
+              const setter = [rSetter, thetaSetter, phiSetter][i];
+              const useOnChange = setter && !disabled;
+              const onChange =
+                useOnChange && [onChangeR, onChangeTheta, onChangePhi][i];
+              const ref = !disabled && [rRef, thetaRef, phiRef][i];
+
+              return (
+                <div key={i}>
+                  <label className="flex">
+                    <span className="shrink-0">
+                      {e} {isPrime && '′'} {isR ? '' : ' (°)'}
+                    </span>
+                    <span className="flex flex-col gap-2">
+                      {useSlider ? (
+                        <span className="safari-only-range-wrapper">
+                          <input
+                            type="range"
+                            value={value}
+                            {...(isR && isVelocity
+                              ? {
+                                  step: String(velocityStep),
+                                  min: String(velocityMin),
+                                  max: String(velocityMax),
+                                }
+                              : {
+                                  step: String(1),
+                                  min: '0',
+                                  max: i === 1 ? '180' : '359',
+                                })}
+                            {...(onChange ? { onChange } : {})}
+                          />
+                        </span>
+                      ) : null}
+                      <input
+                        value={value}
+                        type="number"
+                        {...(useSlider ? { 'aria-label': e } : {})}
+                        {...(isR && isVelocity && !disabled
+                          ? {
+                              step: String(velocityStep),
+                              min: String(velocityMin),
+                              max: String(velocityMax),
+                            }
+                          : {
+                              ...(!disabled ? { step: String(5) } : {}),
+                              ...(i === 1 ? { min: '0', max: '180' } : {}),
+                            })}
+                        {...(disabled ? { disabled } : {})}
+                        {...(onChange ? { onChange } : {})}
+                        {...(ref ? { ref } : {})}
+                      />
+                    </span>
+                  </label>
+                </div>
+              );
+            })}
+            {typeof x === 'number' &&
+              typeof y === 'number' &&
+              typeof z === 'number' && (
+                <VectorFieldset
+                  x={x}
+                  y={y}
+                  z={z}
+                  xDisabled
+                  yDisabled
+                  zDisabled
+                  isPrime={isPrime}
+                  color={color}
+                  colorDark={colorDark}
+                />
+              )}
+          </div>
         </div>
       </fieldset>
     );

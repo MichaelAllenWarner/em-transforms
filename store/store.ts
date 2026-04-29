@@ -90,8 +90,8 @@ export interface State {
 
 const useStore = createWithEqualityFn<State>()((set) => {
   return {
-    eField: [1, -1, 1],
-    bField: [-1, 1, -1],
+    eField: [0, 0, -2],
+    bField: [0, 0, 2],
     boostVelocity: [0.5, 0, Math.PI / 2],
     particleVelocity: [0.25, Math.PI, Math.PI / 2],
     particleCharge: 1,

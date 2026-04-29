@@ -68,124 +68,156 @@ const Options = memo(
     return (
       <details className="w-full">
         <summary id="options">Options</summary>
-        <fieldset className="ml-4 text-pretty [&_label:has(:disabled)]:cursor-not-allowed [&_:disabled]:cursor-not-allowed">
+        <fieldset className="ml-4 mt-2">
           <legend className="sr-only">Options</legend>
-          <div>
+          <div className="flex flex-col gap-2 text-pretty [&_label]:flex [&_label]:gap-2 [&_label:has(:disabled)]:cursor-not-allowed [&_:disabled]:cursor-not-allowed">
             <label>
-              <input
-                ref={showURef}
-                type="checkbox"
-                checked={
-                  showParticleVelocity ||
-                  ((showLorentzForce || showParticleAcceleration) &&
-                    !hideFieldVectors)
-                }
-                disabled={
-                  (showLorentzForce || showParticleAcceleration) &&
-                  !hideFieldVectors
-                }
-                onChange={(e) => setShowParticleVelocity(e.target.checked)}
-              />
-              Show particle velocity{' '}
-              <MathJaxInline content={'\\( \\vec u \\).'} srOnlyText="u" />{' '}
-              Hotkey: <kbd>{hotkeys.oneKey.toggleU}</kbd>
+              <span>
+                <input
+                  ref={showURef}
+                  type="checkbox"
+                  checked={
+                    showParticleVelocity ||
+                    ((showLorentzForce || showParticleAcceleration) &&
+                      !hideFieldVectors)
+                  }
+                  disabled={
+                    (showLorentzForce || showParticleAcceleration) &&
+                    !hideFieldVectors
+                  }
+                  onChange={(e) => setShowParticleVelocity(e.target.checked)}
+                  aria-label={`Show particle velocity (u). Hot-key: ${hotkeys.oneKey.toggleU}`}
+                />
+              </span>
+              <span aria-hidden="true">
+                Show particle velocity{' '}
+                <MathJaxInline content={'\\( \\vec u \\).'} srOnlyText="u" />{' '}
+                Hotkey: <kbd>{hotkeys.oneKey.toggleU}</kbd>
+              </span>
             </label>
-          </div>
-          <div>
+
             <label>
-              <input
-                ref={showFRef}
-                type="checkbox"
-                checked={
-                  (showLorentzForce || showParticleAcceleration) &&
-                  !hideFieldVectors
-                }
-                disabled={showParticleAcceleration || hideFieldVectors}
-                onChange={(e) => setShowLorentzForce(e.target.checked)}
-              />
-              Show Lorentz force{' '}
-              <MathJaxInline content={'\\( \\vec F \\)'} srOnlyText="(F)" />{' '}
-              (and{' '}
-              <MathJaxInline content={'\\( \\vec u \\)).'} srOnlyText="u" />{' '}
-              Hotkey: <kbd>{hotkeys.oneKey.toggleF}</kbd>
+              <span>
+                <input
+                  ref={showFRef}
+                  type="checkbox"
+                  checked={
+                    (showLorentzForce || showParticleAcceleration) &&
+                    !hideFieldVectors
+                  }
+                  disabled={showParticleAcceleration || hideFieldVectors}
+                  onChange={(e) => setShowLorentzForce(e.target.checked)}
+                  aria-label={`Show Lorentz force (F) (and particle velocity u). Hot-key: ${hotkeys.oneKey.toggleF}`}
+                />
+              </span>
+              <span aria-hidden="true">
+                Show Lorentz force{' '}
+                <MathJaxInline content={'\\( \\vec F \\)'} srOnlyText="(F)" />{' '}
+                (and{' '}
+                <MathJaxInline content={'\\( \\vec u \\)).'} srOnlyText="u" />{' '}
+                Hotkey: <kbd>{hotkeys.oneKey.toggleF}</kbd>
+              </span>
             </label>
-          </div>
-          <div>
+
             <label>
-              <input
-                ref={showARef}
-                type="checkbox"
-                checked={showParticleAcceleration && !hideFieldVectors}
-                disabled={hideFieldVectors}
-                onChange={(e) => setShowParticleAcceleration(e.target.checked)}
-              />
-              Show particle acceleration{' '}
-              <MathJaxInline content={'\\( \\vec{a} \\)'} srOnlyText="a" /> (and{' '}
-              <MathJaxInline content={'\\( \\vec u \\)'} srOnlyText="u" /> and{' '}
-              <MathJaxInline content={'\\( \\vec F \\)).'} srOnlyText="F" />{' '}
-              Hotkey: <kbd>{hotkeys.oneKey.toggleA}</kbd>
+              <span>
+                <input
+                  ref={showARef}
+                  type="checkbox"
+                  checked={showParticleAcceleration && !hideFieldVectors}
+                  disabled={hideFieldVectors}
+                  onChange={(e) =>
+                    setShowParticleAcceleration(e.target.checked)
+                  }
+                  aria-label={`Show particle acceleration (A) (and particle velocity u and Lorentz force F). Hot-key: ${hotkeys.oneKey.toggleA.toUpperCase()}`}
+                />
+              </span>
+              <span aria-hidden="true">
+                Show particle acceleration{' '}
+                <MathJaxInline content={'\\( \\vec{a} \\)'} srOnlyText="a" />{' '}
+                (and{' '}
+                <MathJaxInline content={'\\( \\vec u \\)'} srOnlyText="u" /> and{' '}
+                <MathJaxInline content={'\\( \\vec F \\)).'} srOnlyText="F" />{' '}
+                Hotkey: <kbd>{hotkeys.oneKey.toggleA}</kbd>
+              </span>
             </label>
-          </div>
-          <div>
+
             <label>
-              <input
-                ref={showSRef}
-                type="checkbox"
-                checked={showPoynting && !hideFieldVectors}
-                disabled={hideFieldVectors}
-                onChange={(e) => setShowPoynting(e.target.checked)}
-              />
-              Show Poynting vector{' '}
-              <MathJaxInline content={'\\( \\vec S \\).'} srOnlyText="S" />{' '}
-              Hotkey: <kbd>{hotkeys.oneKey.toggleS}</kbd>
+              <span>
+                <input
+                  ref={showSRef}
+                  type="checkbox"
+                  checked={showPoynting && !hideFieldVectors}
+                  disabled={hideFieldVectors}
+                  onChange={(e) => setShowPoynting(e.target.checked)}
+                  aria-label={`Show Poynting vector (S). Hot-key: ${hotkeys.oneKey.toggleS}`}
+                />
+              </span>
+              <span aria-hidden="true">
+                Show Poynting vector{' '}
+                <MathJaxInline content={'\\( \\vec S \\).'} srOnlyText="S" />{' '}
+                Hotkey: <kbd>{hotkeys.oneKey.toggleS}</kbd>
+              </span>
             </label>
-          </div>
-          <div>
+
             <label>
-              <input
-                ref={hideEandBRef}
-                type="checkbox"
-                checked={hideFieldVectors}
-                onChange={(e) => setHideFieldVectors(e.target.checked)}
-              />
-              Hide fields{' '}
-              <MathJaxInline content={'\\( \\vec E \\)'} srOnlyText="E" /> and{' '}
-              <MathJaxInline content={'\\( \\vec B \\)'} srOnlyText="B" /> and
-              all derived quantities. Hotkey:{' '}
-              <kbd>{hotkeys.oneKey.toggleEandB}</kbd>
+              <span>
+                <input
+                  ref={hideEandBRef}
+                  type="checkbox"
+                  checked={hideFieldVectors}
+                  onChange={(e) => setHideFieldVectors(e.target.checked)}
+                  aria-label={`Hide fields E and B and all derived quantities. Hot-key: ${hotkeys.oneKey.toggleEandB}`}
+                />
+              </span>
+              <span aria-hidden="true">
+                Hide fields{' '}
+                <MathJaxInline content={'\\( \\vec E \\)'} srOnlyText="E" /> and{' '}
+                <MathJaxInline content={'\\( \\vec B \\)'} srOnlyText="B" /> and
+                all derived quantities. Hotkey:{' '}
+                <kbd>{hotkeys.oneKey.toggleEandB}</kbd>
+              </span>
             </label>
-          </div>
-          <div>
+
             <label>
-              <input
-                ref={showCompsRef}
-                type="checkbox"
-                checked={showComponentVectors && !hideBoostedQuantities}
-                disabled={hideBoostedQuantities}
-                onChange={(e) => setShowComponentVectors(e.target.checked)}
-              />
-              Show components parallel and perpendicular to boost velocity{' '}
-              <MathJaxInline content={'\\( \\vec v \\).'} srOnlyText="v" />{' '}
-              Hotkey: <kbd>{hotkeys.oneKey.toggleComps}</kbd>
+              <span>
+                <input
+                  ref={showCompsRef}
+                  type="checkbox"
+                  checked={showComponentVectors && !hideBoostedQuantities}
+                  disabled={hideBoostedQuantities}
+                  onChange={(e) => setShowComponentVectors(e.target.checked)}
+                  aria-label={`Show components parallel and perpendicular to boost velocity (v). Hot-key: ${hotkeys.oneKey.toggleComps}`}
+                />
+              </span>
+              <span aria-hidden="true">
+                Show components parallel and perpendicular to boost velocity{' '}
+                <MathJaxInline content={'\\( \\vec v \\).'} srOnlyText="v" />{' '}
+                Hotkey: <kbd>{hotkeys.oneKey.toggleComps}</kbd>
+              </span>
             </label>
-          </div>
-          <div>
+
             <label>
-              <input
-                ref={hideVRef}
-                type="checkbox"
-                checked={hideBoostedQuantities}
-                onChange={(e) => setHideBoostedQuantities(e.target.checked)}
-              />
-              Hide boost velocity{' '}
-              <MathJaxInline content={'\\( \\vec v \\),'} srOnlyText="v" />{' '}
-              "primed" quantities, and components. Hotkey:{' '}
-              <kbd>{hotkeys.oneKey.toggleV}</kbd>
+              <span>
+                <input
+                  ref={hideVRef}
+                  type="checkbox"
+                  checked={hideBoostedQuantities}
+                  onChange={(e) => setHideBoostedQuantities(e.target.checked)}
+                  aria-label={`Hide boost velocity v, primed quantities, and components. Hot-key: ${hotkeys.oneKey.toggleV}`}
+                />
+              </span>
+              <span aria-hidden="true">
+                Hide boost velocity{' '}
+                <MathJaxInline content={'\\( \\vec v \\),'} srOnlyText="v" />{' '}
+                "primed" quantities, and components. Hotkey:{' '}
+                <kbd>{hotkeys.oneKey.toggleV}</kbd>
+              </span>
             </label>
           </div>
 
           <div>
-            <div className="mt-2 flex flex-wrap gap-2">
+            <div className="mt-3 flex flex-wrap gap-2">
               <div>
                 <button
                   type="button"
@@ -195,15 +227,19 @@ const Options = memo(
                       announceCameraReset();
                     }
                   }}
+                  aria-label={`Reset camera. Hot-key: ${hotkeys.oneKey.resetCamera}`}
                 >
-                  Reset camera. Hotkey: <kbd>{hotkeys.oneKey.resetCamera}</kbd>
+                  <span aria-hidden="true">
+                    Reset camera. Hotkey:{' '}
+                    <kbd>{hotkeys.oneKey.resetCamera}</kbd>
+                  </span>
                 </button>
               </div>
             </div>
           </div>
 
           <details className="space-y-2">
-            <summary className="mt-2">
+            <summary className="mt-3">
               Some interesting preset field configurations
             </summary>
             <div className="flex flex-wrap gap-2">
@@ -211,12 +247,33 @@ const Options = memo(
                 <button
                   type="button"
                   onClick={() => {
-                    // I₁=0, I₂=0 — null field; E along z, B along -y → E×B = +x (propagates along boost)
+                    setEField([0, 0, -2]);
+                    setBField([0, 0, 2]);
+                  }}
+                >
+                  Antiparallel
+                </button>
+              </div>
+              <div>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setEField([0, 0, 2]);
+                    setBField([0, 0, 2]);
+                  }}
+                >
+                  Equal
+                </button>
+              </div>
+              <div>
+                <button
+                  type="button"
+                  onClick={() => {
                     setEField([0, 0, 2]);
                     setBField([0, -2, 0]);
                   }}
                 >
-                  Light-wave toward{' '}
+                  Light toward{' '}
                   <MathJaxInline content={'\\( x \\)'} srOnlyText="x" />
                 </button>
               </div>
@@ -224,12 +281,11 @@ const Options = memo(
                 <button
                   type="button"
                   onClick={() => {
-                    // I₁=0, I₂=0 — null field; E along -y, B along -x → E×B = -z
                     setEField([0, -2, 0]);
                     setBField([-2, 0, 0]);
                   }}
                 >
-                  Light-wave toward{' '}
+                  Light toward{' '}
                   <MathJaxInline
                     content={'\\( {-z} \\)'}
                     srOnlyText="negative z"
@@ -240,62 +296,41 @@ const Options = memo(
                 <button
                   type="button"
                   onClick={() => {
-                    // I₁>0, I₂=0 — pure E; boost creates B along -y
                     setEField([0, 0, -2]);
                     setBField([0, 0, 0]);
                   }}
                 >
-                  Pure{' '}
-                  <MathJaxInline content={'\\( \\vec E \\)'} srOnlyText="E" />
+                  No magnetic
                 </button>
               </div>
               <div>
                 <button
                   type="button"
                   onClick={() => {
-                    // I₁<0, I₂=0 — pure B; boost creates E along -y
                     setEField([0, 0, 0]);
                     setBField([0, 0, 2]);
                   }}
                 >
-                  Pure{' '}
-                  <MathJaxInline content={'\\( \\vec B \\)'} srOnlyText="B" />
+                  No electric
                 </button>
               </div>
               <div>
                 <button
                   type="button"
                   onClick={() => {
-                    // I₁=0, I₂=1 — E∥B along z, |E|=|B|; both invariants nonzero
-                    setEField([0, 0, 1]);
-                    setBField([0, 0, 1]);
+                    setEField([
+                      Math.random() * 2 * Math.sign(Math.random() - 0.5),
+                      Math.random() * 2 * Math.sign(Math.random() - 0.5),
+                      Math.random() * 2 * Math.sign(Math.random() - 0.5),
+                    ]);
+                    setBField([
+                      Math.random() * 2 * Math.sign(Math.random() - 0.5),
+                      Math.random() * 2 * Math.sign(Math.random() - 0.5),
+                      Math.random() * 2 * Math.sign(Math.random() - 0.5),
+                    ]);
                   }}
                 >
-                  <MathJaxInline
-                    content={'\\( \\vec E \\parallel \\vec B \\)'}
-                    srOnlyText="E parallel to B"
-                  />
-                  ,{' '}
-                  <MathJaxInline
-                    content={'\\( |\\vec E| = |\\vec B| \\)'}
-                    srOnlyText="E magnitude equals B magnitude"
-                  />
-                </button>
-              </div>
-              <div>
-                <button
-                  type="button"
-                  onClick={() => {
-                    // I₁=3, I₂=1 — general mixed; E and B in xz-plane, no y component
-                    setEField([1, 0, 2]);
-                    setBField([-1, 0, 1]);
-                  }}
-                >
-                  <MathJaxInline
-                    content={'\\( \\vec E \\cdot \\vec B \\neq 0 \\)'}
-                    srOnlyText="E dot B not zero"
-                  />{' '}
-                  (general)
+                  Random
                 </button>
               </div>
             </div>

@@ -5,16 +5,12 @@
     @apply leading-loose bg-white text-black dark:bg-slate-950 dark:text-slate-100;
   }
 
-  fieldset {
-    @apply flex flex-col space-y-2;
-  }
-
   legend {
     @apply text-xl;
   }
 
   input {
-    @apply ml-3 border [&[type=checkbox]]:ml-0 [&[type=checkbox]]:mr-3;
+    @apply ml-3 border [&[type=checkbox]]:ml-0;
   }
 
   /* text-colors handled in `Color.ts` */

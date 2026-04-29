@@ -140,13 +140,6 @@ const Page = () => {
 
   return (
     <>
-      <div
-        id="aria-announcer"
-        aria-live="polite"
-        aria-atomic="true"
-        className="sr-only"
-      />
-
       <Head>
         <title>
           Lorentz Transformation of the Electric and Magnetic Fields, Visualized
@@ -521,7 +514,7 @@ const Page = () => {
                 className={`${textColor[Color.U]} ${textColorDark[ColorDark.U]}`}
               >
                 <legend>Particle charge and mass</legend>
-                <div className="flex flex-col gap-3 leading-none">
+                <div className="mt-2 flex flex-col gap-3 leading-none">
                   <div>
                     <label className="flex">
                       <span className="shrink-0">Charge (q)</span>
