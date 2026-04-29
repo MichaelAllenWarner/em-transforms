@@ -273,23 +273,7 @@ const Options = memo(
                     setBField([0, -2, 0]);
                   }}
                 >
-                  Light toward{' '}
-                  <MathJaxInline content={'\\( x \\)'} srOnlyText="x" />
-                </button>
-              </div>
-              <div>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setEField([0, -2, 0]);
-                    setBField([-2, 0, 0]);
-                  }}
-                >
-                  Light toward{' '}
-                  <MathJaxInline
-                    content={'\\( {-z} \\)'}
-                    srOnlyText="negative z"
-                  />
+                  Light
                 </button>
               </div>
               <div>

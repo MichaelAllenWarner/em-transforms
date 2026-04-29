@@ -196,6 +196,27 @@ for (const { fieldsetName, vectorObjectKey } of [
         inputTest(`that decrements with hotkey '${down}'.`, testDown(down, up));
       });
     }
+
+    const flip = hotkeys.fieldFlip[vectorObjectKey];
+
+    fieldsetTest(
+      `"flips" with hotkey '${flip}'.`,
+      async ({ page, fieldset }) => {
+        const xInput = fieldset.getByRole('spinbutton', { name: 'x' });
+        const yInput = fieldset.getByRole('spinbutton', { name: 'y' });
+        const zInput = fieldset.getByRole('spinbutton', { name: 'z' });
+
+        const initialX = Number(await xInput.inputValue());
+        const initialY = Number(await yInput.inputValue());
+        const initialZ = Number(await zInput.inputValue());
+
+        await page.keyboard.press(flip);
+
+        expect(Number(await xInput.inputValue())).toBeCloseTo(-initialX, 5);
+        expect(Number(await yInput.inputValue())).toBeCloseTo(-initialY, 5);
+        expect(Number(await zInput.inputValue())).toBeCloseTo(-initialZ, 5);
+      },
+    );
   });
 }
 

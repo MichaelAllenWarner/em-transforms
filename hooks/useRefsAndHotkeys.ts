@@ -9,6 +9,8 @@ import {
   announceVFlip,
   announceVReset,
   announceCameraReset,
+  announceEFlip,
+  announceBFlip,
 } from '../helpers/announce';
 
 const storeSelector = (state: State) => ({
@@ -16,6 +18,8 @@ const storeSelector = (state: State) => ({
   flipParticleVelocity: state.flipParticleVelocity,
   resetBoostVelocity: state.resetBoostVelocity,
   resetParticleVelocity: state.resetParticleVelocity,
+  flipEField: state.flipEField,
+  flipBField: state.flipBField,
 });
 
 const inputEvent = new Event('input', { bubbles: true });
@@ -49,6 +53,8 @@ export const useRefsAndHotkeys = () => {
     flipParticleVelocity: rawUFlip,
     resetBoostVelocity: rawVReset,
     resetParticleVelocity: rawUReset,
+    flipEField: rawEFlip,
+    flipBField: rawBFlip,
   } = useStore(storeSelector);
 
   const vFlip = useCallback(() => {
@@ -70,6 +76,16 @@ export const useRefsAndHotkeys = () => {
     rawUReset();
     announceUReset();
   }, [rawUReset]);
+
+  const eFlip = useCallback(() => {
+    rawEFlip();
+    announceEFlip();
+  }, [rawEFlip]);
+
+  const bFlip = useCallback(() => {
+    rawBFlip();
+    announceBFlip();
+  }, [rawBFlip]);
   // set up camera ref and camera-reset hotkey
 
   const cameraRef = useRef<OrbitControls>(null);
@@ -236,6 +252,8 @@ export const useRefsAndHotkeys = () => {
   });
   useHotkeys(hotkeys.vectorReset.u, uReset, { enableOnFormTags: true });
   useHotkeys(hotkeys.vectorFlip.u, uFlip, { enableOnFormTags: true });
+  useHotkeys(hotkeys.fieldFlip.e, eFlip, { enableOnFormTags: true });
+  useHotkeys(hotkeys.fieldFlip.b, bFlip, { enableOnFormTags: true });
 
   // set up ref and hotkeys for particle charge
 
@@ -282,5 +300,7 @@ export const useRefsAndHotkeys = () => {
     uFlip,
     vReset,
     uReset,
+    eFlip,
+    bFlip,
   };
 };

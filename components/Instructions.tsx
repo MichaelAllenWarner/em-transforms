@@ -394,15 +394,13 @@ const Instructions = ({ stickyVersion }: { stickyVersion?: boolean }) => {
             <kbd>p</kbd> + <kbd>↑</kbd>.
           </p>
           <p>
-            The velocity-vectors have a couple of additional controls. To
-            reverse the direction of the boost velocity, press <kbd>v</kbd> +{' '}
-            <kbd>-</kbd>. To reverse the direction of the particle velocity,
-            press <kbd>u</kbd> + <kbd>-</kbd>. To reset the direction of the
-            boost velocity (to the <MathJaxInline content={'\\( +x \\)'} />{' '}
-            direction), press <kbd>v</kbd> + <kbd>0</kbd>. To reset the
-            direction of the particle velocity (to the{' '}
-            <MathJaxInline content={'\\( -x \\)'} /> direction), press{' '}
-            <kbd>u</kbd> + <kbd>0</kbd>.
+            The field vectors and velocity vectors can be flipped (have their
+            directions reversed) by holding the vector name and hitting the
+            minus key, like <kbd>v</kbd> + <kbd>-</kbd> to flip the boost
+            velocity, or <kbd>b</kbd> + <kbd>-</kbd> to flip the magnetic field.
+            The boost velocity and particle velocity can be reset to their
+            default values with <kbd>v</kbd> + <kbd>0</kbd> or <kbd>u</kbd> +{' '}
+            <kbd>0</kbd> respectively.
           </p>
           <p>
             The particle's charge can be increased with <kbd>q</kbd> +{' '}

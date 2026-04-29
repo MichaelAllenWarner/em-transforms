@@ -1,4 +1,4 @@
-import { ChangeEvent, memo, RefObject, useCallback } from 'react';
+import { ChangeEvent, Fragment, memo, RefObject, useCallback } from 'react';
 import { Color, ColorDark, textColor, textColorDark } from '../helpers/Color';
 import { round } from '../helpers/round';
 import { CartesianComponents } from '../store/store';
@@ -22,6 +22,8 @@ interface Props {
   xSetter?: (newComponent: CartesianComponents[number]) => void;
   ySetter?: (newComponent: CartesianComponents[number]) => void;
   zSetter?: (newComponent: CartesianComponents[number]) => void;
+  flipper?: () => void;
+  reverseHotkey?: string;
   isPrime?: boolean;
 }
 
@@ -45,6 +47,8 @@ const VectorFieldset = memo(
     step,
     min,
     max,
+    flipper,
+    reverseHotkey,
     isPrime,
   }: Props) => {
     const onChangeX = useCallback(
@@ -126,7 +130,30 @@ const VectorFieldset = memo(
       return (
         <fieldset className={`${textColor[color]} ${textColorDark[colorDark]}`}>
           <legend>{legend}</legend>
-          <div className="mt-2 flex flex-col gap-3 leading-none">{inputs}</div>
+          <div className="mt-2 flex flex-col gap-3 leading-none">
+            {flipper && reverseHotkey && (
+              <div>
+                <button
+                  type="button"
+                  onClick={flipper}
+                  aria-label={`Flip. Hot-key: ${reverseHotkey.replace('-', ' minus')}`}
+                >
+                  <span aria-hidden="true">
+                    Flip. Hotkey:{' '}
+                    {reverseHotkey.split('+').map((s, i, a) => (
+                      <Fragment key={i}>
+                        <kbd>{s}</kbd>
+                        {i === a.length - 1 ? '' : ' + '}
+                      </Fragment>
+                    ))}
+                  </span>
+                </button>
+              </div>
+            )}
+            <div className="mt-2 flex flex-col gap-3 leading-none">
+              {inputs}
+            </div>
+          </div>
         </fieldset>
       );
     } else {

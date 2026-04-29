@@ -59,3 +59,11 @@ export const announceUReset = () => {
 export const announceCameraReset = () => {
   announce('Camera reset');
 };
+
+export const announceEFlip = () => {
+  announce('Electric field flipped');
+};
+
+export const announceBFlip = () => {
+  announce('Magnetic field flipped');
+};

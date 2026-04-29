@@ -82,6 +82,8 @@ const Page = () => {
     vFlip,
     uFlip,
     vReset,
+    eFlip,
+    bFlip,
     uReset,
   } = useRefsAndHotkeys();
 
@@ -469,6 +471,8 @@ const Page = () => {
                 xRef={eXRef}
                 yRef={eYRef}
                 zRef={eZRef}
+                flipper={eFlip}
+                reverseHotkey={hotkeys.fieldFlip.e}
               />
 
               <VectorFieldset
@@ -485,6 +489,8 @@ const Page = () => {
                 xRef={bXRef}
                 yRef={bYRef}
                 zRef={bZRef}
+                flipper={bFlip}
+                reverseHotkey={hotkeys.fieldFlip.b}
               />
 
               <VectorFieldsetSpherical

@@ -137,6 +137,13 @@ const vectorFlipHotkeys: {
   u: 'u+-',
 };
 
+const fieldFlipHotkeys: {
+  [Field in (typeof keys.cartesianBaseKeys)[number]]: `${Field}+${typeof keys.flipKey}`;
+} = {
+  e: 'e+-',
+  b: 'b+-',
+};
+
 const particleHotkeys: {
   [Quantity in (typeof keys.particleBaseKeys)[number]]: {
     [Direction in (typeof keys.upDownKeys)[number]]: `${Quantity}+${Direction}`;
@@ -157,5 +164,6 @@ export const hotkeys = {
   vectorComp: vectorCompHotkeys,
   vectorReset: vectorResetHotkeys,
   vectorFlip: vectorFlipHotkeys,
+  fieldFlip: fieldFlipHotkeys,
   particle: particleHotkeys,
 };

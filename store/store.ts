@@ -37,10 +37,13 @@ export interface State {
   setEFieldY: (newEFieldY: State['eField'][number]) => void;
   setEFieldZ: (newEFieldZ: State['eField'][number]) => void;
 
+  flipEField: () => void;
+
   setBField: (newBField: State['bField']) => void;
   setBFieldX: (newBFieldX: State['bField'][number]) => void;
   setBFieldY: (newBFieldY: State['bField'][number]) => void;
   setBFieldZ: (newBFieldZ: State['bField'][number]) => void;
+  flipBField: () => void;
 
   setBoostVelocity: (newBoostVelocity: State['boostVelocity']) => void;
   setBoostVelocityR: (
@@ -117,6 +120,10 @@ const useStore = createWithEqualityFn<State>()((set) => {
       set((state) => ({
         eField: [state.eField[0], state.eField[1], newEFieldZ],
       })),
+    flipEField: () =>
+      set((state) => ({
+        eField: state.eField.map((c) => -c) as CartesianComponents,
+      })),
 
     setBField: (newBField) => set(() => ({ bField: newBField })),
     setBFieldX: (newBFieldX) =>
@@ -130,6 +137,10 @@ const useStore = createWithEqualityFn<State>()((set) => {
     setBFieldZ: (newBFieldZ) =>
       set((state) => ({
         bField: [state.bField[0], state.bField[1], newBFieldZ],
+      })),
+    flipBField: () =>
+      set((state) => ({
+        bField: state.bField.map((c) => -c) as CartesianComponents,
       })),
 
     setBoostVelocity: (newBoostVelocity) =>
