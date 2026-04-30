@@ -72,6 +72,7 @@ export const useDebounced = <
   const debouncedCallback = useMemo(() => {
     // will always use the latest `callback` when called
     const fn = (...args: Parameters<T>) => ref.current.callback(...args);
+    // eslint-disable-next-line react-hooks/refs
     return debounce(fn, ref.current.wait, ref.current.options);
   }, []);
 

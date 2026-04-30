@@ -1,5 +1,4 @@
-import { shallow } from 'zustand/shallow';
-import { createWithEqualityFn } from 'zustand/traditional';
+import { create } from 'zustand';
 
 export type CartesianComponents = [x: number, y: number, z: number];
 export type SphericalComponents = [r: number, phi: number, theta: number];
@@ -98,7 +97,7 @@ export interface State {
   setShowInvariants: (newShowInvariants: State['showInvariants']) => void;
 }
 
-const useStore = createWithEqualityFn<State>()((set) => {
+const useStore = create<State>()((set) => {
   return {
     eField: [0, 0, -2],
     bField: [0, 0, 2],
@@ -269,6 +268,6 @@ const useStore = createWithEqualityFn<State>()((set) => {
     setShowInvariants: (newShowInvariants) =>
       set(() => ({ showInvariants: newShowInvariants })),
   };
-}, shallow);
+});
 
 export default useStore;

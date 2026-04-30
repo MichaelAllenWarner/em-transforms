@@ -7,6 +7,9 @@ import {
   defaultCameraTarget,
 } from '../components/CameraController';
 
+/** Translate react-hotkeys-hook key names to Playwright key names. */
+const toPlaywrightKey = (hotkey: string) => hotkey.replace(/\bminus\b/g, 'Minus');
+
 type Fieldset = { fieldset: Locator };
 type Input = { input: Locator; initialValue: number };
 type Checkbox = { checkbox: Locator; initialChecked: boolean };
@@ -109,7 +112,7 @@ for (const { fieldsetName, vectorObjectKey } of [
         await page.keyboard.press(thetaUp);
         const thetaBeforeFlip = Number(await thetaInput.inputValue());
 
-        await page.keyboard.press(flip);
+        await page.keyboard.press(toPlaywrightKey(flip));
 
         expect(Number(await rInput.inputValue())).toEqual(initialR);
         expect(Number(await phiInput.inputValue())).toBeCloseTo(
@@ -210,7 +213,7 @@ for (const { fieldsetName, vectorObjectKey } of [
         const initialY = Number(await yInput.inputValue());
         const initialZ = Number(await zInput.inputValue());
 
-        await page.keyboard.press(flip);
+        await page.keyboard.press(toPlaywrightKey(flip));
 
         expect(Number(await xInput.inputValue())).toBeCloseTo(-initialX, 5);
         expect(Number(await yInput.inputValue())).toBeCloseTo(-initialY, 5);
@@ -338,7 +341,9 @@ test(`Camera resets with hotkey '${resetCamera}'.`, async ({ page }) => {
 
   // Press reset — fires 'end' event which writes default camera params to URL
   await page.keyboard.press(resetCamera);
-  await page.waitForTimeout(400); // 250ms debounce + margin
+  await page.waitForURL((url) =>
+    Math.abs(Number(url.searchParams.get('x')) - dx) < 0.5,
+  );
 
   const paramsAfterReset = new URLSearchParams(new URL(page.url()).search);
   expect(Number(paramsAfterReset.get('x'))).toBeCloseTo(dx, 0);

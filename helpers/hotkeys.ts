@@ -36,7 +36,7 @@ const keys = {
   sphericalComponentKeys: ['r', 'p', 't'],
   upDownKeys: ['ArrowUp', 'ArrowDown'],
   resetKey: '0',
-  flipKey: '-',
+  flipKey: 'minus',
 } as const;
 
 /** All keys to be used in hot-keys. */
@@ -137,15 +137,15 @@ const vectorResetHotkeys: {
 const vectorFlipHotkeys: {
   [Vector in (typeof keys.sphericalBaseKeys)[number]]: `${Vector}+${typeof keys.flipKey}`;
 } = {
-  v: 'v+-',
-  u: 'u+-',
+  v: 'v+minus',
+  u: 'u+minus',
 };
 
 const fieldFlipHotkeys: {
   [Field in (typeof keys.cartesianBaseKeys)[number]]: `${Field}+${typeof keys.flipKey}`;
 } = {
-  e: 'e+-',
-  b: 'b+-',
+  e: 'e+minus',
+  b: 'b+minus',
 };
 
 const particleHotkeys: {

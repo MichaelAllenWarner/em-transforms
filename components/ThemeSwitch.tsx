@@ -16,6 +16,7 @@ const ThemeSwitch = () => {
   const { theme, setTheme } = useTheme();
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setIsHydrated(true);
   }, []);
 
@@ -49,7 +50,7 @@ const ThemeSwitch = () => {
         <div
           aria-hidden
           hidden
-          {...{ inert: '' }}
+          inert
           className="block invisible pointer-events-none [&_*]:select-none"
         >
           <label className={labelStyles}>

@@ -4,7 +4,6 @@ import { OrbitControls } from 'three-stdlib';
 import { QueryParameterKey } from '../helpers/QueryParamKey';
 import { isLegacyUrl, replaceUrlParams } from '../helpers/urlParams';
 import debounce from 'lodash/debounce';
-import { type EventDispatcher } from 'three';
 
 /**
  * Sets up the camera/controller, stores the controller-object
@@ -14,7 +13,7 @@ import { type EventDispatcher } from 'three';
 export const defaultCameraPosition = [2.8, -6.3, 1.4] as const;
 export const defaultCameraTarget = [0, 0, 0] as const;
 
-const CameraController = forwardRef<OrbitControls>((_, ref) => {
+const CameraController = forwardRef<OrbitControls | null>((_, ref) => {
   const { camera, gl } = useThree();
 
   // will only fire once, b/c dependency-array entries are all stable references
@@ -22,8 +21,7 @@ const CameraController = forwardRef<OrbitControls>((_, ref) => {
     camera.position.set(...defaultCameraPosition);
     camera.up.set(0, 0, 1);
     // first, create the `OrbitControls` instance...
-    const controls: EventDispatcher<OrbitControls> & OrbitControls =
-      new OrbitControls(camera, gl.domElement);
+    const controls: OrbitControls = new OrbitControls(camera, gl.domElement);
     controls.update();
     document.body.dataset.cameraReady = 'true';
 
@@ -36,6 +34,7 @@ const CameraController = forwardRef<OrbitControls>((_, ref) => {
               controls.reset();
               controls.dispatchEvent({
                 type: 'end',
+                target: controls,
               });
             };
           }

@@ -1,20 +1,21 @@
 import { RefObject, memo } from 'react';
 import { OrbitControls } from 'three-stdlib';
 import useStore, { State } from '../store/store';
+import { useShallow } from 'zustand/react/shallow';
 import MathJaxInline from './MathJaxInline';
 import { hotkeys } from '../helpers/hotkeys';
 import { announceCameraReset } from '../helpers/announce';
 
 interface Props {
-  cameraRef: RefObject<OrbitControls>;
-  showCompsRef: RefObject<HTMLInputElement>;
-  showSRef: RefObject<HTMLInputElement>;
-  showURef: RefObject<HTMLInputElement>;
-  showFRef: RefObject<HTMLInputElement>;
-  showARef: RefObject<HTMLInputElement>;
-  hideVRef: RefObject<HTMLInputElement>;
-  hideEandBRef: RefObject<HTMLInputElement>;
-  showInvariantsRef: RefObject<HTMLInputElement>;
+  cameraRef: RefObject<OrbitControls | null>;
+  showCompsRef: RefObject<HTMLInputElement | null>;
+  showSRef: RefObject<HTMLInputElement | null>;
+  showURef: RefObject<HTMLInputElement | null>;
+  showFRef: RefObject<HTMLInputElement | null>;
+  showARef: RefObject<HTMLInputElement | null>;
+  hideVRef: RefObject<HTMLInputElement | null>;
+  hideEandBRef: RefObject<HTMLInputElement | null>;
+  showInvariantsRef: RefObject<HTMLInputElement | null>;
   rotateX: () => void;
   rotateY: () => void;
   rotateZ: () => void;
@@ -75,7 +76,7 @@ const Options = memo(
       setShowInvariants,
       setEField,
       setBField,
-    } = useStore(storeSelector);
+    } = useStore(useShallow(storeSelector));
 
     return (
       <div className="w-full flex flex-col gap-4">

@@ -1,9 +1,8 @@
 import * as THREE from 'three';
 import { type CartesianComponents } from '../store/store';
 import { font } from '../helpers/font';
-import { Material } from 'three';
 import { memo, useEffect, useRef, useState } from 'react';
-import { useFrame, useThree } from '@react-three/fiber';
+import { useFrame } from '@react-three/fiber';
 import { TextGeometry } from 'three-stdlib';
 import { Color, ColorDark } from '../helpers/Color';
 import { useTheme } from 'next-themes';
@@ -56,23 +55,23 @@ const Vector = memo(
     */
 
     // define refs for main vector
-    const vector = useRef<THREE.Vector3>();
-    const dir = useRef<THREE.Vector3>();
-    const arrow = useRef<ArrowHelperWithNonArrayMaterials>();
+    const vector = useRef<THREE.Vector3>(undefined);
+    const dir = useRef<THREE.Vector3>(undefined);
+    const arrow = useRef<ArrowHelperWithNonArrayMaterials>(undefined);
     const labelMesh =
-      useRef<THREE.Mesh<TextGeometry, THREE.MeshBasicMaterial>>();
+      useRef<THREE.Mesh<TextGeometry, THREE.MeshBasicMaterial>>(undefined);
 
     // define refs for component-vector parallel to boost
-    const vectorClonePar = useRef<THREE.Vector3>();
-    const parCompProjectee = useRef<THREE.Vector3>();
-    const parCompVec = useRef<THREE.Vector3>();
-    const parCompDir = useRef<THREE.Vector3>();
-    const parCompArrow = useRef<ArrowHelperWithNonArrayMaterials>();
+    const vectorClonePar = useRef<THREE.Vector3>(undefined);
+    const parCompProjectee = useRef<THREE.Vector3>(undefined);
+    const parCompVec = useRef<THREE.Vector3>(undefined);
+    const parCompDir = useRef<THREE.Vector3>(undefined);
+    const parCompArrow = useRef<ArrowHelperWithNonArrayMaterials>(undefined);
 
     // define refs for component-vector perpendicular to boost
-    const perpCompVec = useRef<THREE.Vector3>();
-    const perpCompDir = useRef<THREE.Vector3>();
-    const perpCompArrow = useRef<ArrowHelperWithNonArrayMaterials>();
+    const perpCompVec = useRef<THREE.Vector3>(undefined);
+    const perpCompDir = useRef<THREE.Vector3>(undefined);
+    const perpCompArrow = useRef<ArrowHelperWithNonArrayMaterials>(undefined);
 
     useEffect(() => {
       // main vector

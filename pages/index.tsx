@@ -1,5 +1,6 @@
 import { Canvas } from '@react-three/fiber';
 import useStore, { State } from '../store/store';
+import { useShallow } from 'zustand/react/shallow';
 import Vector from '../components/Vector';
 import Axes from '../components/Axes';
 import Head from 'next/head';
@@ -120,7 +121,7 @@ const Page = () => {
     hideBoostedQuantities,
     hideFieldVectors,
     showInvariants,
-  } = useStore(storeSelector);
+  } = useStore(useShallow(storeSelector));
 
   const {
     boostVelocityCartesian,
@@ -423,7 +424,7 @@ const Page = () => {
             {showInvariants && !hideFieldVectors && (
               <div
                 aria-hidden="true"
-                {...{ inert: '' }}
+                inert
                 className="absolute top-2 right-2 mr-6 xl:mr-0 text-sm font-mono bg-black/50 text-white px-2 py-1 rounded pointer-events-none"
               >
                 <div className="flex flex-col gap-2">
@@ -556,7 +557,7 @@ const Page = () => {
                     <label className="flex">
                       <span className="shrink-0">Charge (q)</span>
                       <span className="flex flex-col gap-2">
-                        <span className="safari-only-range-wrapper">
+                        <span>
                           <input
                             type="range"
                             value={particleCharge}
@@ -589,7 +590,7 @@ const Page = () => {
                     <label className="flex">
                       <span className="shrink-0">Mass (m)</span>
                       <span className="flex flex-col gap-2">
-                        <span className="safari-only-range-wrapper">
+                        <span>
                           <input
                             type="range"
                             value={particleMass}

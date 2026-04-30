@@ -22,9 +22,9 @@ interface Props {
   rDisabled?: boolean;
   phiDisabled?: boolean;
   thetaDisabled?: boolean;
-  rRef?: RefObject<HTMLInputElement>;
-  phiRef?: RefObject<HTMLInputElement>;
-  thetaRef?: RefObject<HTMLInputElement>;
+  rRef?: RefObject<HTMLInputElement | null>;
+  phiRef?: RefObject<HTMLInputElement | null>;
+  thetaRef?: RefObject<HTMLInputElement | null>;
   rSetter?: (newComponent: SphericalComponents[number]) => void;
   phiSetter?: (newComponent: SphericalComponents[number]) => void;
   thetaSetter?: (newComponent: SphericalComponents[number]) => void;
@@ -111,16 +111,19 @@ const VectorFieldsetSpherical = memo(
                   <button
                     type="button"
                     onClick={flipper}
-                    aria-label={`Flip. Hot-key: ${reverseHotkey.replace('-', ' minus')}`}
+                    aria-label={`Flip. Hot-key: ${reverseHotkey}`}
                   >
                     <span aria-hidden="true">
                       Flip. Hotkey:{' '}
-                      {reverseHotkey.split('+').map((s, i, a) => (
-                        <Fragment key={i}>
-                          <kbd>{s}</kbd>
-                          {i === a.length - 1 ? '' : ' + '}
-                        </Fragment>
-                      ))}
+                      {reverseHotkey
+                        .replace('minus', '-')
+                        .split('+')
+                        .map((s, i, a) => (
+                          <Fragment key={i}>
+                            <kbd>{s}</kbd>
+                            {i === a.length - 1 ? '' : ' + '}
+                          </Fragment>
+                        ))}
                     </span>
                   </button>
                 </div>
@@ -171,7 +174,7 @@ const VectorFieldsetSpherical = memo(
                     </span>
                     <span className="flex flex-col gap-2">
                       {useSlider ? (
-                        <span className="safari-only-range-wrapper">
+                        <span>
                           <input
                             type="range"
                             value={value}

@@ -1,5 +1,5 @@
 import { font } from '../helpers/font';
-import { extend, useFrame, type ReactThreeFiber } from '@react-three/fiber';
+import { extend, useFrame, type ThreeElement } from '@react-three/fiber';
 import React, { useEffect, useRef } from 'react';
 import * as THREE from 'three';
 import { TextGeometry } from 'three-stdlib';
@@ -11,14 +11,9 @@ import {
 
 // see https://github.com/pmndrs/react-three-fiber/discussions/1742#discussioncomment-2567726
 extend({ TextGeometry });
-declare global {
-  namespace JSX {
-    interface IntrinsicElements {
-      textGeometry: ReactThreeFiber.Object3DNode<
-        TextGeometry,
-        typeof TextGeometry
-      >;
-    }
+declare module '@react-three/fiber' {
+  interface ThreeElements {
+    textGeometry: ThreeElement<typeof TextGeometry>;
   }
 }
 

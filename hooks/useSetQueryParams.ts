@@ -1,4 +1,5 @@
 import useStore, { State } from '../store/store';
+import { useShallow } from 'zustand/react/shallow';
 import { useDebounced } from './useDebounced';
 import { QueryParameterKey } from '../helpers/QueryParamKey';
 import { replaceUrlParams } from '../helpers/urlParams';
@@ -44,7 +45,7 @@ export const useSetQueryParams = () => {
     hideBoostedQuantities,
     hideFieldVectors,
     showInvariants,
-  } = useStore(storeSelector);
+  } = useStore(useShallow(storeSelector));
 
   const setQueryParams = () => {
     const params = new URLSearchParams(window.location.search);
@@ -80,11 +81,10 @@ export const useSetQueryParams = () => {
       isFirstRender.current = false;
     } else {
       /*
-        Note: in development, w/ StrictMode enabled, the query params will populate on load
-        even if the URL was "clean" (no query params). Just b/c this hook will run twice
-        on mount, and the function-call below will execute the second time. In production,
-        with a "clean" URL, query params should only populate in response to user actions.
-        (Can test this in dev by temporarily disabling StrictMode.)
+        Note: in development, w/ StrictMode enabled, the query params may populate on load
+        even if the URL was "clean" (no query params). If so, it's probably just because of
+        StrictMode running this hook twice on mount instead of just once. If needed, can
+        test by temporarily disabling StrictMode.
       */
       debouncedSetQueryParams();
     }

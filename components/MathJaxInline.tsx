@@ -29,7 +29,7 @@ const MathJaxInline = ({ content, srOnlyText, ...rest }: Props) => {
         {...rest}
         inline
         className={srOnlyText ? 'pointer-events-none' : ''}
-        {...(srOnlyText ? { inert: '' } : {})}
+        inert={!!srOnlyText}
       >
         {expression}
       </MathJax>

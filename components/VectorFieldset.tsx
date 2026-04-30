@@ -13,9 +13,9 @@ interface Props {
   xDisabled?: boolean;
   yDisabled?: boolean;
   zDisabled?: boolean;
-  xRef?: RefObject<HTMLInputElement>;
-  yRef?: RefObject<HTMLInputElement>;
-  zRef?: RefObject<HTMLInputElement>;
+  xRef?: RefObject<HTMLInputElement | null>;
+  yRef?: RefObject<HTMLInputElement | null>;
+  zRef?: RefObject<HTMLInputElement | null>;
   step?: string;
   min?: string;
   max?: string;
@@ -99,7 +99,7 @@ const VectorFieldset = memo(
             </span>
             <span className="flex flex-col gap-2">
               {useSlider ? (
-                <span className="safari-only-range-wrapper">
+                <span>
                   <input
                     type="range"
                     value={value}
@@ -137,16 +137,19 @@ const VectorFieldset = memo(
                 <button
                   type="button"
                   onClick={flipper}
-                  aria-label={`Flip. Hot-key: ${reverseHotkey.replace('-', ' minus')}`}
+                  aria-label={`Flip. Hot-key: ${reverseHotkey}`}
                 >
                   <span aria-hidden="true">
                     Flip. Hotkey:{' '}
-                    {reverseHotkey.split('+').map((s, i, a) => (
-                      <Fragment key={i}>
-                        <kbd>{s}</kbd>
-                        {i === a.length - 1 ? '' : ' + '}
-                      </Fragment>
-                    ))}
+                    {reverseHotkey
+                      .replace('minus', '-')
+                      .split('+')
+                      .map((s, i, a) => (
+                        <Fragment key={i}>
+                          <kbd>{s}</kbd>
+                          {i === a.length - 1 ? '' : ' + '}
+                        </Fragment>
+                      ))}
                   </span>
                 </button>
               </div>

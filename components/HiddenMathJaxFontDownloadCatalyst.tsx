@@ -18,11 +18,7 @@ import { MathJax } from 'better-react-mathjax';
  * should do the trick.
  */
 const HiddenMathJaxFontDownloadCatalyst = () => (
-  <div
-    {...{ inert: '' }}
-    aria-hidden
-    className="sr-only invisible [&_*]:!invisible"
-  >
+  <div inert aria-hidden className="sr-only invisible [&_*]:!invisible">
     <MathJax>{'\\( = \\left (  \\, \\vec u  \\right ) \\)'}</MathJax>
   </div>
 );

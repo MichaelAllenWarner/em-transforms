@@ -492,8 +492,8 @@ const Instructions = ({ stickyVersion }: { stickyVersion?: boolean }) => {
             vector in the direction of the boost velocity{' '}
             <MathJaxInline content={'\\( \\vec v \\),'} /> and the
             aforementioned boost rapidity is{' '}
-            <MathJaxInline content={'\\( \\eta = \\tanh ^{-1} v \\)'} /> (that's
-            the inverse hyperbolic tangent, and{' '}
+            <MathJaxInline content={'\\( \\zeta = \\tanh ^{-1} v \\)'} />{' '}
+            (that's the inverse hyperbolic tangent, and{' '}
             <MathJaxInline content={'\\(  v \\)'} /> is the magnitude of{' '}
             <MathJaxInline content={'\\( \\vec v \\)).'} />
           </p>
@@ -501,21 +501,21 @@ const Instructions = ({ stickyVersion }: { stickyVersion?: boolean }) => {
             <li>
               <MathJaxInline
                 content={
-                  '\\( \\vec E ^ \\prime = \\cosh \\eta \\, \\vec E + \\sinh \\eta \\, ( \\hat v \\times \\vec B ) - 2 \\sinh ^2 \\frac{\\eta}{2} \\, ( \\hat v \\cdot \\vec E ) \\hat v \\)'
+                  '\\( \\vec E ^ \\prime = \\cosh \\zeta \\, \\vec E + \\sinh \\zeta \\, ( \\hat v \\times \\vec B ) - 2 \\sinh ^2 \\frac{\\zeta}{2} \\, ( \\hat v \\cdot \\vec E ) \\hat v \\)'
                 }
               />
             </li>
             <li>
               <MathJaxInline
                 content={
-                  '\\( \\vec B ^ \\prime = \\cosh \\eta \\, \\vec B - \\sinh \\eta \\, ( \\hat v \\times \\vec E ) - 2 \\sinh ^2 \\frac{\\eta}{2} \\, ( \\hat v \\cdot \\vec B ) \\hat v \\)'
+                  '\\( \\vec B ^ \\prime = \\cosh \\zeta \\, \\vec B - \\sinh \\zeta \\, ( \\hat v \\times \\vec E ) - 2 \\sinh ^2 \\frac{\\zeta}{2} \\, ( \\hat v \\cdot \\vec B ) \\hat v \\)'
                 }
               />
             </li>
             <li>
               <MathJaxInline
                 content={
-                  '\\( \\vec u ^ \\prime = \\dfrac{ \\vec u + \\left ( 2 \\sinh ^2 \\frac{ \\eta }{ 2 } \\, ( \\hat v \\cdot \\vec u ) - \\sinh \\eta \\right ) \\hat v }{ \\cosh \\eta - \\sinh \\eta \\, ( \\hat v \\cdot \\vec u ) } \\)'
+                  '\\( \\vec u ^ \\prime = \\dfrac{ \\vec u + \\left ( 2 \\sinh ^2 \\frac{ \\zeta }{ 2 } \\, ( \\hat v \\cdot \\vec u ) - \\sinh \\zeta \\right ) \\hat v }{ \\cosh \\zeta - \\sinh \\zeta \\, ( \\hat v \\cdot \\vec u ) } \\)'
                 }
               />
             </li>
@@ -523,16 +523,17 @@ const Instructions = ({ stickyVersion }: { stickyVersion?: boolean }) => {
           <p>(I didn't say they were pretty!)</p>
           <p>
             It follows from the definition of{' '}
-            <MathJaxInline content={'\\( \\eta \\)'} /> that{' '}
-            <MathJaxInline content={'\\( \\cosh \\eta = \\gamma \\)'} /> and
-            that <MathJaxInline content={'\\( \\sinh \\eta = \\gamma v \\).'} />{' '}
-            To write the formulas in their more familiar "non-rapidity" form,
-            make those substitutions, use{' '}
+            <MathJaxInline content={'\\( \\zeta \\)'} /> that{' '}
+            <MathJaxInline content={'\\( \\cosh \\zeta = \\gamma \\)'} /> and
+            that{' '}
+            <MathJaxInline content={'\\( \\sinh \\zeta = \\gamma v \\).'} /> To
+            write the formulas in their more familiar "non-rapidity" form, make
+            those substitutions, use{' '}
             <MathJaxInline content={'\\( \\vec v = v \\hat v \\)'} /> and the
             identity{' '}
             <MathJaxInline
               content={
-                '\\( 2 \\sinh ^2 \\frac{ \\eta }{ 2 } = \\cosh \\eta - 1 \\),'
+                '\\( 2 \\sinh ^2 \\frac{ \\zeta }{ 2 } = \\cosh \\zeta - 1 \\),'
               }
             />{' '}
             and simplify.

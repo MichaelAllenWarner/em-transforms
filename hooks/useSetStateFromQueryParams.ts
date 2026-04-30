@@ -1,4 +1,5 @@
 import useStore, { State } from '../store/store';
+import { useShallow } from 'zustand/react/shallow';
 import { useEffect, useRef } from 'react';
 import { QueryParameterKey } from '../helpers/QueryParamKey';
 import { isLegacyUrl } from '../helpers/urlParams';
@@ -87,7 +88,7 @@ export const useSetStateFromQueryParams = () => {
     setHideBoostedQuantities,
     setHideFieldVectors,
     setShowInvariants,
-  } = useStore(storeSelector);
+  } = useStore(useShallow(storeSelector));
 
   useEffect(() => {
     if (!isFirstRender.current) return;
