@@ -17,8 +17,6 @@ import { useSetQueryParams } from '../hooks/useSetQueryParams';
 import { hotkeys } from '../helpers/hotkeys';
 import { round } from '../helpers/round';
 
-const axes = <Axes />;
-
 const storeSelector = (state: State) => ({
   eField: state.eField,
   bField: state.bField,
@@ -196,7 +194,7 @@ const Page = () => {
 
               <ambientLight />
 
-              {axes}
+              <Axes />
 
               <Vector
                 x={eField[0]}

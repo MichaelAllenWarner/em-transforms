@@ -290,6 +290,7 @@ optionsFieldsetTest.describe(`Fieldset '${optionsFieldsetName}'`, () => {
     { checkboxLabel: 'hide fields', objectKey: 'toggleEandB' },
     { checkboxLabel: 'show components', objectKey: 'toggleComps' },
     { checkboxLabel: 'hide boost velocity', objectKey: 'toggleV' },
+    { checkboxLabel: 'show field-invariants overlay', objectKey: 'toggleInvariants' },
   ] as const) {
     const checkboxTest = optionsFieldsetTest.extend<Checkbox>({
       checkbox: ({ fieldset }, use) => use(fieldset.getByLabel(checkboxLabel)),

@@ -405,9 +405,9 @@ const Instructions = ({ stickyVersion }: { stickyVersion?: boolean }) => {
           <p>
             The field vectors and velocity vectors can also be flipped (have
             their directions reversed) by holding the vector-name key and
-            hitting the minus key, like <kbd>v</kbd> + <kbd>-</kbd> to flip the
-            boost velocity, or <kbd>b</kbd> + <kbd>-</kbd> to flip the magnetic
-            field.
+            hitting the minus key, like <kbd>v</kbd> + <kbd>&minus;</kbd> to
+            flip the boost velocity, or <kbd>b</kbd> + <kbd>&minus;</kbd> to
+            flip the magnetic field.
           </p>
           <p>
             The boost velocity can be reset to its default value (in the
@@ -441,7 +441,11 @@ const Instructions = ({ stickyVersion }: { stickyVersion?: boolean }) => {
               <kbd>f</kbd> toggles the Lorentz force;
             </li>
             <li>
-              <kbd>a</kbd> toggles the particle acceleration;
+              <kbd>
+                <span className="sr-only">A</span>
+                <span aria-hidden="true">a</span>
+              </kbd>{' '}
+              toggles the particle acceleration;
             </li>
             <li>
               <kbd>s</kbd> toggles the Poynting vector;
