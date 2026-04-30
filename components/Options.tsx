@@ -14,6 +14,7 @@ interface Props {
   showARef: RefObject<HTMLInputElement>;
   hideVRef: RefObject<HTMLInputElement>;
   hideEandBRef: RefObject<HTMLInputElement>;
+  showInvariantsRef: RefObject<HTMLInputElement>;
 }
 
 const storeSelector = (state: State) => ({
@@ -31,6 +32,8 @@ const storeSelector = (state: State) => ({
   setHideBoostedQuantities: state.setHideBoostedQuantities,
   hideFieldVectors: state.hideFieldVectors,
   setHideFieldVectors: state.setHideFieldVectors,
+  showInvariants: state.showInvariants,
+  setShowInvariants: state.setShowInvariants,
   setEField: state.setEField,
   setBField: state.setBField,
   rotateFieldsX: state.rotateFieldsX,
@@ -48,6 +51,7 @@ const Options = memo(
     showARef,
     hideVRef,
     hideEandBRef,
+    showInvariantsRef,
   }: Props) => {
     const {
       showComponentVectors,
@@ -64,6 +68,8 @@ const Options = memo(
       setHideBoostedQuantities,
       hideFieldVectors,
       setHideFieldVectors,
+      showInvariants,
+      setShowInvariants,
       setEField,
       setBField,
       rotateFieldsX,
@@ -192,6 +198,25 @@ const Options = memo(
                       srOnlyText="S"
                     />{' '}
                     Hotkey: <kbd>{hotkeys.oneKey.toggleS}</kbd>
+                  </span>
+                </label>
+              </div>
+
+              <div>
+                <label>
+                  <span>
+                    <input
+                      ref={showInvariantsRef}
+                      type="checkbox"
+                      checked={showInvariants && !hideFieldVectors}
+                      disabled={hideFieldVectors}
+                      onChange={(e) => setShowInvariants(e.target.checked)}
+                      aria-label={`Show field-invariants overlay. Hot-key: ${hotkeys.oneKey.toggleInvariants}`}
+                    />
+                  </span>
+                  <span aria-hidden="true">
+                    Show field-invariants overlay. Hotkey:{' '}
+                    <kbd>{hotkeys.oneKey.toggleInvariants}</kbd>
                   </span>
                 </label>
               </div>

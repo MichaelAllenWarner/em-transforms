@@ -18,6 +18,7 @@ const storeSelector = (state: State) => ({
   showParticleAcceleration: state.showParticleAcceleration,
   hideBoostedQuantities: state.hideBoostedQuantities,
   hideFieldVectors: state.hideFieldVectors,
+  showInvariants: state.showInvariants,
 });
 
 /**
@@ -42,6 +43,7 @@ export const useSetQueryParams = () => {
     showParticleAcceleration,
     hideBoostedQuantities,
     hideFieldVectors,
+    showInvariants,
   } = useStore(storeSelector);
 
   const setQueryParams = () => {
@@ -67,6 +69,7 @@ export const useSetQueryParams = () => {
     params.set(QueryParameterKey.showA, showParticleAcceleration.toString());
     params.set(QueryParameterKey.hideV, hideBoostedQuantities.toString());
     params.set(QueryParameterKey.hideEandB, hideFieldVectors.toString());
+    params.set(QueryParameterKey.showInvariants, showInvariants.toString());
     replaceUrlParams(params);
   };
 

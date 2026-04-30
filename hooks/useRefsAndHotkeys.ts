@@ -156,6 +156,12 @@ export const useRefsAndHotkeys = () => {
     enableOnFormTags: true,
   });
 
+  const showInvariantsRef = useRef<HTMLInputElement>(null);
+  const toggleInvariants = useMemo(() => click(showInvariantsRef), []);
+  useHotkeys(hotkeys.oneKey.toggleInvariants, toggleInvariants, {
+    enableOnFormTags: true,
+  });
+
   // set up E refs and hotkeys
 
   const eXRef = useRef<HTMLInputElement>(null);
@@ -277,9 +283,9 @@ export const useRefsAndHotkeys = () => {
   useHotkeys(hotkeys.vectorFlip.u, uFlip, { enableOnFormTags: true });
   useHotkeys(hotkeys.fieldFlip.e, eFlip, { enableOnFormTags: true });
   useHotkeys(hotkeys.fieldFlip.b, bFlip, { enableOnFormTags: true });
-  useHotkeys(hotkeys.oneKey.rotateFieldsX, rotateX, { enableOnFormTags: true });
-  useHotkeys(hotkeys.oneKey.rotateFieldsY, rotateY, { enableOnFormTags: true });
-  useHotkeys(hotkeys.oneKey.rotateFieldsZ, rotateZ, { enableOnFormTags: true });
+  useHotkeys(hotkeys.oneKey.rotateFieldsX, rotateX);
+  useHotkeys(hotkeys.oneKey.rotateFieldsY, rotateY);
+  useHotkeys(hotkeys.oneKey.rotateFieldsZ, rotateZ);
 
   // set up ref and hotkeys for particle charge
 
@@ -308,6 +314,7 @@ export const useRefsAndHotkeys = () => {
     showARef,
     hideVRef,
     hideEandBRef,
+    showInvariantsRef,
     eXRef,
     eYRef,
     eZRef,

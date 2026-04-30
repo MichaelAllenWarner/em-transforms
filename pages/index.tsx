@@ -15,6 +15,7 @@ import CameraController from '../components/CameraController';
 import { useSetStateFromQueryParams } from '../hooks/useSetStateFromQueryParams';
 import { useSetQueryParams } from '../hooks/useSetQueryParams';
 import { hotkeys } from '../helpers/hotkeys';
+import { round } from '../helpers/round';
 
 const axes = <Axes />;
 
@@ -50,6 +51,7 @@ const storeSelector = (state: State) => ({
   showParticleAcceleration: state.showParticleAcceleration,
   hideBoostedQuantities: state.hideBoostedQuantities,
   hideFieldVectors: state.hideFieldVectors,
+  showInvariants: state.showInvariants,
 });
 
 const Page = () => {
@@ -65,6 +67,7 @@ const Page = () => {
     showARef,
     hideVRef,
     hideEandBRef,
+    showInvariantsRef,
     eXRef,
     eYRef,
     eZRef,
@@ -115,6 +118,7 @@ const Page = () => {
     showParticleAcceleration,
     hideBoostedQuantities,
     hideFieldVectors,
+    showInvariants,
   } = useStore(storeSelector);
 
   const {
@@ -131,6 +135,10 @@ const Page = () => {
     poynting,
     poyntingPrime,
     particleVelocityPrimeSpherical,
+    eDotB,
+    eSqMinusBSq,
+    eDotBPrime,
+    eSqMinusBSqPrime,
   } = getCalculatedQuantities({
     boostVelocity,
     eField,
@@ -179,7 +187,7 @@ const Page = () => {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
-          <div className="h-[calc(600rem/16)] lg:600-h:sticky xl:h-[calc(800rem/16)] xl:!static xl:800-h:!sticky top-0">
+          <div className="relative h-[calc(600rem/16)] lg:600-h:sticky xl:h-[calc(800rem/16)] xl:!static xl:800-h:!sticky top-0">
             <Canvas className="px-6 xl:px-0 [&>*]:border">
               <CameraController ref={cameraRef} />
 
@@ -411,6 +419,24 @@ const Page = () => {
                 }
               />
             </Canvas>
+            {showInvariants && !hideFieldVectors && (
+              <div
+                aria-hidden="true"
+                {...{ inert: '' }}
+                className="absolute top-2 right-2 mr-6 xl:mr-0 text-sm font-mono bg-black/50 text-white px-2 py-1 rounded pointer-events-none"
+              >
+                <div className="flex flex-col gap-2">
+                  <div>
+                    <div>&nbsp;&nbsp;&nbsp;&nbsp;E · B = {round(eDotB)}</div>
+                    <div>&nbsp;&nbsp;E′ · B′ = {round(eDotBPrime)}</div>
+                  </div>
+                  <div>
+                    <div>&nbsp;&nbsp;E² − B² = {round(eSqMinusBSq)}</div>
+                    <div>E′² − B′² = {round(eSqMinusBSqPrime)}</div>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
 
           <div className="flex flex-col gap-4">
@@ -432,6 +458,7 @@ const Page = () => {
                 showARef={showARef}
                 hideVRef={hideVRef}
                 hideEandBRef={hideEandBRef}
+                showInvariantsRef={showInvariantsRef}
               />
 
               <VectorFieldsetSpherical
@@ -709,6 +736,47 @@ const Page = () => {
                 zDisabled
                 isPrime
               />
+
+              <fieldset>
+                <legend>Field invariants</legend>
+                <div className="mt-2 flex flex-col gap-3 leading-none">
+                  {[
+                    { label: 'E · B', ariaLabel: 'E dot B', value: eDotB },
+                    {
+                      label: 'E′ · B′',
+                      ariaLabel: 'E prime dot B prime',
+                      value: eDotBPrime,
+                    },
+                    {
+                      label: 'E² − B²',
+                      ariaLabel: 'E squared minus B squared',
+                      value: eSqMinusBSq,
+                    },
+                    {
+                      label: 'E′² − B′²',
+                      ariaLabel: 'E prime squared minus B prime squared',
+                      value: eSqMinusBSqPrime,
+                    },
+                  ].map(({ label, ariaLabel, value }) => (
+                    <div key={label}>
+                      <label className="flex">
+                        <span
+                          aria-hidden="true"
+                          className="shrink-0 leading-normal"
+                        >
+                          {label}
+                        </span>
+                        <input
+                          aria-label={ariaLabel}
+                          type="number"
+                          value={round(value)}
+                          disabled
+                        />
+                      </label>
+                    </div>
+                  ))}
+                </div>
+              </fieldset>
             </form>
           </div>
         </div>

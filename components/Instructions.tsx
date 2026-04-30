@@ -196,11 +196,16 @@ const Instructions = ({ stickyVersion }: { stickyVersion?: boolean }) => {
             the "primed" vectors.
           </p>
           <p>
-            Another available option lets you see the Poynting vector in both
-            frames. The Poynting vector represents the flow of energy within the
-            electric and magnetic fields. It's given by the cross product{' '}
+            Some of the other options are displaying the "field invariants"{' '}
+            <MathJaxInline content={'\\( \\vec E \\cdot \\vec B \\)'} /> and{' '}
+            <MathJaxInline content={'\\( E^2 - B^2 \\)'} /> in an overlay
+            (invariants are quantities whose values don't change under a boost,
+            like the aforementioned charge and mass), and showing the Poynting
+            vector in both frames (the Poynting vector represents the flow of
+            energy within the electric and magnetic fields, and is given by the
+            cross product{' '}
             <MathJaxInline
-              content={'\\( \\vec S = \\vec E \\times \\vec B \\).'}
+              content={'\\( \\vec S = \\vec E \\times \\vec B \\)).'}
             />
           </p>
         </div>
@@ -430,13 +435,6 @@ const Instructions = ({ stickyVersion }: { stickyVersion?: boolean }) => {
           </p>
           <ul>
             <li>
-              <kbd>c</kbd> toggles the component-vectors parallel and
-              perpendicular to the boost-velocity;
-            </li>
-            <li>
-              <kbd>s</kbd> toggles the Poynting vector;
-            </li>
-            <li>
               <kbd>w</kbd> (not <kbd>u</kbd>!) toggles the particle velocity;
             </li>
             <li>
@@ -446,12 +444,22 @@ const Instructions = ({ stickyVersion }: { stickyVersion?: boolean }) => {
               <kbd>a</kbd> toggles the particle acceleration;
             </li>
             <li>
-              <kbd>h</kbd> toggles the boost-velocity and the boosted
-              quantities;
+              <kbd>s</kbd> toggles the Poynting vector;
+            </li>
+            <li>
+              <kbd>i</kbd> toggles the field invariants;
             </li>
             <li>
               <kbd>d</kbd> toggles the field-vectors and quantities derived from
-              them.
+              them;
+            </li>
+            <li>
+              <kbd>c</kbd> toggles the components parallel and perpendicular to
+              the boost-velocity;
+            </li>
+            <li>
+              <kbd>h</kbd> toggles the boost-velocity and the boosted
+              quantities.
             </li>
           </ul>
           <p>
@@ -539,18 +547,6 @@ const Instructions = ({ stickyVersion }: { stickyVersion?: boolean }) => {
         <div>
           <p>Here are some interesting things to note:</p>
           <ul>
-            <li>
-              The quantities{' '}
-              <MathJaxInline content={'\\( \\vec E \\cdot \\vec B \\)'} /> and{' '}
-              <MathJaxInline content={'\\( E^2 - B^2 \\)'} /> are invariant,
-              meaning that their values don't change under a boost. So if the
-              vectors are perpendicular in one inertial frame, then they're
-              perpendicular in all inertial frames; and if they share a
-              magnitude in one inertial frame, then they share a magnitude in
-              all inertial frames. A light wave is characterized by both of
-              these properties, so a light wave in one inertial frame is a light
-              wave in all inertial frames, as of course it must be.
-            </li>
             <li>
               Under a Lorentz boost, only the components of{' '}
               <MathJaxInline content={'\\( \\vec E \\)'} /> and{' '}

@@ -31,6 +31,8 @@ export interface State {
   hideBoostedQuantities: boolean;
   /** If `true`, will hide the E and B field vectors. Turns the app into a "velocity-boost visualizer". */
   hideFieldVectors: boolean;
+  /** If `true`, shows the Lorentz invariants overlay on the visualization. */
+  showInvariants: boolean;
 
   setEField: (newEField: State['eField']) => void;
   setEFieldX: (newEFieldX: State['eField'][number]) => void;
@@ -93,6 +95,7 @@ export interface State {
     newHideBoostedQuantities: State['hideBoostedQuantities'],
   ) => void;
   setHideFieldVectors: (newHideFieldVectors: State['hideFieldVectors']) => void;
+  setShowInvariants: (newShowInvariants: State['showInvariants']) => void;
 }
 
 const useStore = createWithEqualityFn<State>()((set) => {
@@ -110,6 +113,7 @@ const useStore = createWithEqualityFn<State>()((set) => {
     showParticleAcceleration: false,
     hideBoostedQuantities: false,
     hideFieldVectors: false,
+    showInvariants: false,
 
     setEField: (newEField) => set(() => ({ eField: newEField })),
     setEFieldX: (newEFieldX) =>
@@ -262,6 +266,8 @@ const useStore = createWithEqualityFn<State>()((set) => {
       set(() => ({ hideBoostedQuantities: newHideBoostedQuantities })),
     setHideFieldVectors: (newHideFieldVectors) =>
       set(() => ({ hideFieldVectors: newHideFieldVectors })),
+    setShowInvariants: (newShowInvariants) =>
+      set(() => ({ showInvariants: newShowInvariants })),
   };
 }, shallow);
 

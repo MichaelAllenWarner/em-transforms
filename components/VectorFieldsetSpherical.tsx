@@ -166,7 +166,8 @@ const VectorFieldsetSpherical = memo(
                 <div key={i}>
                   <label className="flex">
                     <span className="shrink-0">
-                      {e} {isPrime && '′'} {isR ? '' : ' (°)'}
+                      {e}
+                      {isPrime && '′'} {isR ? '' : ' (°)'}
                     </span>
                     <span className="flex flex-col gap-2">
                       {useSlider ? (
@@ -201,7 +202,9 @@ const VectorFieldsetSpherical = memo(
                             }
                           : {
                               ...(!disabled ? { step: String(5) } : {}),
-                              ...(i === 1 ? { min: '0', max: '180' } : {}),
+                              ...(i === 1 && !disabled
+                                ? { min: '0', max: '180' }
+                                : {}),
                             })}
                         {...(disabled ? { disabled } : {})}
                         {...(onChange ? { onChange } : {})}

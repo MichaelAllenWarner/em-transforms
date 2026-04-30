@@ -135,6 +135,11 @@ export const getCalculatedQuantities = ({
   const poynting = cross(eField, bField);
   const poyntingPrime = cross(ePrime, bPrime);
 
+  const eDotB = dot(eField, bField);
+  const eSqMinusBSq = dot(eField, eField) - dot(bField, bField);
+  const eDotBPrime = dot(ePrime, bPrime);
+  const eSqMinusBSqPrime = dot(ePrime, ePrime) - dot(bPrime, bPrime);
+
   return {
     boostVelocityCartesian,
     boostUnit,
@@ -149,5 +154,9 @@ export const getCalculatedQuantities = ({
     poynting,
     poyntingPrime,
     particleVelocityPrimeSpherical,
+    eDotB,
+    eSqMinusBSq,
+    eDotBPrime,
+    eSqMinusBSqPrime,
   };
 };

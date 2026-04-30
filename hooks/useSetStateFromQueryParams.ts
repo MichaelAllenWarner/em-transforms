@@ -17,6 +17,7 @@ const storeSelector = (state: State) => ({
   showParticleAcceleration: state.showParticleAcceleration,
   hideBoostedQuantities: state.hideBoostedQuantities,
   hideFieldVectors: state.hideFieldVectors,
+  showInvariants: state.showInvariants,
   setEFieldX: state.setEFieldX,
   setEFieldY: state.setEFieldY,
   setEFieldZ: state.setEFieldZ,
@@ -38,6 +39,7 @@ const storeSelector = (state: State) => ({
   setShowParticleAcceleration: state.setShowParticleAcceleration,
   setHideBoostedQuantities: state.setHideBoostedQuantities,
   setHideFieldVectors: state.setHideFieldVectors,
+  setShowInvariants: state.setShowInvariants,
 });
 
 /**
@@ -62,6 +64,7 @@ export const useSetStateFromQueryParams = () => {
     showParticleAcceleration,
     hideBoostedQuantities,
     hideFieldVectors,
+    showInvariants,
     setEFieldX,
     setEFieldY,
     setEFieldZ,
@@ -83,6 +86,7 @@ export const useSetStateFromQueryParams = () => {
     setShowParticleAcceleration,
     setHideBoostedQuantities,
     setHideFieldVectors,
+    setShowInvariants,
   } = useStore(storeSelector);
 
   useEffect(() => {
@@ -306,6 +310,10 @@ export const useSetStateFromQueryParams = () => {
         key: QueryParameterKey.hideEandB,
         setter: setHideFieldVectors,
       },
+      {
+        key: QueryParameterKey.showInvariants,
+        setter: setShowInvariants,
+      },
     ]) {
       if (!queryParams.has(key)) continue;
 
@@ -384,6 +392,7 @@ export const useSetStateFromQueryParams = () => {
     setEFieldZ,
     setHideBoostedQuantities,
     setHideFieldVectors,
+    setShowInvariants,
     setParticleCharge,
     setParticleMass,
     setParticleVelocityPhi,
@@ -399,5 +408,6 @@ export const useSetStateFromQueryParams = () => {
     showParticleAcceleration,
     showParticleVelocity,
     showPoynting,
+    showInvariants,
   ]);
 };

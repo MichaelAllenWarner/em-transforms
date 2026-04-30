@@ -94,7 +94,8 @@ const VectorFieldset = memo(
         <div key={i}>
           <label className="flex">
             <span className={`shrink-0 ${!useSlider ? 'leading-normal' : ''}`}>
-              {e} {isPrime && '′'}
+              {e}
+              {isPrime && '′'}
             </span>
             <span className="flex flex-col gap-2">
               {useSlider ? (
