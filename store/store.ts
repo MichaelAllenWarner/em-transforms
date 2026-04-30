@@ -45,6 +45,10 @@ export interface State {
   setBFieldZ: (newBFieldZ: State['bField'][number]) => void;
   flipBField: () => void;
 
+  rotateFieldsX: () => void;
+  rotateFieldsY: () => void;
+  rotateFieldsZ: () => void;
+
   setBoostVelocity: (newBoostVelocity: State['boostVelocity']) => void;
   setBoostVelocityR: (
     newBoostVelocityR: State['boostVelocity'][number],
@@ -141,6 +145,22 @@ const useStore = createWithEqualityFn<State>()((set) => {
     flipBField: () =>
       set((state) => ({
         bField: state.bField.map((c) => -c) as CartesianComponents,
+      })),
+
+    rotateFieldsX: () =>
+      set((state) => ({
+        eField: [state.eField[0], -state.eField[2], state.eField[1]],
+        bField: [state.bField[0], -state.bField[2], state.bField[1]],
+      })),
+    rotateFieldsY: () =>
+      set((state) => ({
+        eField: [state.eField[2], state.eField[1], -state.eField[0]],
+        bField: [state.bField[2], state.bField[1], -state.bField[0]],
+      })),
+    rotateFieldsZ: () =>
+      set((state) => ({
+        eField: [-state.eField[1], state.eField[0], state.eField[2]],
+        bField: [-state.bField[1], state.bField[0], state.bField[2]],
       })),
 
     setBoostVelocity: (newBoostVelocity) =>

@@ -67,3 +67,15 @@ export const announceEFlip = () => {
 export const announceBFlip = () => {
   announce('Magnetic field flipped');
 };
+
+export const announceRotateX = () => {
+  announce('Fields rotated 90° around x');
+};
+
+export const announceRotateY = () => {
+  announce('Fields rotated 90° around y');
+};
+
+export const announceRotateZ = () => {
+  announce('Fields rotated 90° around z');
+};

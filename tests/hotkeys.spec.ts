@@ -348,6 +348,52 @@ test(`Camera resets with hotkey '${resetCamera}'.`, async ({ page }) => {
   expect(Number(paramsAfterReset.get('targetZ'))).toBeCloseTo(tz, 0);
 });
 
+// Field rotation tests — verify each 90° rotation applies correct transform to E and B
+for (const { axis, hotkey, transform } of [
+  {
+    axis: 'x',
+    hotkey: hotkeys.oneKey.rotateFieldsX,
+    transform: ([x, y, z]: number[]) => [x, -z, y],
+  },
+  {
+    axis: 'y',
+    hotkey: hotkeys.oneKey.rotateFieldsY,
+    transform: ([x, y, z]: number[]) => [z, y, -x],
+  },
+  {
+    axis: 'z',
+    hotkey: hotkeys.oneKey.rotateFieldsZ,
+    transform: ([x, y, z]: number[]) => [-y, x, z],
+  },
+] as const) {
+  test(`Rotates E and B 90° around ${axis} with hotkey '${hotkey}'.`, async ({
+    page,
+  }) => {
+    const eGroup = page.getByRole('group', { name: 'original electric field' });
+    const bGroup = page.getByRole('group', { name: 'original magnetic field' });
+
+    const readVec = async (group: typeof eGroup) => [
+      Number(await group.getByRole('spinbutton', { name: 'x' }).inputValue()),
+      Number(await group.getByRole('spinbutton', { name: 'y' }).inputValue()),
+      Number(await group.getByRole('spinbutton', { name: 'z' }).inputValue()),
+    ];
+
+    const eInitial = await readVec(eGroup);
+    const bInitial = await readVec(bGroup);
+
+    await page.keyboard.press(hotkey);
+
+    const eExpected = transform(eInitial);
+    const bExpected = transform(bInitial);
+
+    const eActual = await readVec(eGroup);
+    const bActual = await readVec(bGroup);
+
+    eExpected.forEach((v, i) => expect(eActual[i]).toBeCloseTo(v, 5));
+    bExpected.forEach((v, i) => expect(bActual[i]).toBeCloseTo(v, 5));
+  });
+}
+
 test('All hotkeys were tested. (This test is allowed to fail; see logs for results.)', async () => {
   const message = `The following hotkeys weren't tested: ${[
     ...untestedHotkeys.values(),

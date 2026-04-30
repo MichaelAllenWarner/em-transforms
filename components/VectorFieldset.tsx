@@ -150,9 +150,7 @@ const VectorFieldset = memo(
                 </button>
               </div>
             )}
-            <div className="mt-2 flex flex-col gap-3 leading-none">
-              {inputs}
-            </div>
+            <div className="flex flex-col gap-3 leading-none">{inputs}</div>
           </div>
         </fieldset>
       );

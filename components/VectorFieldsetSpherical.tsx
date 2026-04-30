@@ -104,46 +104,50 @@ const VectorFieldsetSpherical = memo(
       <fieldset className={`${textColor[color]} ${textColorDark[colorDark]}`}>
         <legend>{legend}</legend>
         <div className="mt-2 flex flex-col gap-3 leading-none">
-          {flipper && reverseHotkey && (
-            <div>
-              <button
-                type="button"
-                onClick={flipper}
-                aria-label={`Flip. Hot-key: ${reverseHotkey.replace('-', ' minus')}`}
-              >
-                <span aria-hidden="true">
-                  Flip. Hotkey:{' '}
-                  {reverseHotkey.split('+').map((s, i, a) => (
-                    <Fragment key={i}>
-                      <kbd>{s}</kbd>
-                      {i === a.length - 1 ? '' : ' + '}
-                    </Fragment>
-                  ))}
-                </span>
-              </button>
+          {(flipper && reverseHotkey) || (resetter && resetHotkey) ? (
+            <div className="flex flex-col gap-2">
+              {flipper && reverseHotkey && (
+                <div>
+                  <button
+                    type="button"
+                    onClick={flipper}
+                    aria-label={`Flip. Hot-key: ${reverseHotkey.replace('-', ' minus')}`}
+                  >
+                    <span aria-hidden="true">
+                      Flip. Hotkey:{' '}
+                      {reverseHotkey.split('+').map((s, i, a) => (
+                        <Fragment key={i}>
+                          <kbd>{s}</kbd>
+                          {i === a.length - 1 ? '' : ' + '}
+                        </Fragment>
+                      ))}
+                    </span>
+                  </button>
+                </div>
+              )}
+              {resetter && resetHotkey && (
+                <div>
+                  <div>
+                    <button
+                      type="button"
+                      onClick={resetter}
+                      aria-label={`Reset. Hot-key: ${resetHotkey}`}
+                    >
+                      <span aria-hidden="true">
+                        Reset. Hotkey:{' '}
+                        {resetHotkey.split('+').map((s, i, a) => (
+                          <Fragment key={i}>
+                            <kbd>{s}</kbd>
+                            {i === a.length - 1 ? '' : ' + '}
+                          </Fragment>
+                        ))}
+                      </span>
+                    </button>
+                  </div>
+                </div>
+              )}
             </div>
-          )}
-          {resetter && resetHotkey && (
-            <div>
-              <div>
-                <button
-                  type="button"
-                  onClick={resetter}
-                  aria-label={`Reset. Hot-key: ${resetHotkey}`}
-                >
-                  <span aria-hidden="true">
-                    Reset. Hotkey:{' '}
-                    {resetHotkey.split('+').map((s, i, a) => (
-                      <Fragment key={i}>
-                        <kbd>{s}</kbd>
-                        {i === a.length - 1 ? '' : ' + '}
-                      </Fragment>
-                    ))}
-                  </span>
-                </button>
-              </div>
-            </div>
-          )}
+          ) : null}
           <div className="flex flex-col gap-3 leading-none">
             {['r', 'θ', 'φ'].map((e, i) => {
               const isR = i === 0;

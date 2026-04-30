@@ -67,6 +67,10 @@ const SyncedDetails = ({
   summary: React.ReactElement;
   children: React.ReactNode;
 }) => {
+  if (summary.type !== 'summary') {
+    throw new Error('summary must be a <summary> element');
+  }
+
   const open = useDetailsOpen(id);
 
   return (
@@ -332,15 +336,15 @@ const Instructions = ({ stickyVersion }: { stickyVersion?: boolean }) => {
         <div>
           <ul>
             <li>
-              To orbit, use the left mouse-button (or one-finger move for
+              To orbit, use the left mouse-button (or one-finger drag for
               touch).
             </li>
             <li>
               To zoom, use the mousewheel or the middle mouse-button (or
-              two-finger spread/squish for touch).
+              two-finger pinch for touch).
             </li>
             <li>
-              To pan, use the right mouse-button (or two-finger move for touch).
+              To pan, use the right mouse-button (or two-finger drag for touch).
               Panning will change the focal point for orbiting and zooming, but
               you can restore it with the "Reset camera" button in the Options.
             </li>
@@ -394,13 +398,26 @@ const Instructions = ({ stickyVersion }: { stickyVersion?: boolean }) => {
             <kbd>p</kbd> + <kbd>↑</kbd>.
           </p>
           <p>
-            The field vectors and velocity vectors can be flipped (have their
-            directions reversed) by holding the vector name and hitting the
-            minus key, like <kbd>v</kbd> + <kbd>-</kbd> to flip the boost
-            velocity, or <kbd>b</kbd> + <kbd>-</kbd> to flip the magnetic field.
-            The boost velocity and particle velocity can be reset to their
-            default values with <kbd>v</kbd> + <kbd>0</kbd> or <kbd>u</kbd> +{' '}
-            <kbd>0</kbd> respectively.
+            The field vectors and velocity vectors can also be flipped (have
+            their directions reversed) by holding the vector-name key and
+            hitting the minus key, like <kbd>v</kbd> + <kbd>-</kbd> to flip the
+            boost velocity, or <kbd>b</kbd> + <kbd>-</kbd> to flip the magnetic
+            field.
+          </p>
+          <p>
+            The boost velocity can be reset to its default value (in the
+            positive <MathJaxInline content={'\\( x \\)'} /> direction) with{' '}
+            <kbd>v</kbd> + <kbd>0</kbd>. The particle velocity can be reset to
+            its default value (in the negative{' '}
+            <MathJaxInline content={'\\( x \\)'} /> direction) with <kbd>u</kbd>{' '}
+            + <kbd>0</kbd>.
+          </p>
+          <p>
+            The field vectors can be rotated <em>together</em> 90° around the{' '}
+            <MathJaxInline content={'\\( x \\),'} />{' '}
+            <MathJaxInline content={'\\( y \\),'} /> or{' '}
+            <MathJaxInline content={'\\( z \\)'} /> axis with hotkeys{' '}
+            <kbd>1</kbd>, <kbd>2</kbd>, and <kbd>3</kbd>, respectively.
           </p>
           <p>
             The particle's charge can be increased with <kbd>q</kbd> +{' '}

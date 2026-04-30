@@ -11,6 +11,9 @@ import {
   announceCameraReset,
   announceEFlip,
   announceBFlip,
+  announceRotateX,
+  announceRotateY,
+  announceRotateZ,
 } from '../helpers/announce';
 
 const storeSelector = (state: State) => ({
@@ -20,6 +23,9 @@ const storeSelector = (state: State) => ({
   resetParticleVelocity: state.resetParticleVelocity,
   flipEField: state.flipEField,
   flipBField: state.flipBField,
+  rotateFieldsX: state.rotateFieldsX,
+  rotateFieldsY: state.rotateFieldsY,
+  rotateFieldsZ: state.rotateFieldsZ,
 });
 
 const inputEvent = new Event('input', { bubbles: true });
@@ -55,6 +61,9 @@ export const useRefsAndHotkeys = () => {
     resetParticleVelocity: rawUReset,
     flipEField: rawEFlip,
     flipBField: rawBFlip,
+    rotateFieldsX: rawRotateX,
+    rotateFieldsY: rawRotateY,
+    rotateFieldsZ: rawRotateZ,
   } = useStore(storeSelector);
 
   const vFlip = useCallback(() => {
@@ -86,6 +95,20 @@ export const useRefsAndHotkeys = () => {
     rawBFlip();
     announceBFlip();
   }, [rawBFlip]);
+
+  const rotateX = useCallback(() => {
+    rawRotateX();
+    announceRotateX();
+  }, [rawRotateX]);
+  const rotateY = useCallback(() => {
+    rawRotateY();
+    announceRotateY();
+  }, [rawRotateY]);
+  const rotateZ = useCallback(() => {
+    rawRotateZ();
+    announceRotateZ();
+  }, [rawRotateZ]);
+
   // set up camera ref and camera-reset hotkey
 
   const cameraRef = useRef<OrbitControls>(null);
@@ -254,6 +277,9 @@ export const useRefsAndHotkeys = () => {
   useHotkeys(hotkeys.vectorFlip.u, uFlip, { enableOnFormTags: true });
   useHotkeys(hotkeys.fieldFlip.e, eFlip, { enableOnFormTags: true });
   useHotkeys(hotkeys.fieldFlip.b, bFlip, { enableOnFormTags: true });
+  useHotkeys(hotkeys.oneKey.rotateFieldsX, rotateX, { enableOnFormTags: true });
+  useHotkeys(hotkeys.oneKey.rotateFieldsY, rotateY, { enableOnFormTags: true });
+  useHotkeys(hotkeys.oneKey.rotateFieldsZ, rotateZ, { enableOnFormTags: true });
 
   // set up ref and hotkeys for particle charge
 
@@ -302,5 +328,8 @@ export const useRefsAndHotkeys = () => {
     uReset,
     eFlip,
     bFlip,
+    rotateX,
+    rotateY,
+    rotateZ,
   };
 };
