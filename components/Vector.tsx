@@ -28,6 +28,7 @@ interface Props {
 
 const origin = new THREE.Vector3(0, 0, 0);
 
+// keep using `memo()` even w/ React Compiler enabled, b/c not sure if React Three Fiber memoizes without it
 const Vector = memo(
   ({
     x,

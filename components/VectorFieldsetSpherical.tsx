@@ -1,4 +1,4 @@
-import { ChangeEvent, Fragment, memo, RefObject, useCallback } from 'react';
+import { ChangeEvent, Fragment, RefObject, useCallback } from 'react';
 import { Color, ColorDark, textColor, textColorDark } from '../helpers/Color';
 import { round } from '../helpers/round';
 import { SphericalComponents } from '../store/store';
@@ -40,206 +40,202 @@ interface Props {
   resetHotkey?: string;
 }
 
-const VectorFieldsetSpherical = memo(
-  ({
-    color,
-    colorDark,
-    legend,
-    r,
-    phi,
-    theta,
-    rRef,
-    phiRef,
-    thetaRef,
-    rSetter,
-    phiSetter,
-    thetaSetter,
-    rDisabled,
-    phiDisabled,
-    thetaDisabled,
-    isVelocity,
-    flipper,
-    resetter,
-    isPrime,
-    x,
-    y,
-    z,
-    reverseHotkey,
-    resetHotkey,
-  }: Props) => {
-    const onChangeR = useCallback(
-      (e: ChangeEvent<HTMLInputElement>) => {
-        if (!rSetter) return;
-        let n = e.target.valueAsNumber;
-        if (isVelocity) {
-          if (n >= 1) n = velocityMax;
-        }
-        if (n <= 0 || isNaN(n)) n = 0;
-        rSetter(n);
-      },
-      [rSetter, isVelocity],
-    );
+const VectorFieldsetSpherical = ({
+  color,
+  colorDark,
+  legend,
+  r,
+  phi,
+  theta,
+  rRef,
+  phiRef,
+  thetaRef,
+  rSetter,
+  phiSetter,
+  thetaSetter,
+  rDisabled,
+  phiDisabled,
+  thetaDisabled,
+  isVelocity,
+  flipper,
+  resetter,
+  isPrime,
+  x,
+  y,
+  z,
+  reverseHotkey,
+  resetHotkey,
+}: Props) => {
+  const onChangeR = useCallback(
+    (e: ChangeEvent<HTMLInputElement>) => {
+      if (!rSetter) return;
+      let n = e.target.valueAsNumber;
+      if (isVelocity) {
+        if (n >= 1) n = velocityMax;
+      }
+      if (n <= 0 || isNaN(n)) n = 0;
+      rSetter(n);
+    },
+    [rSetter, isVelocity],
+  );
 
-    const onChangePhi = useCallback(
-      (e: ChangeEvent<HTMLInputElement>) => {
-        if (!phiSetter) return;
-        let n = e.target.valueAsNumber;
-        if (isNaN(n)) n = 0;
-        phiSetter(degToRad(n));
-      },
-      [phiSetter],
-    );
+  const onChangePhi = useCallback(
+    (e: ChangeEvent<HTMLInputElement>) => {
+      if (!phiSetter) return;
+      let n = e.target.valueAsNumber;
+      if (isNaN(n)) n = 0;
+      phiSetter(degToRad(n));
+    },
+    [phiSetter],
+  );
 
-    const onChangeTheta = useCallback(
-      (e: ChangeEvent<HTMLInputElement>) => {
-        if (!thetaSetter) return;
-        let n = e.target.valueAsNumber;
-        if (isNaN(n)) n = 0;
-        thetaSetter(degToRad(n));
-      },
-      [thetaSetter],
-    );
+  const onChangeTheta = useCallback(
+    (e: ChangeEvent<HTMLInputElement>) => {
+      if (!thetaSetter) return;
+      let n = e.target.valueAsNumber;
+      if (isNaN(n)) n = 0;
+      thetaSetter(degToRad(n));
+    },
+    [thetaSetter],
+  );
 
-    return (
-      <fieldset className={`${textColor[color]} ${textColorDark[colorDark]}`}>
-        <legend>{legend}</legend>
-        <div className="mt-2 flex flex-col gap-3 leading-none">
-          {(flipper && reverseHotkey) || (resetter && resetHotkey) ? (
-            <div className="flex flex-col gap-2">
-              {flipper && reverseHotkey && (
+  return (
+    <fieldset className={`${textColor[color]} ${textColorDark[colorDark]}`}>
+      <legend>{legend}</legend>
+      <div className="mt-2 flex flex-col gap-3 leading-none">
+        {(flipper && reverseHotkey) || (resetter && resetHotkey) ? (
+          <div className="flex flex-col gap-2">
+            {flipper && reverseHotkey && (
+              <div>
+                <button
+                  type="button"
+                  onClick={flipper}
+                  aria-label={`Flip. Hot-key: ${reverseHotkey}`}
+                >
+                  <span aria-hidden="true">
+                    Flip. Hotkey:{' '}
+                    {reverseHotkey
+                      .replace('minus', '-')
+                      .split('+')
+                      .map((s, i, a) => (
+                        <Fragment key={i}>
+                          <kbd>{s}</kbd>
+                          {i === a.length - 1 ? '' : ' + '}
+                        </Fragment>
+                      ))}
+                  </span>
+                </button>
+              </div>
+            )}
+            {resetter && resetHotkey && (
+              <div>
                 <div>
                   <button
                     type="button"
-                    onClick={flipper}
-                    aria-label={`Flip. Hot-key: ${reverseHotkey}`}
+                    onClick={resetter}
+                    aria-label={`Reset. Hot-key: ${resetHotkey}`}
                   >
                     <span aria-hidden="true">
-                      Flip. Hotkey:{' '}
-                      {reverseHotkey
-                        .replace('minus', '-')
-                        .split('+')
-                        .map((s, i, a) => (
-                          <Fragment key={i}>
-                            <kbd>{s}</kbd>
-                            {i === a.length - 1 ? '' : ' + '}
-                          </Fragment>
-                        ))}
+                      Reset. Hotkey:{' '}
+                      {resetHotkey.split('+').map((s, i, a) => (
+                        <Fragment key={i}>
+                          <kbd>{s}</kbd>
+                          {i === a.length - 1 ? '' : ' + '}
+                        </Fragment>
+                      ))}
                     </span>
                   </button>
                 </div>
-              )}
-              {resetter && resetHotkey && (
-                <div>
-                  <div>
-                    <button
-                      type="button"
-                      onClick={resetter}
-                      aria-label={`Reset. Hot-key: ${resetHotkey}`}
-                    >
-                      <span aria-hidden="true">
-                        Reset. Hotkey:{' '}
-                        {resetHotkey.split('+').map((s, i, a) => (
-                          <Fragment key={i}>
-                            <kbd>{s}</kbd>
-                            {i === a.length - 1 ? '' : ' + '}
-                          </Fragment>
-                        ))}
-                      </span>
-                    </button>
-                  </div>
-                </div>
-              )}
-            </div>
-          ) : null}
-          <div className="flex flex-col gap-3 leading-none">
-            {['r', 'θ', 'φ'].map((e, i) => {
-              const isR = i === 0;
-              const value = isR
-                ? round(r)
-                : round(trueMod(radToDeg([theta, phi][i - 1]), 360));
-              const disabled = [rDisabled, thetaDisabled, phiDisabled][i];
-              const useSlider = !disabled;
-              const setter = [rSetter, thetaSetter, phiSetter][i];
-              const useOnChange = setter && !disabled;
-              const onChange =
-                useOnChange && [onChangeR, onChangeTheta, onChangePhi][i];
-              const ref = !disabled && [rRef, thetaRef, phiRef][i];
-
-              return (
-                <div key={i}>
-                  <label className="flex">
-                    <span className="shrink-0">
-                      {e}
-                      {isPrime && '′'} {isR ? '' : ' (°)'}
-                    </span>
-                    <span className="flex flex-col gap-2">
-                      {useSlider ? (
-                        <span>
-                          <input
-                            type="range"
-                            value={value}
-                            {...(isR && isVelocity
-                              ? {
-                                  step: String(velocityStep),
-                                  min: String(velocityMin),
-                                  max: String(velocityMax),
-                                }
-                              : {
-                                  step: String(1),
-                                  min: '0',
-                                  max: i === 1 ? '180' : '359',
-                                })}
-                            {...(onChange ? { onChange } : {})}
-                          />
-                        </span>
-                      ) : null}
-                      <input
-                        value={value}
-                        type="number"
-                        {...(useSlider ? { 'aria-label': e } : {})}
-                        {...(isR && isVelocity && !disabled
-                          ? {
-                              step: String(velocityStep),
-                              min: String(velocityMin),
-                              max: String(velocityMax),
-                            }
-                          : {
-                              ...(!disabled ? { step: String(5) } : {}),
-                              ...(i === 1 && !disabled
-                                ? { min: '0', max: '180' }
-                                : {}),
-                            })}
-                        {...(disabled ? { disabled } : {})}
-                        {...(onChange ? { onChange } : {})}
-                        {...(ref ? { ref } : {})}
-                      />
-                    </span>
-                  </label>
-                </div>
-              );
-            })}
-            {typeof x === 'number' &&
-              typeof y === 'number' &&
-              typeof z === 'number' && (
-                <VectorFieldset
-                  x={x}
-                  y={y}
-                  z={z}
-                  xDisabled
-                  yDisabled
-                  zDisabled
-                  isPrime={isPrime}
-                  color={color}
-                  colorDark={colorDark}
-                />
-              )}
+              </div>
+            )}
           </div>
-        </div>
-      </fieldset>
-    );
-  },
-);
+        ) : null}
+        <div className="flex flex-col gap-3 leading-none">
+          {['r', 'θ', 'φ'].map((e, i) => {
+            const isR = i === 0;
+            const value = isR
+              ? round(r)
+              : round(trueMod(radToDeg([theta, phi][i - 1]), 360));
+            const disabled = [rDisabled, thetaDisabled, phiDisabled][i];
+            const useSlider = !disabled;
+            const setter = [rSetter, thetaSetter, phiSetter][i];
+            const useOnChange = setter && !disabled;
+            const onChange =
+              useOnChange && [onChangeR, onChangeTheta, onChangePhi][i];
+            const ref = !disabled && [rRef, thetaRef, phiRef][i];
 
-VectorFieldsetSpherical.displayName = 'VectorFieldsetSpherical';
+            return (
+              <div key={i}>
+                <label className="flex">
+                  <span className="shrink-0">
+                    {e}
+                    {isPrime && '′'} {isR ? '' : ' (°)'}
+                  </span>
+                  <span className="flex flex-col gap-2">
+                    {useSlider ? (
+                      <span>
+                        <input
+                          type="range"
+                          value={value}
+                          {...(isR && isVelocity
+                            ? {
+                                step: String(velocityStep),
+                                min: String(velocityMin),
+                                max: String(velocityMax),
+                              }
+                            : {
+                                step: String(1),
+                                min: '0',
+                                max: i === 1 ? '180' : '359',
+                              })}
+                          {...(onChange ? { onChange } : {})}
+                        />
+                      </span>
+                    ) : null}
+                    <input
+                      value={value}
+                      type="number"
+                      {...(useSlider ? { 'aria-label': e } : {})}
+                      {...(isR && isVelocity && !disabled
+                        ? {
+                            step: String(velocityStep),
+                            min: String(velocityMin),
+                            max: String(velocityMax),
+                          }
+                        : {
+                            ...(!disabled ? { step: String(5) } : {}),
+                            ...(i === 1 && !disabled
+                              ? { min: '0', max: '180' }
+                              : {}),
+                          })}
+                      {...(disabled ? { disabled } : {})}
+                      {...(onChange ? { onChange } : {})}
+                      {...(ref ? { ref } : {})}
+                    />
+                  </span>
+                </label>
+              </div>
+            );
+          })}
+          {typeof x === 'number' &&
+            typeof y === 'number' &&
+            typeof z === 'number' && (
+              <VectorFieldset
+                x={x}
+                y={y}
+                z={z}
+                xDisabled
+                yDisabled
+                zDisabled
+                isPrime={isPrime}
+                color={color}
+                colorDark={colorDark}
+              />
+            )}
+        </div>
+      </div>
+    </fieldset>
+  );
+};
 
 export default VectorFieldsetSpherical;
