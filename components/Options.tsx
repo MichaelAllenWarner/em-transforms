@@ -15,6 +15,9 @@ interface Props {
   hideVRef: RefObject<HTMLInputElement>;
   hideEandBRef: RefObject<HTMLInputElement>;
   showInvariantsRef: RefObject<HTMLInputElement>;
+  rotateX: () => void;
+  rotateY: () => void;
+  rotateZ: () => void;
 }
 
 const storeSelector = (state: State) => ({
@@ -36,9 +39,6 @@ const storeSelector = (state: State) => ({
   setShowInvariants: state.setShowInvariants,
   setEField: state.setEField,
   setBField: state.setBField,
-  rotateFieldsX: state.rotateFieldsX,
-  rotateFieldsY: state.rotateFieldsY,
-  rotateFieldsZ: state.rotateFieldsZ,
 });
 
 const Options = memo(
@@ -52,6 +52,9 @@ const Options = memo(
     hideVRef,
     hideEandBRef,
     showInvariantsRef,
+    rotateX,
+    rotateY,
+    rotateZ,
   }: Props) => {
     const {
       showComponentVectors,
@@ -72,9 +75,6 @@ const Options = memo(
       setShowInvariants,
       setEField,
       setBField,
-      rotateFieldsX,
-      rotateFieldsY,
-      rotateFieldsZ,
     } = useStore(storeSelector);
 
     return (
@@ -316,9 +316,9 @@ const Options = memo(
 
                 {(
                   [
-                    ['x', rotateFieldsX, hotkeys.oneKey.rotateFieldsX],
-                    ['y', rotateFieldsY, hotkeys.oneKey.rotateFieldsY],
-                    ['z', rotateFieldsZ, hotkeys.oneKey.rotateFieldsZ],
+                    ['x', rotateX, hotkeys.oneKey.rotateFieldsX],
+                    ['y', rotateY, hotkeys.oneKey.rotateFieldsY],
+                    ['z', rotateZ, hotkeys.oneKey.rotateFieldsZ],
                   ] as const
                 ).map(([axis, handler, key]) => (
                   <div key={axis}>

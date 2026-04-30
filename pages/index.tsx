@@ -88,6 +88,9 @@ const Page = () => {
     eFlip,
     bFlip,
     uReset,
+    rotateX,
+    rotateY,
+    rotateZ,
   } = useRefsAndHotkeys();
 
   const {
@@ -459,6 +462,9 @@ const Page = () => {
                 hideVRef={hideVRef}
                 hideEandBRef={hideEandBRef}
                 showInvariantsRef={showInvariantsRef}
+                rotateX={rotateX}
+                rotateY={rotateY}
+                rotateZ={rotateZ}
               />
 
               <VectorFieldsetSpherical
