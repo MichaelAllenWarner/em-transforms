@@ -4,7 +4,7 @@ import useStore, { State } from '../store/store';
 import { useShallow } from 'zustand/react/shallow';
 import MathJaxInline from './MathJaxInline';
 import { hotkeys } from '../helpers/hotkeys';
-import { announceCameraReset } from '../helpers/announce';
+import { announce, announceCameraReset } from '../helpers/announce';
 
 interface Props {
   cameraRef: RefObject<OrbitControls | null>;
@@ -322,6 +322,7 @@ const Options = ({
               onClick={() => {
                 setEField([0, 0, -2]);
                 setBField([0, 0, 2]);
+                announce('Antiparallel-fields configuration set.');
               }}
             >
               Antiparallel
@@ -333,6 +334,7 @@ const Options = ({
               onClick={() => {
                 setEField([0, 0, 2]);
                 setBField([0, 0, 2]);
+                announce('Equal-fields configuration set.');
               }}
             >
               Equal
@@ -344,6 +346,7 @@ const Options = ({
               onClick={() => {
                 setEField([0, 0, 2]);
                 setBField([0, -2, 0]);
+                announce('Light-wave configuration set.');
               }}
             >
               Light
@@ -355,6 +358,7 @@ const Options = ({
               onClick={() => {
                 setEField([0, 0, -2]);
                 setBField([0, 0, 0]);
+                announce('Zero-magnetic-field configuration set.');
               }}
             >
               No magnetic
@@ -366,6 +370,7 @@ const Options = ({
               onClick={() => {
                 setEField([0, 0, 0]);
                 setBField([0, 0, 2]);
+                announce('Zero-electric-field configuration set.');
               }}
             >
               No electric
@@ -385,6 +390,7 @@ const Options = ({
                   Math.random() * 2 * Math.sign(Math.random() - 0.5),
                   Math.random() * 2 * Math.sign(Math.random() - 0.5),
                 ]);
+                announce('Fields randomized.');
               }}
             >
               Random

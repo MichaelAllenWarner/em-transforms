@@ -7,7 +7,7 @@ let latestAnnouncementId = 0;
 let pendingSetId: ReturnType<typeof setTimeout> | null = null;
 let pendingClearId: ReturnType<typeof setTimeout> | null = null;
 
-const announce = (message: string) => {
+export const announce = (message: string) => {
   if (typeof window === 'undefined') return;
 
   const announcer = document.getElementById(ANNOUNCER_ID);
