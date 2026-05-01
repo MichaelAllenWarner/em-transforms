@@ -300,10 +300,10 @@ const Options = ({
                     <span aria-hidden="true">
                       Rotate fields 90° around{' '}
                       <MathJaxInline
-                        content={`\\( ${axis} \\)`}
+                        content={`\\( ${axis} \\).`}
                         srOnlyText={axis}
                       />{' '}
-                      axis. Hotkey: <kbd>{key}</kbd>
+                      Hotkey: <kbd>{key}</kbd>
                     </span>
                   </button>
                 </div>

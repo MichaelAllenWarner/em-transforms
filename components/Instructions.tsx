@@ -260,14 +260,9 @@ const Instructions = ({ stickyVersion }: { stickyVersion?: boolean }) => {
           <p>A few notes:</p>
           <ul>
             <li>
-              This app works fine on mobile devices, but it's best viewed on a
-              wider screen, so that the Options and inputs can fit side-by-side
-              with the visualization. It's also best to make the browser window
-              tall enough to fit the whole visualization (for the
-              desktop/side-by-side layout); this way, the visualization will
-              remain in place on the page as you scroll, allowing you to bring
-              any of the Options and inputs into view without losing sight of
-              the visualization.
+              This app works on mobile devices, but it's best viewed on a wider
+              screen, where the two-column layout lets you see the visualization
+              side-by-side with the rest of the (scrollable) page-content.
             </li>
             <li>
               We're using Heaviside–Lorentz units, so electric and magnetic

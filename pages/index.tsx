@@ -163,7 +163,7 @@ const Page = () => {
         />
       </Head>
 
-      <main className="container mt-10 flex flex-col gap-10">
+      <main className="px-4 mt-10 flex flex-col gap-10">
         <div className="flex flex-col gap-6 mx-auto max-w-full">
           <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl max-w-5xl">
             Lorentz Transformation of the Electric and Magnetic Fields,
@@ -183,14 +183,14 @@ const Page = () => {
 
           <ThemeSwitch />
 
-          <div className="lg:600-h:hidden xl:!block xl:800-h:!hidden">
+          <div className="2-col:hidden">
             <Instructions />
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
-          <div className="relative h-[calc(600rem/16)] lg:600-h:sticky xl:h-[calc(800rem/16)] xl:!static xl:800-h:!sticky top-0">
-            <Canvas className="px-6 xl:px-0 [&>*]:border">
+        <div className="grid grid-cols-1 2-col:grid-cols-2 gap-10">
+          <div className="relative h-[calc(600rem/16)] 2-col:h-screen supports-[height:100dvh]:2-col:h-dvh 2-col:sticky top-0">
+            <Canvas className="px-6 2-col:px-0 [&>*]:border">
               <CameraController ref={cameraRef} />
 
               <ambientLight />
@@ -425,7 +425,7 @@ const Page = () => {
               <div
                 aria-hidden="true"
                 inert
-                className="absolute top-2 right-2 mr-6 xl:mr-0 text-sm font-mono bg-black/50 text-white px-2 py-1 rounded pointer-events-none"
+                className="absolute top-2 right-2 mr-6 2-col:mr-0 text-sm font-mono bg-black/50 text-white px-2 py-1 rounded pointer-events-none"
               >
                 <div className="flex flex-col gap-2">
                   <div>
@@ -442,7 +442,7 @@ const Page = () => {
           </div>
 
           <div className="flex flex-col gap-4">
-            <div className="hidden lg:600-h:block xl:!hidden xl:800-h:!block">
+            <div className="hidden 2-col:block">
               <Instructions stickyVersion />
             </div>
             <form

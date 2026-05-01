@@ -28,7 +28,7 @@
 
   button,
   [type='button'] {
-    @apply rounded bg-stone-600 px-3 py-2 leading-normal text-white transition-colors hover:bg-stone-600/[.85] focus-visible:bg-stone-600/[.85];
+    @apply text-pretty rounded bg-stone-600 px-3 py-2 leading-normal text-white transition-colors hover:bg-stone-600/[.85] focus-visible:bg-stone-600/[.85];
   }
 
   ul,

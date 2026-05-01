@@ -15,6 +15,14 @@ const round = (num) =>
 /** @param {number} px */
 const em = (px, base = 16) => `${round(px / base)}em`;
 
+const mainBreakpoints = {
+  sm: em(640),
+  md: em(768),
+  lg: em(1024),
+  xl: em(1280),
+  '2xl': em(1536),
+};
+
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
@@ -24,22 +32,8 @@ module.exports = {
   ],
   theme: {
     screens: {
-      /* Tailwind defaults (plus a 3xl), but in `em` (see https://danburzo.ro/media-query-units/) */
-      sm: em(640),
-      md: em(768),
-      lg: em(1024),
-      xl: em(1280),
-      '2xl': em(1536),
-      '3xl': em(1792),
-      // verticals
-      '600-h': { raw: `(min-height: ${em(600)})` },
-      '800-h': { raw: `(min-height: ${em(800)})` },
-    },
-    extend: {
-      container: {
-        center: true,
-        padding: '1rem',
-      },
+      ...mainBreakpoints,
+      '2-col': mainBreakpoints.md,
     },
   },
   darkMode: [
