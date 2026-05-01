@@ -18,6 +18,10 @@ const oneKeyHotkeys = {
   toggleA: 'a',
   toggleV: 'h', // not 'v' to avoid conflict w/ 'v+' hotkeys ('h' for 'hide')
   toggleEandB: 'd', // 'd' b/c it isn't used yet, I guess!
+  toggleInvariants: 'i',
+  rotateFieldsX: '1',
+  rotateFieldsY: '2',
+  rotateFieldsZ: '3',
 } as const;
 
 const keys = {
@@ -32,7 +36,7 @@ const keys = {
   sphericalComponentKeys: ['r', 'p', 't'],
   upDownKeys: ['ArrowUp', 'ArrowDown'],
   resetKey: '0',
-  flipKey: '-',
+  flipKey: 'minus',
 } as const;
 
 /** All keys to be used in hot-keys. */
@@ -133,8 +137,15 @@ const vectorResetHotkeys: {
 const vectorFlipHotkeys: {
   [Vector in (typeof keys.sphericalBaseKeys)[number]]: `${Vector}+${typeof keys.flipKey}`;
 } = {
-  v: 'v+-',
-  u: 'u+-',
+  v: 'v+minus',
+  u: 'u+minus',
+};
+
+const fieldFlipHotkeys: {
+  [Field in (typeof keys.cartesianBaseKeys)[number]]: `${Field}+${typeof keys.flipKey}`;
+} = {
+  e: 'e+minus',
+  b: 'b+minus',
 };
 
 const particleHotkeys: {
@@ -157,5 +168,6 @@ export const hotkeys = {
   vectorComp: vectorCompHotkeys,
   vectorReset: vectorResetHotkeys,
   vectorFlip: vectorFlipHotkeys,
+  fieldFlip: fieldFlipHotkeys,
   particle: particleHotkeys,
 };

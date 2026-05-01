@@ -1,5 +1,4 @@
-import { shallow } from 'zustand/shallow';
-import { createWithEqualityFn } from 'zustand/traditional';
+import { create } from 'zustand';
 
 export type CartesianComponents = [x: number, y: number, z: number];
 export type SphericalComponents = [r: number, phi: number, theta: number];
@@ -31,16 +30,25 @@ export interface State {
   hideBoostedQuantities: boolean;
   /** If `true`, will hide the E and B field vectors. Turns the app into a "velocity-boost visualizer". */
   hideFieldVectors: boolean;
+  /** If `true`, shows the Lorentz invariants overlay on the visualization. */
+  showInvariants: boolean;
 
   setEField: (newEField: State['eField']) => void;
   setEFieldX: (newEFieldX: State['eField'][number]) => void;
   setEFieldY: (newEFieldY: State['eField'][number]) => void;
   setEFieldZ: (newEFieldZ: State['eField'][number]) => void;
 
+  flipEField: () => void;
+
   setBField: (newBField: State['bField']) => void;
   setBFieldX: (newBFieldX: State['bField'][number]) => void;
   setBFieldY: (newBFieldY: State['bField'][number]) => void;
   setBFieldZ: (newBFieldZ: State['bField'][number]) => void;
+  flipBField: () => void;
+
+  rotateFieldsX: () => void;
+  rotateFieldsY: () => void;
+  rotateFieldsZ: () => void;
 
   setBoostVelocity: (newBoostVelocity: State['boostVelocity']) => void;
   setBoostVelocityR: (
@@ -53,6 +61,7 @@ export interface State {
     newBoostVelocityTheta: State['boostVelocity'][number],
   ) => void;
   flipBoostVelocity: () => void;
+  resetBoostVelocity: () => void;
 
   setParticleVelocity: (newParticleVelocity: State['particleVelocity']) => void;
   setParticleVelocityR: (
@@ -65,6 +74,7 @@ export interface State {
     newParticleVelocityTheta: State['particleVelocity'][number],
   ) => void;
   flipParticleVelocity: () => void;
+  resetParticleVelocity: () => void;
 
   setParticleCharge: (newParticleCharge: State['particleCharge']) => void;
   setParticleMass: (newParticleMass: State['particleMass']) => void;
@@ -84,14 +94,15 @@ export interface State {
     newHideBoostedQuantities: State['hideBoostedQuantities'],
   ) => void;
   setHideFieldVectors: (newHideFieldVectors: State['hideFieldVectors']) => void;
+  setShowInvariants: (newShowInvariants: State['showInvariants']) => void;
 }
 
-const useStore = createWithEqualityFn<State>()((set) => {
+const useStore = create<State>()((set) => {
   return {
-    eField: [1, 1, 1],
-    bField: [-1, -1, -1],
-    boostVelocity: [0.5, Math.PI / 2, Math.PI / 2],
-    particleVelocity: [0.25, -Math.PI / 2, Math.PI / 2],
+    eField: [0, 0, -2],
+    bField: [0, 0, 2],
+    boostVelocity: [0.5, 0, Math.PI / 2],
+    particleVelocity: [0.25, Math.PI, Math.PI / 2],
     particleCharge: 1,
     particleMass: 1,
     showComponentVectors: false,
@@ -101,6 +112,7 @@ const useStore = createWithEqualityFn<State>()((set) => {
     showParticleAcceleration: false,
     hideBoostedQuantities: false,
     hideFieldVectors: false,
+    showInvariants: false,
 
     setEField: (newEField) => set(() => ({ eField: newEField })),
     setEFieldX: (newEFieldX) =>
@@ -115,6 +127,10 @@ const useStore = createWithEqualityFn<State>()((set) => {
       set((state) => ({
         eField: [state.eField[0], state.eField[1], newEFieldZ],
       })),
+    flipEField: () =>
+      set((state) => ({
+        eField: state.eField.map((c) => -c) as CartesianComponents,
+      })),
 
     setBField: (newBField) => set(() => ({ bField: newBField })),
     setBFieldX: (newBFieldX) =>
@@ -128,6 +144,26 @@ const useStore = createWithEqualityFn<State>()((set) => {
     setBFieldZ: (newBFieldZ) =>
       set((state) => ({
         bField: [state.bField[0], state.bField[1], newBFieldZ],
+      })),
+    flipBField: () =>
+      set((state) => ({
+        bField: state.bField.map((c) => -c) as CartesianComponents,
+      })),
+
+    rotateFieldsX: () =>
+      set((state) => ({
+        eField: [state.eField[0], -state.eField[2], state.eField[1]],
+        bField: [state.bField[0], -state.bField[2], state.bField[1]],
+      })),
+    rotateFieldsY: () =>
+      set((state) => ({
+        eField: [state.eField[2], state.eField[1], -state.eField[0]],
+        bField: [state.bField[2], state.bField[1], -state.bField[0]],
+      })),
+    rotateFieldsZ: () =>
+      set((state) => ({
+        eField: [-state.eField[1], state.eField[0], state.eField[2]],
+        bField: [-state.bField[1], state.bField[0], state.bField[2]],
       })),
 
     setBoostVelocity: (newBoostVelocity) =>
@@ -161,9 +197,14 @@ const useStore = createWithEqualityFn<State>()((set) => {
         boostVelocity: [
           state.boostVelocity[0],
           state.boostVelocity[1] + Math.PI,
-          state.boostVelocity[2],
+          Math.PI - state.boostVelocity[2],
         ],
       })),
+    resetBoostVelocity: () => {
+      set(() => ({
+        boostVelocity: [0.5, 0, Math.PI / 2],
+      }));
+    },
 
     setParticleVelocity: (newParticleVelocity) =>
       set(() => ({ particleVelocity: newParticleVelocity })),
@@ -196,9 +237,14 @@ const useStore = createWithEqualityFn<State>()((set) => {
         particleVelocity: [
           state.particleVelocity[0],
           state.particleVelocity[1] + Math.PI,
-          state.particleVelocity[2],
+          Math.PI - state.particleVelocity[2],
         ],
       })),
+    resetParticleVelocity: () => {
+      set(() => ({
+        particleVelocity: [0.25, Math.PI, Math.PI / 2],
+      }));
+    },
 
     setParticleCharge: (newParticleCharge) =>
       set(() => ({ particleCharge: newParticleCharge })),
@@ -219,7 +265,9 @@ const useStore = createWithEqualityFn<State>()((set) => {
       set(() => ({ hideBoostedQuantities: newHideBoostedQuantities })),
     setHideFieldVectors: (newHideFieldVectors) =>
       set(() => ({ hideFieldVectors: newHideFieldVectors })),
+    setShowInvariants: (newShowInvariants) =>
+      set(() => ({ showInvariants: newShowInvariants })),
   };
-}, shallow);
+});
 
 export default useStore;

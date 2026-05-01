@@ -35,16 +35,24 @@ export default defineConfig({
     {
       name: 'chromium',
       use: { ...devices['Desktop Chrome'] },
+      testIgnore: '**/physics.spec.ts',
     },
 
     {
       name: 'firefox',
       use: { ...devices['Desktop Firefox'] },
+      testIgnore: '**/physics.spec.ts',
     },
 
     {
       name: 'webkit',
       use: { ...devices['Desktop Safari'] },
+      testIgnore: '**/physics.spec.ts',
+    },
+
+    {
+      name: 'unit',
+      testMatch: '**/physics.spec.ts',
     },
 
     /* Test against mobile viewports. */

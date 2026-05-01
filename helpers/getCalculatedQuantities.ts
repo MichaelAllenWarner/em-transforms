@@ -14,12 +14,32 @@ const dot = (
   [b_x, b_y, b_z]: CartesianComponents,
 ) => a_x * b_x + a_y * b_y + a_z * b_z;
 
+// Physics spherical convention: theta = polar from z-axis, phi = azimuthal from x toward y
+// x = r sinθ cosφ,  y = r sinθ sinφ,  z = r cosθ
+const physicsSphericalToCartesian = (
+  r: number,
+  phi: number,
+  theta: number,
+): CartesianComponents => [
+  r * Math.sin(theta) * Math.cos(phi),
+  r * Math.sin(theta) * Math.sin(phi),
+  r * Math.cos(theta),
+];
+
+const cartesianToPhysicsSpherical = (x: number, y: number, z: number) => {
+  const r = Math.sqrt(x * x + y * y + z * z);
+  return {
+    r,
+    theta: r === 0 ? 0 : Math.acos(z / r),
+    phi: Math.atan2(y, x),
+  };
+};
+
 const boostVelocityVec = new THREE.Vector3();
 const boostUnitVelocity = boostVelocityVec.clone();
 
 const particleVelocityVec = new THREE.Vector3();
 const particleVelocityPrimeVec = new THREE.Vector3();
-const particleVelocityPrimeSpherical = new THREE.Spherical();
 
 export const getCalculatedQuantities = ({
   boostVelocity,
@@ -36,9 +56,8 @@ export const getCalculatedQuantities = ({
   particleCharge: State['particleCharge'];
   particleMass: State['particleMass'];
 }) => {
-  const boostVelocityCartesian = boostVelocityVec
-    .setFromSphericalCoords(...boostVelocity)
-    .toArray();
+  const boostVelocityCartesian = physicsSphericalToCartesian(...boostVelocity);
+  boostVelocityVec.set(...boostVelocityCartesian);
 
   const boostUnit = boostUnitVelocity
     .set(...boostVelocityCartesian)
@@ -61,9 +80,10 @@ export const getCalculatedQuantities = ({
     (comp, i) => ch * comp - sh * crossE[i] - sh2 * dotB * boostUnit[i],
   ) as CartesianComponents;
 
-  const particleVelocityCartesian = particleVelocityVec
-    .setFromSphericalCoords(...particleVelocity)
-    .toArray();
+  const particleVelocityCartesian = physicsSphericalToCartesian(
+    ...particleVelocity,
+  );
+  particleVelocityVec.set(...particleVelocityCartesian);
 
   const dotU = dot(boostUnit, particleVelocityCartesian);
 
@@ -72,7 +92,9 @@ export const getCalculatedQuantities = ({
   ) as CartesianComponents;
 
   particleVelocityPrimeVec.set(...particleVelocityPrime);
-  particleVelocityPrimeSpherical.setFromVector3(particleVelocityPrimeVec);
+  const particleVelocityPrimeSpherical = cartesianToPhysicsSpherical(
+    ...particleVelocityPrime,
+  );
 
   const particleVelocityCrossB = cross(particleVelocityCartesian, bField);
   const particleVelocityCrossBPrime = cross(particleVelocityPrime, bPrime);
@@ -113,6 +135,11 @@ export const getCalculatedQuantities = ({
   const poynting = cross(eField, bField);
   const poyntingPrime = cross(ePrime, bPrime);
 
+  const eDotB = dot(eField, bField);
+  const eSqMinusBSq = dot(eField, eField) - dot(bField, bField);
+  const eDotBPrime = dot(ePrime, bPrime);
+  const eSqMinusBSqPrime = dot(ePrime, ePrime) - dot(bPrime, bPrime);
+
   return {
     boostVelocityCartesian,
     boostUnit,
@@ -127,5 +154,9 @@ export const getCalculatedQuantities = ({
     poynting,
     poyntingPrime,
     particleVelocityPrimeSpherical,
+    eDotB,
+    eSqMinusBSq,
+    eDotBPrime,
+    eSqMinusBSqPrime,
   };
 };

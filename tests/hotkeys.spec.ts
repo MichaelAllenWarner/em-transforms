@@ -2,13 +2,13 @@ import { test, expect, Locator } from '@playwright/test';
 import { isProxy } from 'util/types';
 import { hotkeys as _hotkeys } from '../helpers/hotkeys';
 import { testUp, testDown, deepStringValsOf, isObject } from './helpers';
+import {
+  defaultCameraPosition,
+  defaultCameraTarget,
+} from '../components/CameraController';
 
-/*
-  TODO (if feasible): test camera-reset hotkey (`hotkeys.oneKey.resetCamera`)
-    - I think would require snapshot-comparison and some canvas-click/dragging?
-  TODO: improve flip/reset tests
-  TODO: can (and should) we combine spherical and cartesian sets?
-*/
+/** Translate react-hotkeys-hook key names to Playwright key names. */
+const toPlaywrightKey = (hotkey: string) => hotkey.replace(/\bminus\b/g, 'Minus');
 
 type Fieldset = { fieldset: Locator };
 type Input = { input: Locator; initialValue: number };
@@ -87,42 +87,69 @@ for (const { fieldsetName, vectorObjectKey } of [
 
         const down =
           hotkeys.vectorComp[vectorObjectKey][compObjectKey].ArrowDown;
-        inputTest(`that decrements with hotkey '${down}'.`, testDown(down));
-
-        if (inputLabel !== 'φ') return;
-
-        // for 'φ' only:
-
-        const flip = hotkeys.vectorFlip[vectorObjectKey];
-        const reset = hotkeys.vectorReset[vectorObjectKey];
-
-        // improve (probably w/ all 3 inputs)
-        inputTest(
-          `that "flips" with hotkey '${flip}'.`,
-          async ({ page, input, initialValue }) => {
-            await page.keyboard.press(flip);
-            const newValue = Number(await input.inputValue());
-            expect(newValue).not.toEqual(initialValue);
-          },
-        );
-
-        // improve (probably w/ all 3 inputs)
-        inputTest(
-          `that resets with hotkey '${reset}'.`,
-          async ({ page, input, initialValue }) => {
-            // flip first to change value
-            await page.keyboard.press(flip);
-            let newValue = Number(await input.inputValue());
-            expect(newValue).not.toEqual(initialValue);
-
-            // now test reset
-            await page.keyboard.press(reset);
-            newValue = Number(await input.inputValue());
-            expect(newValue).toEqual(initialValue);
-          },
-        );
+        inputTest(`that decrements with hotkey '${down}'.`, testDown(down, up));
       });
     }
+
+    // flip and reset tests at fieldset level (need all three inputs)
+
+    const flip = hotkeys.vectorFlip[vectorObjectKey];
+    const reset = hotkeys.vectorReset[vectorObjectKey];
+    const phiUp = hotkeys.vectorComp[vectorObjectKey].p.ArrowUp;
+    const thetaUp = hotkeys.vectorComp[vectorObjectKey].t.ArrowUp;
+
+    fieldsetTest(
+      `"flips" direction with hotkey '${flip}'.`,
+      async ({ page, fieldset }) => {
+        const rInput = fieldset.getByRole('spinbutton', { name: 'r' });
+        const phiInput = fieldset.getByRole('spinbutton', { name: 'φ' });
+        const thetaInput = fieldset.getByRole('spinbutton', { name: 'θ' });
+
+        const initialR = Number(await rInput.inputValue());
+        const initialPhi = Number(await phiInput.inputValue());
+
+        // step theta away from 90° so its flip is non-trivial
+        await page.keyboard.press(thetaUp);
+        const thetaBeforeFlip = Number(await thetaInput.inputValue());
+
+        await page.keyboard.press(toPlaywrightKey(flip));
+
+        expect(Number(await rInput.inputValue())).toEqual(initialR);
+        expect(Number(await phiInput.inputValue())).toBeCloseTo(
+          (initialPhi + 180) % 360,
+          0,
+        );
+        expect(Number(await thetaInput.inputValue())).toBeCloseTo(
+          180 - thetaBeforeFlip,
+          0,
+        );
+      },
+    );
+
+    fieldsetTest(
+      `resets direction with hotkey '${reset}'.`,
+      async ({ page, fieldset }) => {
+        const rInput = fieldset.getByRole('spinbutton', { name: 'r' });
+        const phiInput = fieldset.getByRole('spinbutton', { name: 'φ' });
+        const thetaInput = fieldset.getByRole('spinbutton', { name: 'θ' });
+
+        const initialR = Number(await rInput.inputValue());
+        const initialPhi = Number(await phiInput.inputValue());
+        const initialTheta = Number(await thetaInput.inputValue());
+
+        // dirty phi and theta independently (no reliance on flip)
+        await page.keyboard.press(phiUp);
+        await page.keyboard.press(thetaUp);
+        expect(Number(await phiInput.inputValue())).not.toEqual(initialPhi);
+        expect(Number(await thetaInput.inputValue())).not.toEqual(initialTheta);
+
+        await page.keyboard.press(reset);
+
+        expect(Number(await rInput.inputValue())).toEqual(initialR);
+        expect(Number(await phiInput.inputValue())).toEqual(initialPhi);
+        expect(Number(await thetaInput.inputValue())).toEqual(initialTheta);
+      },
+    );
   });
 }
 
@@ -169,9 +196,30 @@ for (const { fieldsetName, vectorObjectKey } of [
 
         const down =
           hotkeys.vectorComp[vectorObjectKey][compObjectKey].ArrowDown;
-        inputTest(`that decrements with hotkey '${down}'.`, testDown(down));
+        inputTest(`that decrements with hotkey '${down}'.`, testDown(down, up));
       });
     }
+
+    const flip = hotkeys.fieldFlip[vectorObjectKey];
+
+    fieldsetTest(
+      `"flips" with hotkey '${flip}'.`,
+      async ({ page, fieldset }) => {
+        const xInput = fieldset.getByRole('spinbutton', { name: 'x' });
+        const yInput = fieldset.getByRole('spinbutton', { name: 'y' });
+        const zInput = fieldset.getByRole('spinbutton', { name: 'z' });
+
+        const initialX = Number(await xInput.inputValue());
+        const initialY = Number(await yInput.inputValue());
+        const initialZ = Number(await zInput.inputValue());
+
+        await page.keyboard.press(toPlaywrightKey(flip));
+
+        expect(Number(await xInput.inputValue())).toBeCloseTo(-initialX, 5);
+        expect(Number(await yInput.inputValue())).toBeCloseTo(-initialY, 5);
+        expect(Number(await zInput.inputValue())).toBeCloseTo(-initialZ, 5);
+      },
+    );
   });
 }
 
@@ -214,7 +262,7 @@ particleFieldsetTest.describe(`Fieldset '${particleFieldsetName}'`, () => {
       inputTest(`that increments with hotkey '${up}'.`, testUp(up));
 
       const down = hotkeys.particle[objectKey].ArrowDown;
-      inputTest(`that decrements with hotkey '${down}'.`, testDown(down));
+      inputTest(`that decrements with hotkey '${down}'.`, testDown(down, up));
     });
   }
 });
@@ -238,13 +286,14 @@ optionsFieldsetTest.describe(`Fieldset '${optionsFieldsetName}'`, () => {
   });
 
   for (const { checkboxLabel, objectKey } of [
-    { checkboxLabel: 'show component-vectors', objectKey: 'toggleComps' },
-    { checkboxLabel: 'show the poynting vector', objectKey: 'toggleS' },
-    { checkboxLabel: 'show the particle velocity', objectKey: 'toggleU' },
-    { checkboxLabel: 'show the lorentz force', objectKey: 'toggleF' },
-    { checkboxLabel: `show the particle's acceleration`, objectKey: 'toggleA' },
-    { checkboxLabel: 'hide the boost-velocity', objectKey: 'toggleV' },
-    { checkboxLabel: 'hide the field-vectors', objectKey: 'toggleEandB' },
+    { checkboxLabel: 'show particle velocity', objectKey: 'toggleU' },
+    { checkboxLabel: 'show lorentz force', objectKey: 'toggleF' },
+    { checkboxLabel: `show particle acceleration`, objectKey: 'toggleA' },
+    { checkboxLabel: 'show poynting vector', objectKey: 'toggleS' },
+    { checkboxLabel: 'hide fields', objectKey: 'toggleEandB' },
+    { checkboxLabel: 'show components', objectKey: 'toggleComps' },
+    { checkboxLabel: 'hide boost velocity', objectKey: 'toggleV' },
+    { checkboxLabel: 'show field-invariants overlay', objectKey: 'toggleInvariants' },
   ] as const) {
     const checkboxTest = optionsFieldsetTest.extend<Checkbox>({
       checkbox: ({ fieldset }, use) => use(fieldset.getByLabel(checkboxLabel)),
@@ -274,6 +323,82 @@ optionsFieldsetTest.describe(`Fieldset '${optionsFieldsetName}'`, () => {
     });
   }
 });
+
+// Camera reset — navigate to a URL with non-default camera position,
+// press the reset hotkey, and verify the URL params return to the default position.
+const resetCamera = hotkeys.oneKey.resetCamera;
+test(`Camera resets with hotkey '${resetCamera}'.`, async ({ page }) => {
+  const [dx, dy, dz] = defaultCameraPosition;
+  const [tx, ty, tz] = defaultCameraTarget;
+  const offset = 3;
+  await page.goto(
+    `/?v=2&x=${dx + offset}&y=${dy + offset}&z=${dz + offset}&targetX=${tx + offset}&targetY=${ty + offset}&targetZ=${tz + offset}`,
+  );
+  await page.locator('[data-camera-ready]').waitFor({ state: 'attached' });
+
+  const paramsOnLoad = new URLSearchParams(new URL(page.url()).search);
+  expect(Number(paramsOnLoad.get('x'))).toBeCloseTo(dx + offset, 1);
+
+  // Press reset — fires 'end' event which writes default camera params to URL
+  await page.keyboard.press(resetCamera);
+  await page.waitForURL((url) =>
+    Math.abs(Number(url.searchParams.get('x')) - dx) < 0.5,
+  );
+
+  const paramsAfterReset = new URLSearchParams(new URL(page.url()).search);
+  expect(Number(paramsAfterReset.get('x'))).toBeCloseTo(dx, 0);
+  expect(Number(paramsAfterReset.get('y'))).toBeCloseTo(dy, 0);
+  expect(Number(paramsAfterReset.get('z'))).toBeCloseTo(dz, 0);
+  expect(Number(paramsAfterReset.get('targetX'))).toBeCloseTo(tx, 0);
+  expect(Number(paramsAfterReset.get('targetY'))).toBeCloseTo(ty, 0);
+  expect(Number(paramsAfterReset.get('targetZ'))).toBeCloseTo(tz, 0);
+});
+
+// Field rotation tests — verify each 90° rotation applies correct transform to E and B
+for (const { axis, hotkey, transform } of [
+  {
+    axis: 'x',
+    hotkey: hotkeys.oneKey.rotateFieldsX,
+    transform: ([x, y, z]: number[]) => [x, -z, y],
+  },
+  {
+    axis: 'y',
+    hotkey: hotkeys.oneKey.rotateFieldsY,
+    transform: ([x, y, z]: number[]) => [z, y, -x],
+  },
+  {
+    axis: 'z',
+    hotkey: hotkeys.oneKey.rotateFieldsZ,
+    transform: ([x, y, z]: number[]) => [-y, x, z],
+  },
+] as const) {
+  test(`Rotates E and B 90° around ${axis} with hotkey '${hotkey}'.`, async ({
+    page,
+  }) => {
+    const eGroup = page.getByRole('group', { name: 'original electric field' });
+    const bGroup = page.getByRole('group', { name: 'original magnetic field' });
+
+    const readVec = async (group: typeof eGroup) => [
+      Number(await group.getByRole('spinbutton', { name: 'x' }).inputValue()),
+      Number(await group.getByRole('spinbutton', { name: 'y' }).inputValue()),
+      Number(await group.getByRole('spinbutton', { name: 'z' }).inputValue()),
+    ];
+
+    const eInitial = await readVec(eGroup);
+    const bInitial = await readVec(bGroup);
+
+    await page.keyboard.press(hotkey);
+
+    const eExpected = transform(eInitial);
+    const bExpected = transform(bInitial);
+
+    const eActual = await readVec(eGroup);
+    const bActual = await readVec(bGroup);
+
+    eExpected.forEach((v, i) => expect(eActual[i]).toBeCloseTo(v, 5));
+    bExpected.forEach((v, i) => expect(bActual[i]).toBeCloseTo(v, 5));
+  });
+}
 
 test('All hotkeys were tested. (This test is allowed to fail; see logs for results.)', async () => {
   const message = `The following hotkeys weren't tested: ${[

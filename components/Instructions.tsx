@@ -1,26 +1,99 @@
 import MathJaxInline from './MathJaxInline';
-import ThemeSwitch from './ThemeSwitch';
+import { useSyncExternalStore } from 'react';
+import type React from 'react';
 
-const TitleAndInstructions = () => (
-  <div className="space-y-6 mx-auto max-w-full">
-    <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl max-w-5xl">
-      Lorentz Transformation of the Electric and Magnetic Fields, Visualized in
-      3D
-    </h1>
-    <noscript className="block">
-      <div className="border p-4 inline-block">
-        <p>
-          <strong>
-            JavaScript is currently disabled in your browser. To use this app,
-            you'll have to enable JavaScript and reload the page.
-          </strong>
-        </p>
-      </div>
-    </noscript>
-    <ThemeSwitch />
-    <div className="space-y-4 [&_summary+div]:max-w-prose [&_summary+div]:space-y-5 [&_ul+p]:mt-3 [&_li>ul]:mt-3 [&_li>p:last-child]:mb-4 [&_summary+div]:p-4">
-      <details>
-        <summary>Background for those who need it</summary>
+/*
+  Mechanism for keeping open-states of `details` elements in sync across
+  component-instances (because it gets used in two spots in the DOM, with one
+  always hidden depending on viewport size). This way, when breakpoint
+  is crossed, the open-state of each `details` element is preserved.
+*/
+
+type Listener = () => void;
+
+const detailsIds = [
+  'background',
+  'instructions',
+  'camera-controls',
+  'hotkeys',
+  'formulas',
+  'observations',
+] as const;
+
+type DetailsId = (typeof detailsIds)[number];
+
+const listenersById = new Map<DetailsId, Set<Listener>>(
+  detailsIds.map((id) => [id, new Set<Listener>()]),
+);
+
+let openStates: Record<DetailsId, boolean> = {
+  background: false,
+  instructions: false,
+  'camera-controls': false,
+  hotkeys: false,
+  formulas: false,
+  observations: false,
+};
+
+const subscribeId = (id: DetailsId, listener: Listener) => {
+  listenersById.get(id)?.add(listener);
+  return () => listenersById.get(id)?.delete(listener);
+};
+
+const getSnapshotId = (id: DetailsId) => {
+  return openStates[id];
+};
+
+const setOpen = (id: DetailsId, isOpen: boolean) => {
+  if (openStates[id] === isOpen) return;
+  openStates = { ...openStates, [id]: isOpen };
+  listenersById.get(id)?.forEach((l) => l());
+};
+
+const useDetailsOpen = (id: DetailsId) => {
+  return useSyncExternalStore(
+    (listener) => subscribeId(id, listener),
+    () => getSnapshotId(id),
+    () => getSnapshotId(id),
+  );
+};
+
+const SyncedDetails = ({
+  id,
+  summary,
+  children,
+}: {
+  id: DetailsId;
+  summary: React.ReactElement;
+  children: React.ReactNode;
+}) => {
+  if (summary.type !== 'summary') {
+    throw new Error('summary must be a <summary> element');
+  }
+
+  const open = useDetailsOpen(id);
+
+  return (
+    <details
+      open={open}
+      onToggle={(e) => {
+        setOpen(id, e.currentTarget.open);
+      }}
+      className="[&_summary+div]:max-w-prose [&_summary+div]:flex [&_summary+div]:flex-col [&_summary+div]:gap-5 [&_ul+p]:mt-3 [&_li>ul]:mt-3 [&_li>p:last-child]:mb-4 [&_summary+div]:p-4"
+    >
+      {summary}
+      {children}
+    </details>
+  );
+};
+
+const Instructions = ({ stickyVersion }: { stickyVersion?: boolean }) => {
+  return (
+    <div className="flex flex-col gap-4">
+      <SyncedDetails
+        id="background"
+        summary={<summary>Background for those who need it</summary>}
+      >
         <div>
           <p>
             (The reader is assumed to have some familiarity with vectors,
@@ -123,17 +196,24 @@ const TitleAndInstructions = () => (
             the "primed" vectors.
           </p>
           <p>
-            Another available option lets you see the Poynting vector in both
-            frames. The Poynting vector represents the flow of energy within the
-            electric and magnetic fields. It's given by the cross product{' '}
+            Some of the other options are displaying the "field invariants"{' '}
+            <MathJaxInline content={'\\( \\vec E \\cdot \\vec B \\)'} /> and{' '}
+            <MathJaxInline content={'\\( E^2 - B^2 \\)'} /> in an overlay
+            (invariants are quantities whose values don't change under a boost,
+            like the aforementioned charge and mass), and showing the Poynting
+            vector in both frames (the Poynting vector represents the flow of
+            energy within the electric and magnetic fields, and is given by the
+            cross product{' '}
             <MathJaxInline
-              content={'\\( \\vec S = \\vec E \\times \\vec B \\).'}
+              content={'\\( \\vec S = \\vec E \\times \\vec B \\)).'}
             />
           </p>
         </div>
-      </details>
-      <details>
-        <summary>Instructions</summary>
+      </SyncedDetails>
+      <SyncedDetails
+        id="instructions"
+        summary={<summary>Instructions</summary>}
+      >
         <div>
           <p>
             This visualization demonstrates how the electric- and magnetic-field
@@ -142,11 +222,12 @@ const TitleAndInstructions = () => (
           </p>
           <p>
             Use the sliders, input-boxes, or corresponding{' '}
-            <a href="#hotkeys">hotkeys</a> to set the Cartesian components of
-            the electric- and magnetic-field vectors in the original "unprimed"
-            inertial frame, as well as the direction and magnitude of the
-            boost-velocity. The electric- and magnetic-field vectors in the
-            "primed" inertial frame are calculated and rendered automatically.
+            <a href={stickyVersion ? '#hotkeys-sticky' : '#hotkeys'}>hotkeys</a>{' '}
+            to set the Cartesian components of the electric- and magnetic-field
+            vectors in the original "unprimed" inertial frame, as well as the
+            direction and magnitude of the boost-velocity. The electric- and
+            magnetic-field vectors in the "primed" inertial frame are calculated
+            and rendered automatically.
           </p>
           <p>
             The Poynting vector in each frame is calculated automatically, too,
@@ -179,9 +260,9 @@ const TitleAndInstructions = () => (
           <p>A few notes:</p>
           <ul>
             <li>
-              This app works fine on mobile devices, but it's best viewed on a
-              wider screen, so that the Options and inputs can fit side-by-side
-              with the visualization.
+              This app works on mobile devices, but it's best viewed on a wider
+              screen, where the two-column layout lets you see the visualization
+              side-by-side with the rest of the (scrollable) page-content.
             </li>
             <li>
               We're using Heaviside–Lorentz units, so electric and magnetic
@@ -190,8 +271,8 @@ const TitleAndInstructions = () => (
             <li>
               Each velocity (boost or particle) is specified with three
               parameters: <MathJaxInline content={'\\( r \\),'} />{' '}
-              <MathJaxInline content={'\\( \\phi \\),'} /> and{' '}
-              <MathJaxInline content={'\\( \\theta \\).'} />
+              <MathJaxInline content={'\\( \\theta \\),'} /> and{' '}
+              <MathJaxInline content={'\\( \\phi \\).'} />
               <ul>
                 <li>
                   The <MathJaxInline content={'\\( r \\)-parameter'} /> sets the
@@ -200,18 +281,16 @@ const TitleAndInstructions = () => (
                   light defined as <MathJaxInline content={'\\( 1 \\)).'} />
                 </li>
                 <li>
-                  The <MathJaxInline content={'\\( \\phi \\)-'} /> and{' '}
-                  <MathJaxInline content={'\\( \\theta \\)-parameters'} /> set
-                  the direction. Note that these spherical coordinates are not
-                  the usual ones used in physics. Rather,{' '}
-                  <MathJaxInline content={'\\( \\phi \\)'} /> is the polar angle
-                  with reference to the{' '}
-                  <MathJaxInline content={'\\( y \\)-axis,'} /> and{' '}
-                  <MathJaxInline content={'\\( \\theta \\)'} /> is the azimuthal
+                  The <MathJaxInline content={'\\( \\theta \\)-'} /> and{' '}
+                  <MathJaxInline content={'\\( \\phi \\)-parameters'} /> set the
+                  direction using the standard physics convention:{' '}
+                  <MathJaxInline content={'\\( \\theta \\)'} /> is the polar
                   angle with reference to the{' '}
-                  <MathJaxInline content={'\\( z \\)-axis.'} /> (The software
-                  I'm using adopts this peculiar variant of the "math"
-                  convention, and it's easiest to just stick with it.)
+                  <MathJaxInline content={'\\( z \\)-axis,'} /> and{' '}
+                  <MathJaxInline content={'\\( \\phi \\)'} /> is the azimuthal
+                  angle with reference to the{' '}
+                  <MathJaxInline content={'\\( x \\)-axis'} /> (toward positive{' '}
+                  <MathJaxInline content={'\\( y \\)).'} />
                 </li>
               </ul>
               <p>
@@ -221,7 +300,13 @@ const TitleAndInstructions = () => (
                 coordinates only have a radial component. Technically the
                 input-parameters specify the <em>coordinates of a point</em>,
                 and then we "build" the velocity as a vector from the origin to
-                that location.
+                that location. That might sound pedantic, but this is something
+                that apparently stumps even most physics graduate students,
+                according to{' '}
+                <a href="https://www.per-central.org/items/perc/1901.pdf">
+                  this study (PDF)
+                </a>
+                .
               </p>
             </li>
             <li>
@@ -243,29 +328,37 @@ const TitleAndInstructions = () => (
             encoded in the URL, too.
           </p>
         </div>
-      </details>
-      <details>
-        <summary>Camera controls for 3D visualization</summary>
+      </SyncedDetails>
+      <SyncedDetails
+        id="camera-controls"
+        summary={<summary>Camera controls for 3D visualization</summary>}
+      >
         <div>
           <ul>
             <li>
-              To orbit, use the left mouse-button (or one-finger move for
+              To orbit, use the left mouse-button (or one-finger drag for
               touch).
             </li>
             <li>
               To zoom, use the mousewheel or the middle mouse-button (or
-              two-finger spread/squish for touch).
+              two-finger pinch for touch).
             </li>
             <li>
-              To pan, use the right mouse-button (or two-finger move for touch).
+              To pan, use the right mouse-button (or two-finger drag for touch).
               Panning will change the focal point for orbiting and zooming, but
               you can restore it with the "Reset camera" button in the Options.
             </li>
           </ul>
         </div>
-      </details>
-      <details>
-        <summary id="hotkeys">Hotkeys</summary>
+      </SyncedDetails>
+      <SyncedDetails
+        id="hotkeys"
+        summary={
+          <summary id={stickyVersion ? 'hotkeys-sticky' : 'hotkeys'}>
+            Hotkeys
+          </summary>
+        }
+      >
         <div>
           <p>
             You can use the keyboard to control the input-parameters and many of
@@ -286,13 +379,14 @@ const TitleAndInstructions = () => (
             <li>
               hold the key for the input you're changing (<kbd>x</kbd>,{' '}
               <kbd>y</kbd>, or <kbd>z</kbd> for a Cartesian component of the
-              electric or magnetic field, and <kbd>r</kbd>, <kbd>p</kbd> [for
-              phi], or <kbd>t</kbd> [for theta] for the appropriate parameter of
+              electric or magnetic field, and <kbd>r</kbd>, <kbd>t</kbd> [for
+              theta], or <kbd>p</kbd> [for phi] for the appropriate parameter of
               a velocity);
             </li>
             <li>
               and press either the up- or down-arrow (<kbd>↑</kbd> or{' '}
-              <kbd>↓</kbd>).
+              <kbd>↓</kbd>
+              ).
             </li>
           </ol>
           <p>
@@ -304,15 +398,26 @@ const TitleAndInstructions = () => (
             <kbd>p</kbd> + <kbd>↑</kbd>.
           </p>
           <p>
-            The velocity-vectors have a couple of additional controls. To
-            reverse the direction of the boost velocity, press <kbd>v</kbd> +{' '}
-            <kbd>-</kbd>. To reverse the direction of the particle velocity,
-            press <kbd>u</kbd> + <kbd>-</kbd>. To reset the direction of the
-            boost velocity (to the <MathJaxInline content={'\\( +x \\)'} />{' '}
-            direction), press <kbd>v</kbd> + <kbd>0</kbd>. To reset the
-            direction of the particle velocity (to the{' '}
-            <MathJaxInline content={'\\( -x \\)'} /> direction), press{' '}
-            <kbd>u</kbd> + <kbd>0</kbd>.
+            The field vectors and velocity vectors can also be flipped (have
+            their directions reversed) by holding the vector-name key and
+            hitting the minus key, like <kbd>v</kbd> + <kbd>&minus;</kbd> to
+            flip the boost velocity, or <kbd>b</kbd> + <kbd>&minus;</kbd> to
+            flip the magnetic field.
+          </p>
+          <p>
+            The boost velocity can be reset to its default value (in the
+            positive <MathJaxInline content={'\\( x \\)'} /> direction) with{' '}
+            <kbd>v</kbd> + <kbd>0</kbd>. The particle velocity can be reset to
+            its default value (in the negative{' '}
+            <MathJaxInline content={'\\( x \\)'} /> direction) with <kbd>u</kbd>{' '}
+            + <kbd>0</kbd>.
+          </p>
+          <p>
+            The field vectors can be rotated <em>together</em> 90° around the{' '}
+            <MathJaxInline content={'\\( x \\),'} />{' '}
+            <MathJaxInline content={'\\( y \\),'} /> or{' '}
+            <MathJaxInline content={'\\( z \\)'} /> axis with hotkeys{' '}
+            <kbd>1</kbd>, <kbd>2</kbd>, and <kbd>3</kbd>, respectively.
           </p>
           <p>
             The particle's charge can be increased with <kbd>q</kbd> +{' '}
@@ -325,37 +430,43 @@ const TitleAndInstructions = () => (
           </p>
           <ul>
             <li>
-              <kbd>c</kbd> toggles the component-vectors parallel and
-              perpendicular to the boost-velocity;
-            </li>
-            <li>
-              <kbd>s</kbd> toggles the Poynting vector;
-            </li>
-            <li>
               <kbd>w</kbd> (not <kbd>u</kbd>!) toggles the particle velocity;
             </li>
             <li>
               <kbd>f</kbd> toggles the Lorentz force;
             </li>
             <li>
-              <kbd>a</kbd> toggles the particle acceleration;
+              <kbd>
+                <span className="sr-only">A</span>
+                <span aria-hidden="true">a</span>
+              </kbd>{' '}
+              toggles the particle acceleration;
             </li>
             <li>
-              <kbd>h</kbd> toggles the boost-velocity and the boosted
-              quantities;
+              <kbd>s</kbd> toggles the Poynting vector;
+            </li>
+            <li>
+              <kbd>i</kbd> toggles the field invariants;
             </li>
             <li>
               <kbd>d</kbd> toggles the field-vectors and quantities derived from
-              them.
+              them;
+            </li>
+            <li>
+              <kbd>c</kbd> toggles the components parallel and perpendicular to
+              the boost-velocity;
+            </li>
+            <li>
+              <kbd>h</kbd> toggles the boost-velocity and the boosted
+              quantities.
             </li>
           </ul>
           <p>
             Use <kbd>k</kbd> to reset the camera.
           </p>
         </div>
-      </details>
-      <details>
-        <summary>Formulas used</summary>
+      </SyncedDetails>
+      <SyncedDetails id="formulas" summary={<summary>Formulas used</summary>}>
         <div>
           <p>
             The most elegant way to express how quantities transform under
@@ -376,8 +487,8 @@ const TitleAndInstructions = () => (
             vector in the direction of the boost velocity{' '}
             <MathJaxInline content={'\\( \\vec v \\),'} /> and the
             aforementioned boost rapidity is{' '}
-            <MathJaxInline content={'\\( \\eta = \\tanh ^{-1} v \\)'} /> (that's
-            the inverse hyperbolic tangent, and{' '}
+            <MathJaxInline content={'\\( \\zeta = \\tanh ^{-1} v \\)'} />{' '}
+            (that's the inverse hyperbolic tangent, and{' '}
             <MathJaxInline content={'\\(  v \\)'} /> is the magnitude of{' '}
             <MathJaxInline content={'\\( \\vec v \\)).'} />
           </p>
@@ -385,21 +496,21 @@ const TitleAndInstructions = () => (
             <li>
               <MathJaxInline
                 content={
-                  '\\( \\vec E ^ \\prime = \\cosh \\eta \\, \\vec E + \\sinh \\eta \\, ( \\hat v \\times \\vec B ) - 2 \\sinh ^2 \\frac{\\eta}{2} \\, ( \\hat v \\cdot \\vec E ) \\hat v \\)'
+                  '\\( \\vec E ^ \\prime = \\cosh \\zeta \\, \\vec E + \\sinh \\zeta \\, ( \\hat v \\times \\vec B ) - 2 \\sinh ^2 \\frac{\\zeta}{2} \\, ( \\hat v \\cdot \\vec E ) \\hat v \\)'
                 }
               />
             </li>
             <li>
               <MathJaxInline
                 content={
-                  '\\( \\vec B ^ \\prime = \\cosh \\eta \\, \\vec B - \\sinh \\eta \\, ( \\hat v \\times \\vec E ) - 2 \\sinh ^2 \\frac{\\eta}{2} \\, ( \\hat v \\cdot \\vec B ) \\hat v \\)'
+                  '\\( \\vec B ^ \\prime = \\cosh \\zeta \\, \\vec B - \\sinh \\zeta \\, ( \\hat v \\times \\vec E ) - 2 \\sinh ^2 \\frac{\\zeta}{2} \\, ( \\hat v \\cdot \\vec B ) \\hat v \\)'
                 }
               />
             </li>
             <li>
               <MathJaxInline
                 content={
-                  '\\( \\vec u ^ \\prime = \\dfrac{ \\vec u + \\left ( 2 \\sinh ^2 \\frac{ \\eta }{ 2 } \\, ( \\hat v \\cdot \\vec u ) - \\sinh \\eta \\right ) \\hat v }{ \\cosh \\eta - \\sinh \\eta \\, ( \\hat v \\cdot \\vec u ) } \\)'
+                  '\\( \\vec u ^ \\prime = \\dfrac{ \\vec u + \\left ( 2 \\sinh ^2 \\frac{ \\zeta }{ 2 } \\, ( \\hat v \\cdot \\vec u ) - \\sinh \\zeta \\right ) \\hat v }{ \\cosh \\zeta - \\sinh \\zeta \\, ( \\hat v \\cdot \\vec u ) } \\)'
                 }
               />
             </li>
@@ -407,16 +518,17 @@ const TitleAndInstructions = () => (
           <p>(I didn't say they were pretty!)</p>
           <p>
             It follows from the definition of{' '}
-            <MathJaxInline content={'\\( \\eta \\)'} /> that{' '}
-            <MathJaxInline content={'\\( \\cosh \\eta = \\gamma \\)'} /> and
-            that <MathJaxInline content={'\\( \\sinh \\eta = \\gamma v \\).'} />{' '}
-            To write the formulas in their more familiar "non-rapidity" form,
-            make those substitutions, use{' '}
+            <MathJaxInline content={'\\( \\zeta \\)'} /> that{' '}
+            <MathJaxInline content={'\\( \\cosh \\zeta = \\gamma \\)'} /> and
+            that{' '}
+            <MathJaxInline content={'\\( \\sinh \\zeta = \\gamma v \\).'} /> To
+            write the formulas in their more familiar "non-rapidity" form, make
+            those substitutions, use{' '}
             <MathJaxInline content={'\\( \\vec v = v \\hat v \\)'} /> and the
             identity{' '}
             <MathJaxInline
               content={
-                '\\( 2 \\sinh ^2 \\frac{ \\eta }{ 2 } = \\cosh \\eta - 1 \\),'
+                '\\( 2 \\sinh ^2 \\frac{ \\zeta }{ 2 } = \\cosh \\zeta - 1 \\),'
               }
             />{' '}
             and simplify.
@@ -427,24 +539,14 @@ const TitleAndInstructions = () => (
             I'd already obtained.
           </p>
         </div>
-      </details>
-      <details>
-        <summary>Observations</summary>
+      </SyncedDetails>
+      <SyncedDetails
+        id="observations"
+        summary={<summary>Observations</summary>}
+      >
         <div>
           <p>Here are some interesting things to note:</p>
           <ul>
-            <li>
-              The quantities{' '}
-              <MathJaxInline content={'\\( \\vec E \\cdot \\vec B \\)'} /> and{' '}
-              <MathJaxInline content={'\\( E^2 - B^2 \\)'} /> are invariant,
-              meaning that their values don't change under a boost. So if the
-              vectors are perpendicular in one inertial frame, then they're
-              perpendicular in all inertial frames; and if they share a
-              magnitude in one inertial frame, then they share a magnitude in
-              all inertial frames. A light wave is characterized by both of
-              these properties, so a light wave in one inertial frame is a light
-              wave in all inertial frames, as of course it must be.
-            </li>
             <li>
               Under a Lorentz boost, only the components of{' '}
               <MathJaxInline content={'\\( \\vec E \\)'} /> and{' '}
@@ -479,16 +581,15 @@ const TitleAndInstructions = () => (
               setting both <MathJaxInline content={'\\( \\vec v \\)'} /> and{' '}
               <MathJaxInline content={'\\( \\vec u \\)'} /> to point along the{' '}
               <MathJaxInline content={'\\( x \\)-axis'} /> (by using the "Reset"
-              buttons in the Options, say);{' '}
-              <MathJaxInline content={'\\( F_x \\)'} /> and{' '}
+              buttons, say); <MathJaxInline content={'\\( F_x \\)'} /> and{' '}
               <MathJaxInline content={'\\( F ^ \\prime _x \\)'} /> should then
               have the same value.
             </li>
           </ul>
         </div>
-      </details>
+      </SyncedDetails>
     </div>
-  </div>
-);
+  );
+};
 
-export default TitleAndInstructions;
+export default Instructions;

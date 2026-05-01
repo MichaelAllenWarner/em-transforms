@@ -1,6 +1,8 @@
 import useStore, { State } from '../store/store';
+import { useShallow } from 'zustand/react/shallow';
 import { useDebounced } from './useDebounced';
 import { QueryParameterKey } from '../helpers/QueryParamKey';
+import { replaceUrlParams } from '../helpers/urlParams';
 import { useEffect, useRef } from 'react';
 
 const storeSelector = (state: State) => ({
@@ -17,6 +19,7 @@ const storeSelector = (state: State) => ({
   showParticleAcceleration: state.showParticleAcceleration,
   hideBoostedQuantities: state.hideBoostedQuantities,
   hideFieldVectors: state.hideFieldVectors,
+  showInvariants: state.showInvariants,
 });
 
 /**
@@ -41,7 +44,8 @@ export const useSetQueryParams = () => {
     showParticleAcceleration,
     hideBoostedQuantities,
     hideFieldVectors,
-  } = useStore(storeSelector);
+    showInvariants,
+  } = useStore(useShallow(storeSelector));
 
   const setQueryParams = () => {
     const params = new URLSearchParams(window.location.search);
@@ -66,7 +70,8 @@ export const useSetQueryParams = () => {
     params.set(QueryParameterKey.showA, showParticleAcceleration.toString());
     params.set(QueryParameterKey.hideV, hideBoostedQuantities.toString());
     params.set(QueryParameterKey.hideEandB, hideFieldVectors.toString());
-    window.history.replaceState({}, '', `?${params.toString()}`);
+    params.set(QueryParameterKey.showInvariants, showInvariants.toString());
+    replaceUrlParams(params);
   };
 
   const debouncedSetQueryParams = useDebounced(setQueryParams, 500);
@@ -75,6 +80,12 @@ export const useSetQueryParams = () => {
     if (isFirstRender.current) {
       isFirstRender.current = false;
     } else {
+      /*
+        Note: in development, w/ StrictMode enabled, the query params may populate on load
+        even if the URL was "clean" (no query params). If so, it's probably just because of
+        StrictMode running this hook twice on mount instead of just once. If needed, can
+        test by temporarily disabling StrictMode.
+      */
       debouncedSetQueryParams();
     }
   });

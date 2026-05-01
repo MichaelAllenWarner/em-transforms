@@ -1,8 +1,8 @@
 import * as THREE from 'three';
 import { type CartesianComponents } from '../store/store';
 import { font } from '../helpers/font';
-import { Material } from 'three';
 import { memo, useEffect, useRef, useState } from 'react';
+import { useFrame } from '@react-three/fiber';
 import { TextGeometry } from 'three-stdlib';
 import { Color, ColorDark } from '../helpers/Color';
 import { useTheme } from 'next-themes';
@@ -28,6 +28,7 @@ interface Props {
 
 const origin = new THREE.Vector3(0, 0, 0);
 
+// keep using `memo()` even w/ React Compiler enabled, b/c not sure if React Three Fiber memoizes without it
 const Vector = memo(
   ({
     x,
@@ -52,36 +53,26 @@ const Vector = memo(
       Use refs for the needed THREE.js objects, and mutate them in the `useEffect()`.
       This prevents them from getting destroyed and recreated on re-renders, which
       helps with performance.
-
-      For further optimization, could use zustand's transient update mechanism to handle
-      changes to x/y/z state (instead of passing those values in as props). This would prevent
-      the component from having to re-render at all in that scenario. See:
-
-      https://github.com/pmndrs/zustand#transient-updates-for-often-occurring-state-changes
-
-      However, that would require quite a bit of refactoring, since right now most of the vectors
-      are calculated on the fly in response to state-changes. Performance seems all right
-      at the moment, so leaving it be.
     */
 
     // define refs for main vector
-    const vector = useRef<THREE.Vector3>();
-    const dir = useRef<THREE.Vector3>();
-    const arrow = useRef<ArrowHelperWithNonArrayMaterials>();
+    const vector = useRef<THREE.Vector3>(undefined);
+    const dir = useRef<THREE.Vector3>(undefined);
+    const arrow = useRef<ArrowHelperWithNonArrayMaterials>(undefined);
     const labelMesh =
-      useRef<THREE.Mesh<TextGeometry, THREE.MeshBasicMaterial>>();
+      useRef<THREE.Mesh<TextGeometry, THREE.MeshBasicMaterial>>(undefined);
 
     // define refs for component-vector parallel to boost
-    const vectorClonePar = useRef<THREE.Vector3>();
-    const parCompProjectee = useRef<THREE.Vector3>();
-    const parCompVec = useRef<THREE.Vector3>();
-    const parCompDir = useRef<THREE.Vector3>();
-    const parCompArrow = useRef<ArrowHelperWithNonArrayMaterials>();
+    const vectorClonePar = useRef<THREE.Vector3>(undefined);
+    const parCompProjectee = useRef<THREE.Vector3>(undefined);
+    const parCompVec = useRef<THREE.Vector3>(undefined);
+    const parCompDir = useRef<THREE.Vector3>(undefined);
+    const parCompArrow = useRef<ArrowHelperWithNonArrayMaterials>(undefined);
 
     // define refs for component-vector perpendicular to boost
-    const perpCompVec = useRef<THREE.Vector3>();
-    const perpCompDir = useRef<THREE.Vector3>();
-    const perpCompArrow = useRef<ArrowHelperWithNonArrayMaterials>();
+    const perpCompVec = useRef<THREE.Vector3>(undefined);
+    const perpCompDir = useRef<THREE.Vector3>(undefined);
+    const perpCompArrow = useRef<ArrowHelperWithNonArrayMaterials>(undefined);
 
     useEffect(() => {
       // main vector
@@ -309,6 +300,12 @@ const Vector = memo(
       boostUnitY,
       boostUnitZ,
     ]);
+
+    useFrame(({ camera }) => {
+      if (labelMesh.current) {
+        labelMesh.current.quaternion.copy(camera.quaternion);
+      }
+    });
 
     return ready ? (
       <>

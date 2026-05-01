@@ -18,6 +18,7 @@ export enum QueryParameterKey {
   showA = 'showA',
   hideV = 'hideV',
   hideEandB = 'hideEandB',
+  showInvariants = 'showInvariants',
   q = 'q',
   m = 'm',
   azimuthal = 'azimuthal',
@@ -28,4 +29,5 @@ export enum QueryParameterKey {
   targetX = 'targetX',
   targetY = 'targetY',
   targetZ = 'targetZ',
+  version = 'v',
 }

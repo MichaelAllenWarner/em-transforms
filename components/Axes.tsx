@@ -1,6 +1,6 @@
 import { font } from '../helpers/font';
-import { extend, type ReactThreeFiber } from '@react-three/fiber';
-import React, { useEffect } from 'react';
+import { extend, useFrame, type ThreeElement } from '@react-three/fiber';
+import React, { useEffect, useRef } from 'react';
 import * as THREE from 'three';
 import { TextGeometry } from 'three-stdlib';
 import { useTheme } from 'next-themes';
@@ -11,14 +11,9 @@ import {
 
 // see https://github.com/pmndrs/react-three-fiber/discussions/1742#discussioncomment-2567726
 extend({ TextGeometry });
-declare global {
-  namespace JSX {
-    interface IntrinsicElements {
-      textGeometry: ReactThreeFiber.Object3DNode<
-        TextGeometry,
-        typeof TextGeometry
-      >;
-    }
+declare module '@react-three/fiber' {
+  interface ThreeElements {
+    textGeometry: ThreeElement<typeof TextGeometry>;
   }
 }
 
@@ -63,6 +58,8 @@ const Axes = () => {
   const { resolvedTheme } = useTheme();
   const color = resolvedTheme === 'dark' ? darkModeColor : lightModeColor;
   const opacity = resolvedTheme === 'dark' ? darkModeOpacity : lightModeOpacity;
+  const labelsGroupRef = useRef<THREE.Group>(null);
+  const axisLabelGroupRefs = useRef<(THREE.Group | null)[]>([null, null, null]);
 
   useEffect(() => {
     axes.forEach((axis) => {
@@ -72,8 +69,29 @@ const Axes = () => {
     });
   }, [color, opacity]);
 
+  useFrame(({ camera }) => {
+    // Billboard each axis label group so letter+prime+bracket rotate together
+    axisLabelGroupRefs.current.forEach((group) => {
+      if (group) group.quaternion.copy(camera.quaternion);
+    });
+    // Billboard tick number labels individually (not children of axis label groups)
+    if (labelsGroupRef.current) {
+      labelsGroupRef.current.traverse((child) => {
+        if (
+          child instanceof THREE.Mesh &&
+          child.geometry instanceof TextGeometry &&
+          !axisLabelGroupRefs.current.includes(
+            child.parent as THREE.Group | null,
+          )
+        ) {
+          child.quaternion.copy(camera.quaternion);
+        }
+      });
+    }
+  });
+
   return (
-    <>
+    <group ref={labelsGroupRef}>
       {axes.map((axis, i) => (
         <React.Fragment key={i}>
           <primitive object={axis} />
@@ -90,7 +108,6 @@ const Axes = () => {
                 args={[
                   `${i < 3 ? j + 1 : -(j + 1)}`,
                   {
-                    // @ts-ignore
                     font,
                     size: 0.1,
                     height: 0,
@@ -105,19 +122,21 @@ const Axes = () => {
             </mesh>
           ))}
           {i < 3 && (
-            <>
-              <mesh
-                position={[
-                  i === 0 ? length + 0.1 : 0,
-                  i === 1 ? length + 0.1 : 0,
-                  i === 2 ? length + 0.1 : 0,
-                ]}
-              >
+            <group
+              ref={(el) => {
+                axisLabelGroupRefs.current[i] = el;
+              }}
+              position={[
+                i === 0 ? length + 0.1 : 0,
+                i === 1 ? length + 0.1 : 0,
+                i === 2 ? length + 0.1 : 0,
+              ]}
+            >
+              <mesh position={[0, 0, 0]}>
                 <textGeometry
                   args={[
                     ['x', 'y', 'z'][i],
                     {
-                      // @ts-ignore
                       font,
                       size: 0.3,
                       height: 0,
@@ -130,18 +149,11 @@ const Axes = () => {
                   opacity={opacity}
                 />
               </mesh>
-              <mesh
-                position={[
-                  i === 0 ? length + 0.35 : 0.28,
-                  i === 1 ? length + 0.1 : 0,
-                  i === 2 ? length + 0.1 : 0,
-                ]}
-              >
+              <mesh position={[0.25, 0, 0]}>
                 <textGeometry
                   args={[
                     '′',
                     {
-                      // @ts-ignore
                       font,
                       size: 0.3,
                       height: 0,
@@ -154,18 +166,11 @@ const Axes = () => {
                   opacity={opacity}
                 />
               </mesh>
-              <mesh
-                position={[
-                  i === 0 ? length + 0.3 : 0.23,
-                  i === 1 ? length + 0.3 : 0.2,
-                  i === 2 ? length + 0.1 : 0,
-                ]}
-              >
+              <mesh position={[0.2, 0.2, 0]}>
                 <textGeometry
                   args={[
                     '[ ]',
                     {
-                      // @ts-ignore
                       font,
                       size: 0.15,
                       height: 0,
@@ -178,11 +183,11 @@ const Axes = () => {
                   opacity={opacity}
                 />
               </mesh>
-            </>
+            </group>
           )}
         </React.Fragment>
       ))}
-    </>
+    </group>
   );
 };
 
