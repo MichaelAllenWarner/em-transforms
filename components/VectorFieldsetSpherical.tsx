@@ -1,4 +1,4 @@
-import { ChangeEvent, Fragment, RefObject, useCallback } from 'react';
+import { ChangeEvent, Fragment, RefObject } from 'react';
 import { Color, ColorDark, textColor, textColorDark } from '../helpers/Color';
 import { round } from '../helpers/round';
 import { SphericalComponents } from '../store/store';
@@ -66,38 +66,29 @@ const VectorFieldsetSpherical = ({
   reverseHotkey,
   resetHotkey,
 }: Props) => {
-  const onChangeR = useCallback(
-    (e: ChangeEvent<HTMLInputElement>) => {
-      if (!rSetter) return;
-      let n = e.target.valueAsNumber;
-      if (isVelocity) {
-        if (n >= 1) n = velocityMax;
-      }
-      if (n <= 0 || isNaN(n)) n = 0;
-      rSetter(n);
-    },
-    [rSetter, isVelocity],
-  );
+  const onChangeR = (e: ChangeEvent<HTMLInputElement>) => {
+    if (!rSetter) return;
+    let n = e.target.valueAsNumber;
+    if (isVelocity) {
+      if (n >= 1) n = velocityMax;
+    }
+    if (n <= 0 || isNaN(n)) n = 0;
+    rSetter(n);
+  };
 
-  const onChangePhi = useCallback(
-    (e: ChangeEvent<HTMLInputElement>) => {
-      if (!phiSetter) return;
-      let n = e.target.valueAsNumber;
-      if (isNaN(n)) n = 0;
-      phiSetter(degToRad(n));
-    },
-    [phiSetter],
-  );
+  const onChangePhi = (e: ChangeEvent<HTMLInputElement>) => {
+    if (!phiSetter) return;
+    let n = e.target.valueAsNumber;
+    if (isNaN(n)) n = 0;
+    phiSetter(degToRad(n));
+  };
 
-  const onChangeTheta = useCallback(
-    (e: ChangeEvent<HTMLInputElement>) => {
-      if (!thetaSetter) return;
-      let n = e.target.valueAsNumber;
-      if (isNaN(n)) n = 0;
-      thetaSetter(degToRad(n));
-    },
-    [thetaSetter],
-  );
+  const onChangeTheta = (e: ChangeEvent<HTMLInputElement>) => {
+    if (!thetaSetter) return;
+    let n = e.target.valueAsNumber;
+    if (isNaN(n)) n = 0;
+    thetaSetter(degToRad(n));
+  };
 
   return (
     <fieldset className={`${textColor[color]} ${textColorDark[colorDark]}`}>

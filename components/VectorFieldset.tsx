@@ -1,4 +1,4 @@
-import { ChangeEvent, Fragment, RefObject, useCallback } from 'react';
+import { ChangeEvent, Fragment, RefObject } from 'react';
 import { Color, ColorDark, textColor, textColorDark } from '../helpers/Color';
 import { round } from '../helpers/round';
 import { CartesianComponents } from '../store/store';
@@ -50,35 +50,26 @@ const VectorFieldset = ({
   reverseHotkey,
   isPrime,
 }: Props) => {
-  const onChangeX = useCallback(
-    (e: ChangeEvent<HTMLInputElement>) => {
-      if (!xSetter) return;
-      let n = e.target.valueAsNumber;
-      if (isNaN(n)) n = 0;
-      xSetter(n);
-    },
-    [xSetter],
-  );
+  const onChangeX = (e: ChangeEvent<HTMLInputElement>) => {
+    if (!xSetter) return;
+    let n = e.target.valueAsNumber;
+    if (isNaN(n)) n = 0;
+    xSetter(n);
+  };
 
-  const onChangeY = useCallback(
-    (e: ChangeEvent<HTMLInputElement>) => {
-      if (!ySetter) return;
-      let n = e.target.valueAsNumber;
-      if (isNaN(n)) n = 0;
-      ySetter(n);
-    },
-    [ySetter],
-  );
+  const onChangeY = (e: ChangeEvent<HTMLInputElement>) => {
+    if (!ySetter) return;
+    let n = e.target.valueAsNumber;
+    if (isNaN(n)) n = 0;
+    ySetter(n);
+  };
 
-  const onChangeZ = useCallback(
-    (e: ChangeEvent<HTMLInputElement>) => {
-      if (!zSetter) return;
-      let n = e.target.valueAsNumber;
-      if (isNaN(n)) n = 0;
-      zSetter(n);
-    },
-    [zSetter],
-  );
+  const onChangeZ = (e: ChangeEvent<HTMLInputElement>) => {
+    if (!zSetter) return;
+    let n = e.target.valueAsNumber;
+    if (isNaN(n)) n = 0;
+    zSetter(n);
+  };
 
   const inputs = ['x', 'y', 'z'].map((e, i) => {
     const value = round([x, y, z][i]);
