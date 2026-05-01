@@ -1,5 +1,6 @@
 const nextConfig = require('eslint-config-next');
 const prettier = require('eslint-config-prettier');
+const tsPlugin = require('@typescript-eslint/eslint-plugin');
 
 module.exports = [
   ...nextConfig,
@@ -8,8 +9,17 @@ module.exports = [
     settings: {
       react: { version: '19' },
     },
+    plugins: { '@typescript-eslint': tsPlugin },
     rules: {
       'react/no-unescaped-entities': 'off',
+      '@typescript-eslint/no-unused-vars': [
+        'error',
+        {
+          ignoreRestSiblings: true,
+          argsIgnorePattern: '^_',
+          varsIgnorePattern: '^_',
+        },
+      ],
     },
   },
   {

@@ -1,8 +1,10 @@
 import { MathJax } from 'better-react-mathjax';
-import { ComponentProps, type HTMLAttributes } from 'react';
+import { ComponentProps } from 'react';
 
-interface Props
-  extends Omit<ComponentProps<typeof MathJax>, 'inline' | 'children'> {
+interface Props extends Omit<
+  ComponentProps<typeof MathJax>,
+  'inline' | 'children'
+> {
   /**
    * The string must include a MathJax expression like `'\\( ... \\)'`
    * but may optionally begin and/or end with characters that should
