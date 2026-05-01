@@ -317,8 +317,9 @@ const Instructions = ({ stickyVersion }: { stickyVersion?: boolean }) => {
               components of a boosted vector—the{' '}
               <MathJaxInline content={'\\( x ^ \\prime \\)-component'} /> will
               no longer be the component whose basis-vector is parallel to the
-              boost-axis! There's a button in the Options to reset the
-              boost-direction to <MathJaxInline content={'\\( +x \\).'} />
+              boost-axis! There's a button for resetting the boost velocity to
+              its default <MathJaxInline content={'\\( +x \\)'} /> state
+              (hotkey: <kbd>v</kbd> + <kbd>0</kbd>).
             </li>
           </ul>
           <p>
